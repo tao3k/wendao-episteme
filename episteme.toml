@@ -18,6 +18,8 @@ allowed_source_artifacts = [
   "read_only_validation_queries",
   "anchor_v3_prompt_surfaces",
   "diagnostic_semantic_requirements",
+  "source_registries",
+  "skillsc_skill_surfaces",
 ]
 source_artifact_exclusions = [
   "schemas",
@@ -26,6 +28,9 @@ source_artifact_exclusions = [
   "rust_type_layout",
   "arrow_recordbatch_layout",
   "whole_document_rewrite_engine",
+  "project_local_topology_manifest",
+  "static_source_prompt",
+  "runtime_topology_mutation",
 ]
 
 [sql]
@@ -43,6 +48,9 @@ public_catalogs = [
 stable_views = [
   "repo_content_chunk",
   "repo_entity",
+]
+optional_project_views = [
+  "project_topology_category",
 ]
 forbidden_operations = [
   "CREATE",
@@ -73,6 +81,23 @@ emits = [
   "current_id",
 ]
 
+[[policy_queries]]
+id = "diataxis.intent-validation"
+framework = "diataxis"
+path = "policies/diataxis/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_intent",
+]
+
 [[diagnostic_mappings]]
 id = "johnny-decimal.anchor-id-diagnostic"
 framework = "johnny-decimal"
@@ -81,12 +106,57 @@ path = "policies/johnny_decimal/diagnostic.toml"
 issue_type = "Episteme_JohnnyDecimal_Violation"
 renderer_owner = "Project Sentinel"
 
+[[diagnostic_mappings]]
+id = "diataxis.intent-diagnostic"
+framework = "diataxis"
+query = "diataxis.intent-validation"
+path = "policies/diataxis/diagnostic.toml"
+issue_type = "Episteme_Diataxis_Intent_Violation"
+renderer_owner = "Project Sentinel"
+
 [[repair_prompts]]
 id = "johnny-decimal.fix-anchor-id"
 framework = "johnny-decimal"
 path = "prompts/anchor_v3_fixers/fix_jd_id.txt"
 repair_tooling = "Project AnchoR v3"
 write_mode = "byte_range_compare_and_swap"
+
+[[source_evolution_skill_surfaces]]
+id = "johnny-decimal.source-evolution"
+framework = "johnny-decimal"
+sources_path = "sources/johnny_decimal/sources.toml"
+skill_path = "sources/johnny_decimal/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
 
 [[frameworks]]
 id = "johnny-decimal"
@@ -98,6 +168,7 @@ owns = [
   "node.address",
   "collection.boundary",
   "canonical_path",
+  "anchor.syntax",
 ]
 conflict_strategy = "preserve_topological_identity"
 
@@ -124,8 +195,22 @@ owns = [
   "node.intent",
   "reader_task",
   "document_mode",
+  "diataxis.closed_ontology",
 ]
 conflict_strategy = "reclassify_intent_without_rewriting_identity"
+
+[topology_manifest]
+owner = "consumer_repository"
+default_path = "topology.toml"
+sync_command = "wendao episteme sync"
+sync_mode = "skillsc_bpmn_review_flow"
+runtime_mutation_allowed = false
+llm_runtime_mutation_allowed = false
+category_identity_mutation_allowed = false
+agent_role = "Topology Architect Skill"
+syntax_policy_owner = "wendao-episteme"
+semantic_map_owner = "consumer_repository"
+enactment = "git_commit"
 
 [[frameworks]]
 id = "evergreen-notes"

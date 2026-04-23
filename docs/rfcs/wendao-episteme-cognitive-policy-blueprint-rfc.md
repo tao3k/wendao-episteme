@@ -16,7 +16,9 @@ The primary objectives are:
 
 - decouple cognitive policy from `xiuxian-wendao-parsers`;
 - provide machine-readable audit contracts for Project Sentinel;
-- provide repair prompt surfaces for Project AnchoR v3;
+- provide bounded repair-template surfaces for Project AnchoR v3;
+- provide skillsc/BPMN source evolution flows for reference and practice policy
+  learning;
 - preserve human authorship by limiting automated repair to explicit byte
   ranges;
 - prevent semantic rot, knowledge silos, and unaudited decision drift.
@@ -36,6 +38,17 @@ DuckDB queries, graph traversals, Rust checks, Julia analysis jobs, or
 LLM-assisted repair plans. Those compiled artifacts are implementation details
 of the consumer.
 
+Empirical learning flows are different from repair prompts. They must be
+authored as `skill.md` source files and compiled by `skillsc` into BPMN. The
+current `skillsc` prototype compiles Markdown with a large model and emits a
+bounded BPMN subset where executable work appears as `serviceTask` nodes with
+`skillsc:config` extension elements.
+
+The prototype's Node `bpmn-engine` executor is informative but not normative for
+Wendao. The target executor is `qianji-bpmn-engine`. Wendao should preserve the
+`skillsc:config` task contract while replacing the prototype runtime with a
+Qianji host bridge.
+
 This keeps the parser substrate, policy layer, audit tooling, and remediation
 tooling independently evolvable.
 
@@ -50,6 +63,12 @@ logical identity and workspace structure.
 It has high authority because identity and topology must not be rewritten by
 advisory synthesis signals.
 
+Johnny.Decimal is only the topology grammar. It is not a universal category
+catalog. `wendao-episteme` owns syntax rules such as `XX.YY_semantic_name` and
+the `00` through `99` entity range inside each category. The consuming
+repository owns semantic category meaning through a project-local topology
+manifest.
+
 ### Diátaxis
 
 Diátaxis defines document intent policy. It maps knowledge nodes into tutorials,
@@ -58,6 +77,10 @@ how-to guides, explanations, and reference material.
 It governs reader-task classification, not physical identity. A Diátaxis
 mismatch should normally reclassify intent metadata or request curation rather
 than relocate a node.
+
+Unlike Johnny.Decimal semantics, Diátaxis is a closed ontology. The allowed
+values are part of this repository's policy contract: `tutorial`, `how-to`,
+`explanation`, and `reference`.
 
 ### Architecture Decision Records
 
@@ -150,6 +173,10 @@ Policy-local validation queries may live beside the policy they enforce. For
 example, Johnny.Decimal anchor checks are defined in
 `policies/johnny_decimal/validation.sql`.
 
+Validation queries may read project-local manifests only after Wendao exposes
+them as request-scoped logical views. The manifest file itself belongs to the
+consumer repository, not to `wendao-episteme`.
+
 ## AnchoR v3 Repair Contract
 
 Project AnchoR v3 performs surgical remediation. It must operate on explicit
@@ -168,6 +195,33 @@ This makes AI useful for scaffolding work while preventing it from overwriting
 human reasoning, mathematical derivations, code examples, or decision records
 outside the declared range.
 
+## Source Evolution Contract
+
+Source learning is a scheduled review flow, not a runtime mutation path.
+Each framework may define a `sources/<framework>/sources.toml` registry and one
+monolithic `evolution.skill.md` file.
+
+The registry selects external sources and scheduling metadata. The skill file
+owns the source workflow. Consumers compile it with `skillsc` into BPMN before
+execution.
+
+The prototype supports a deliberately small BPMN subset: `startEvent`,
+`endEvent`, `serviceTask`, `exclusiveGateway`, `parallelGateway`, boundary error
+events, and `sequenceFlow`. Each `serviceTask` uses
+`implementation="${environment.services.runAgent}"` and carries
+`skillsc:prompt`, `skillsc:tools`, `skillsc:inputs`, and `skillsc:outputs`.
+
+Until the Qianji adapter exists, source skills must not require BPMN `userTask`
+or `manualTask`. Human review is represented as a review packet and
+`humanReviewRequired` output variable. A later `qianji-bpmn-engine` integration
+may map that review packet onto a typed host-blocking task without changing the
+policy source.
+
+For Johnny.Decimal, this means official references and external practice can
+influence policy only through evidence and a reviewable `Evolution_PR_Draft`.
+LLM analysis must not silently edit `policies/johnny_decimal/validation.sql`,
+consumer `topology.toml`, or any committed category meaning.
+
 ## Repository Structure
 
 ```text
@@ -179,6 +233,10 @@ wendao-episteme/
 │   ├── diataxis/
 │   ├── evergreen/
 │   └── johnny_decimal/
+├── sources/
+│   └── johnny_decimal/
+│       ├── sources.toml
+│       └── evolution.skill.md
 ├── prompts/
 │   └── anchor_v3_fixers/
 ├── README.md
@@ -187,9 +245,15 @@ wendao-episteme/
 
 The `policies/` tree contains portable policy contracts. The `prompts/` tree
 contains repair-template surfaces for bounded AnchoR v3 payload generation.
+The `sources/` tree contains skillsc source files for reference and practice
+evolution workflows. It must not contain static source `prompt.txt` flows.
 
 Policy directories may contain read-only `validation.sql` diagnostics. The
 repository intentionally has no `schemas/` tree and no DDL source model.
+
+Consumer repositories may contain project-local topology manifests such as
+`topology.toml`. Those manifests encode local category meaning. They are not
+copied into `wendao-episteme`.
 
 ## Consumer Boundary
 
@@ -203,6 +267,17 @@ Project Sentinel owns diagnostic rendering and audit protocol execution.
 Project AnchoR v3 owns byte-range planning, CAS validation, overlap detection,
 and final filesystem mutation.
 
+Topology sync and source learning are separate build-time or review-time skill
+flows. A Topology Architect Skill may scan the Git tree, source manifests,
+external reference sources, and existing notes to propose a diff in the consumer
+repository or in `wendao-episteme`. It must not update topology during
+`wendao audit`, and it must not silently change the meaning of existing category
+numbers.
+
+Compiled BPMN is not the policy source of record. The Markdown skill and source
+registry are the governed source artifacts. Generated BPMN should be treated as
+a build artifact unless a downstream release process explicitly pins it.
+
 ## Roadmap
 
 1. Define the Diátaxis policy contract and Sentinel diagnostic mapping.
@@ -211,7 +286,9 @@ and final filesystem mutation.
 4. Define Evergreen connectivity and atomicity audits.
 5. Define ADR sensemaking checks for deprecated references and supersession
    drift.
-6. Add read-only validation queries only after the target Wendao SQL view is
+6. Define skillsc/BPMN source evolution flows for reference and external
+   practice review.
+7. Add read-only validation queries only after the target Wendao SQL view is
    visible through `wendao_sql_tables` and `wendao_sql_columns`.
 
 ## Johnny.Decimal Closed Loop
@@ -229,3 +306,43 @@ Johnny.Decimal anchor enforcement is a three-stage policy loop:
 
 The LLM infers semantic routing. It does not execute writes, bypass CAS guards,
 or rewrite the surrounding document.
+
+## Topology Manifest Sync
+
+Johnny.Decimal semantics are enacted through a project-local `topology.toml`.
+That file is an immutable contract once committed. If a module reorganization
+requires new categories, the change must enter through an explicit diff or pull
+request.
+
+The sync flow has three responsibilities:
+
+1. discover candidate topology pressure from code, dependency graphs, and notes;
+2. propose manifest additions or deprecations without changing existing meaning;
+3. emit reviewable diffs and provenance for human approval.
+
+The runtime flow remains deterministic:
+
+1. `wendao audit` loads `wendao-episteme` syntax policy;
+2. Wendao reads the committed project-local `topology.toml`;
+3. SQL and graph checks validate notes against the enacted map;
+4. Sentinel and AnchoR v3 handle diagnostics and range-bounded repairs.
+
+LLM agents execute governed skills. Git commits enact laws. SQL executes laws.
+
+## Johnny.Decimal Source Learning Loop
+
+Johnny.Decimal source learning is a skill-driven loop:
+
+1. `sources/johnny_decimal/sources.toml` selects reference and practice sources
+   plus scheduling metadata.
+2. `sources/johnny_decimal/evolution.skill.md` is compiled by the
+   `skillsc` prototype into BPMN with `skillsc:config` service-task metadata.
+3. The target Wendao runtime executes the compiled graph through
+   `qianji-bpmn-engine`, not through the prototype's Node `bpmn-engine`.
+4. The BPMN flow runs fetch, parser mapping, and source audit tasks. Official
+   references produce canonical drift reports; external practice sources may
+   produce SQL deviation XML.
+5. The BPMN flow routes non-empty audit reports into critique and policy
+   proposal tasks.
+6. Any policy change exits as an `Evolution_PR_Draft` for human review, never as
+   an automatic runtime write.

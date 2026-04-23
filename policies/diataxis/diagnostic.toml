@@ -1,0 +1,29 @@
+id = "diataxis.intent-diagnostic"
+framework = "diataxis"
+query = "policies/diataxis/validation.sql"
+issue_type = "Episteme_Diataxis_Intent_Violation"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+current_intent = "current_intent"
+
+[[messages]]
+violation_type = "MISSING_DIATAXIS_INTENT"
+message = "Markdown node is missing a Diátaxis intent. Expected one of: tutorial, how-to, explanation, reference."
+remediation_class = "metadata_patch"
+
+[[messages]]
+violation_type = "INVALID_DIATAXIS_INTENT"
+message = "Diátaxis intent is outside the closed ontology. Expected one of: tutorial, how-to, explanation, reference."
+remediation_class = "metadata_patch"

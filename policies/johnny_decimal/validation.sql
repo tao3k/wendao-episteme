@@ -1,8 +1,11 @@
--- Johnny.Decimal anchor validation for Wendao Episteme.
+-- Johnny.Decimal anchor syntax validation for Wendao Episteme.
 --
 -- This file is intentionally read-only. It assumes Wendao has already
 -- assembled the request-scoped SQL surface and exposed parser-owned logical
 -- views. Do not add DDL, mutations, schema setup, or physical type mirrors.
+--
+-- Semantic category meaning is project-local and must come from the consumer
+-- repository's enacted topology manifest.
 
 SELECT
   path AS file_path,
