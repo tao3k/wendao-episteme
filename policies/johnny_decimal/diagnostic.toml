@@ -1,0 +1,29 @@
+id = "johnny-decimal.anchor-id-diagnostic"
+framework = "johnny-decimal"
+query = "policies/johnny_decimal/validation.sql"
+issue_type = "Episteme_JohnnyDecimal_Violation"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+current_id = "current_id"
+
+[[messages]]
+violation_type = "MISSING_ID"
+message = "Markdown node is missing a Johnny.Decimal :ID: property drawer."
+remediation_class = "metadata_patch"
+
+[[messages]]
+violation_type = "INVALID_JD_FORMAT"
+message = "ID violates Johnny.Decimal topology. Expected format: XX.YY_semantic_name."
+remediation_class = "metadata_patch"

@@ -1,0 +1,235 @@
+schema_version = 1
+name = "wendao-episteme"
+description = "Epistemological contracts for Wendao knowledge governance."
+
+[policy]
+default_conflict_resolution = "highest_authority_wins"
+notes = "Identity and contract invariants outrank synthesis recommendations. Execution engines may compile these policies into their own validators."
+
+[boundaries]
+policy_owner = "wendao-episteme"
+parser_substrate = "xiuxian-wendao-parsers"
+audit_tooling = "Project Sentinel"
+repair_tooling = "Project AnchoR v3"
+diagnostic_renderer_owner = "Project Sentinel"
+filesystem_writer_owner = "Project AnchoR v3"
+allowed_source_artifacts = [
+  "policy_contracts",
+  "read_only_validation_queries",
+  "anchor_v3_prompt_surfaces",
+  "diagnostic_semantic_requirements",
+]
+source_artifact_exclusions = [
+  "schemas",
+  "ddl_sql",
+  "parser_implementation",
+  "rust_type_layout",
+  "arrow_recordbatch_layout",
+  "whole_document_rewrite_engine",
+]
+
+[sql]
+query_location = "policy_local_validation_sql"
+statement_mode = "select_only"
+execution_surface = "request_scoped"
+mutation_allowed = false
+ddl_allowed = false
+schema_ownership = "wendao_engine"
+type_ownership = "xiuxian-wendao-parsers"
+public_catalogs = [
+  "wendao_sql_tables",
+  "wendao_sql_columns",
+]
+stable_views = [
+  "repo_content_chunk",
+  "repo_entity",
+]
+forbidden_operations = [
+  "CREATE",
+  "ALTER",
+  "DROP",
+  "INSERT",
+  "UPDATE",
+  "DELETE",
+  "MERGE",
+  "COPY",
+  "ATTACH",
+]
+
+[[policy_queries]]
+id = "johnny-decimal.anchor-id-validation"
+framework = "johnny-decimal"
+path = "policies/johnny_decimal/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_id",
+]
+
+[[diagnostic_mappings]]
+id = "johnny-decimal.anchor-id-diagnostic"
+framework = "johnny-decimal"
+query = "johnny-decimal.anchor-id-validation"
+path = "policies/johnny_decimal/diagnostic.toml"
+issue_type = "Episteme_JohnnyDecimal_Violation"
+renderer_owner = "Project Sentinel"
+
+[[repair_prompts]]
+id = "johnny-decimal.fix-anchor-id"
+framework = "johnny-decimal"
+path = "prompts/anchor_v3_fixers/fix_jd_id.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[frameworks]]
+id = "johnny-decimal"
+name = "Johnny.Decimal"
+kind = "topological_addressing"
+authority_rank = 100
+default_severity = "error"
+owns = [
+  "node.address",
+  "collection.boundary",
+  "canonical_path",
+]
+conflict_strategy = "preserve_topological_identity"
+
+[[frameworks]]
+id = "adr"
+name = "Architecture Decision Records"
+kind = "decision_contract"
+authority_rank = 90
+default_severity = "error"
+owns = [
+  "decision.status",
+  "decision.supersession",
+  "decision.scope",
+]
+conflict_strategy = "preserve_recorded_decision_contract"
+
+[[frameworks]]
+id = "diataxis"
+name = "Diátaxis"
+kind = "intent_classification"
+authority_rank = 70
+default_severity = "warning"
+owns = [
+  "node.intent",
+  "reader_task",
+  "document_mode",
+]
+conflict_strategy = "reclassify_intent_without_rewriting_identity"
+
+[[frameworks]]
+id = "evergreen-notes"
+name = "Evergreen Notes"
+kind = "atomic_synthesis"
+authority_rank = 60
+default_severity = "advisory"
+owns = [
+  "note.atomicity",
+  "note.link_density",
+  "graph.connectivity",
+  "relation_block",
+  "semantic_neighbors",
+]
+conflict_strategy = "recommend_synthesis_without_rewriting_identity"
+
+[[frameworks]]
+id = "temporal-scaffolding"
+name = "Temporal Scaffolding"
+kind = "authorship_boundary"
+authority_rank = 55
+default_severity = "advisory"
+owns = [
+  "repair.scope",
+  "byte_range_payload",
+  "human_attention_budget",
+]
+conflict_strategy = "automate_structure_without_rewriting_reasoning"
+
+[[frameworks]]
+id = "epistemic-sensemaking"
+name = "Epistemic Sensemaking"
+kind = "consensus_evolution"
+authority_rank = 80
+default_severity = "warning"
+owns = [
+  "diagnostic.disagreement",
+  "provenance.bundle",
+  "consensus.proposal",
+]
+conflict_strategy = "surface_disagreement_before_mutation"
+
+[[conflicts]]
+id = "topology-vs-synthesis"
+primary = "johnny-decimal"
+secondary = "evergreen-notes"
+severity = "warning"
+when = "A synthesis link crosses a topological boundary or suggests relocating a note."
+resolution = "Keep the canonical address stable. Emit a repair recommendation or require an explicit move decision before relocation."
+
+[[conflicts]]
+id = "decision-contract-vs-intent"
+primary = "adr"
+secondary = "diataxis"
+severity = "error"
+when = "A document is classified by reader intent in a way that contradicts its recorded decision contract."
+resolution = "Preserve the ADR contract. Reclassify the intent layer or create a superseding decision record."
+
+[[conflicts]]
+id = "topology-vs-intent"
+primary = "johnny-decimal"
+secondary = "diataxis"
+severity = "warning"
+when = "A document's intent suggests a different collection than its canonical topological address."
+resolution = "Keep the address stable. Flag the mismatch for explicit curation instead of moving the node automatically."
+
+[[conflicts]]
+id = "authorship-vs-structural-repair"
+primary = "temporal-scaffolding"
+secondary = "evergreen-notes"
+severity = "warning"
+when = "A repair proposal would improve graph connectivity by editing author-owned prose outside a declared repair range."
+resolution = "Reject whole-document rewriting. Restrict the proposal to explicit relation blocks, metadata drawers, or another governed ByteRange."
+
+[[conflicts]]
+id = "deprecated-decision-reference"
+primary = "epistemic-sensemaking"
+secondary = "adr"
+severity = "warning"
+when = "New material references a deprecated or superseded decision without acknowledging the newer decision contract."
+resolution = "Emit a disagreement diagnostic with provenance. Propose a contextual update or supersession note before any write."
+
+[diagnostics]
+protocol_owner = "Project Sentinel"
+format = "xml"
+required_fields = [
+  "policy_id",
+  "framework_id",
+  "severity",
+  "source_path",
+  "byte_range",
+  "provenance",
+  "remediation_class",
+]
+
+[repair]
+protocol_owner = "Project AnchoR v3"
+hash_algorithm = "blake3"
+default_write_mode = "byte_range_compare_and_swap"
+allow_whole_document_rewrite = false
+llm_authority_source = false
+required_guards = [
+  "byte_range",
+  "original_content_or_hash",
+  "non_overlapping_payloads",
+  "provenance",
+]
