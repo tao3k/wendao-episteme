@@ -115,6 +115,107 @@ Remediation should be advisory by default. For example, an isolated note may
 receive suggested wiki-link insertions for a relation block, but the system must
 not rewrite the author's core prose to force connectivity.
 
+### MOC
+
+MOC policy governs route hubs for dense note clusters. It treats a Map of
+Content as a graph-navigation surface, not as a subjective summary quality
+score.
+
+The policy checks for scopes whose note count exceeds the hub threshold without
+an explicit MOC node and for MOC nodes whose outgoing references are too sparse
+to function as route hubs.
+
+Automated repair is index-scoped. AnchoR v3 may add a compact route index only
+inside an explicit range in an existing MOC file. Missing MOC creation remains a
+manual governance action.
+
+### Folgezettel
+
+Folgezettel policy governs lineage-sequence metadata for notes that opt into
+causal extension chains. A child sequence must have an existing parent sequence,
+and sequence ids must remain unique across the audited graph.
+
+The policy does not replace Johnny.Decimal identity. Folgezettel records a
+knowledge-growth path, while Johnny.Decimal remains the canonical topology.
+
+Automated repair is metadata-scoped. AnchoR v3 may rewrite only the reported
+sequence range when the diagnostic includes exact bytes and a reviewable
+replacement candidate. It must not create parent notes or rewrite prose.
+
+### IBIS
+
+IBIS policy governs argumentation graph structure. It checks that issues have
+position responses and that positions target known issues.
+
+IBIS is not an adjudication engine. It surfaces unresolved discourse so humans
+can close the loop or record a decision through ADR.
+
+Automated repair is debate-scaffold scoped. AnchoR v3 may add a placeholder
+position only inside an explicit range. It must not decide the issue, fabricate
+arguments, or mark a resolution.
+
+### Structural Proprioception
+
+Structural Proprioception policy governs graph-health self-awareness. It checks
+whether resolved reference edges form bounded circular dependencies that can
+trap navigation, search, or repair flows.
+
+The policy is intentionally based on stable SQL surfaces. Because
+`reference_occurrence` exposes reference names rather than resolved target
+paths, the validation query resolves targets by matching reference names against
+known node titles and ids from `repo_content_chunk`.
+
+Sentinel v2 extends the same boundary to source alignment. Documents may use
+`OBSERVE` metadata to name code symbols they claim to describe. The
+Proprioception policy compares those names with the `local_symbol` view and
+reports semantic drift when a documented symbol disappears from the latest
+symbol index.
+
+Automated repair is relation- or metadata-scoped. AnchoR v3 may soften one
+selected relation edge or update one reported observation pointer only when
+Sentinel reports exact bytes and the selected target. It must not rewrite
+author prose, rename code symbols, move nodes, or perform global graph surgery.
+
+### Search as Reasoning
+
+Search as Reasoning policy treats embedded queries as reasoning artifacts.
+Hard-coded path equality is fragile because it couples retrieval behavior to a
+physical file location rather than a stable semantic identity.
+
+The policy scans Markdown code fences for SQL, DuckDB, and GraphQL snippets
+that use exact `path` or `file_path` predicates. It reports those snippets as
+query-fragility diagnostics.
+
+The policy also checks code-symbol references that resolve through
+`local_symbol`. A cross-file symbol reference should use a structural UID such
+as `path/to/file::owner::symbol`, not a bare symbol name.
+
+Automated repair is query- or reference-scoped. AnchoR v3 may replace a brittle
+predicate with a stable id, topology, intent, or tag predicate only when the
+diagnostic provides exact bytes and an unambiguous replacement. It may replace
+a reported bare symbol with a structural UID. It must preserve query intent.
+
+### Semantic Consistency
+
+Semantic Consistency policy governs lifecycle vocabulary alignment across
+documentation, audit, and repair surfaces. It keeps status values inside the
+enacted vocabulary that Wendao tooling understands.
+
+The policy checks status metadata against the enacted values `DRAFT`,
+`PROPOSED`, `ACCEPTED`, `ACTIVE`, `HARDENING`, `HARDENED`, `DEPRECATED`, and
+`SUPERSEDED`.
+
+Agent-maintained notes may opt into stale-read detection. When a document
+records `DEPENDS_ON_FILE` and `DEPENDS_ON_HASH`, the optional
+`project_content_fingerprint` view lets Sentinel compare the recorded hash with
+the live dependency hash.
+
+Automated repair is metadata-scoped for status typos only. AnchoR v3 may
+correct a misspelled status only when the replacement is unambiguous. Stale-read
+diagnostics route to planner review; they are not authority for direct prose
+mutation. New lifecycle values require source evolution review before becoming
+valid protocol vocabulary.
+
 ### Temporal Scaffolding
 
 Temporal Scaffolding defines the human-AI authorship boundary. AI should carry
@@ -136,6 +237,28 @@ When a deprecated ADR is still referenced by new code or documents, Sentinel
 should report the disagreement with provenance and range information. LLM repair
 logic may propose a contextual fix, but the final write path must preserve
 authority, provenance, and conflict visibility.
+
+### Conflict Arbitration Matrix
+
+The conflict matrix in `episteme.toml` is the jurisprudence layer for
+cross-framework disagreement. `authority_rank` chooses the governing invariant;
+`[[conflicts]]` records the enacted precedent and resolution text.
+
+`policies/conflicts/validation.sql` exposes a read-only Sentinel surface for
+selected conflicts:
+
+- `topology-vs-synthesis` keeps Johnny.Decimal identity stable when synthesis
+  pressure crosses a topological boundary;
+- `decision-contract-vs-intent` preserves ADR contract authority when reader
+  intent metadata classifies a decision as tutorial or explanation material;
+- `deprecated-decision-reference` routes stale ADR pointers through
+  Sensemaking before mutation.
+
+Conflict diagnostics are arbitration packets. They do not perform repair.
+Only the ADR-vs-Diátaxis case has a bounded AnchoR prompt because its safe
+resolution is local intent metadata reclassification.
+The `sources/sensemaking` skill surface is the review flow for evolving these
+precedents without runtime mutation.
 
 ## Sentinel Audit Contract
 
@@ -198,6 +321,8 @@ Required repair constraints:
 - every payload targets a known `ByteRange`;
 - payloads include the original byte content or an equivalent Blake3 guard;
 - overlapping payloads must be rejected or merged by a deterministic planner;
+- target ranges must remain inside parser-reported scaffold zones unless
+  Sentinel reports another governed safe range;
 - whole-document rewrites are outside the default contract;
 - LLM output is never an authority source;
 - final writes must preserve provenance and expose unresolved disagreements.
@@ -205,6 +330,22 @@ Required repair constraints:
 This makes AI useful for scaffolding work while preventing it from overwriting
 human reasoning, mathematical derivations, code examples, or decision records
 outside the declared range.
+
+### Authorship Boundary Defense
+
+Temporal Scaffolding becomes a physical write-time guard in Project AnchoR v3.
+The parser substrate classifies byte ranges into protected author zones and
+governed scaffold zones. Protected zones include paragraphs, lists, code
+blocks, mathematical content, and decision rationale. Governed scaffold zones
+include metadata drawers, relation blocks, footer blocks, and explicit
+Sentinel-reported safe ranges.
+
+AnchoR must reject any `SurgicalFix` whose target range is not fully contained
+by one governed scaffold zone. The failure diagnostic is
+`Episteme_AuthorshipBoundary_Violation` with conflict id
+`authorship-vs-structural-repair`. The replan prompt may move the proposal into
+a safe scaffold range only when Sentinel provides exact original bytes for that
+range.
 
 ## Source Evolution Contract
 
@@ -233,9 +374,25 @@ influence policy only through evidence and a reviewable `Evolution_PR_Draft`.
 LLM analysis must not silently edit `policies/johnny_decimal/validation.sql`,
 consumer `topology.toml`, or any committed category meaning.
 
+Topology manifest sync is an on-demand review flow, not scheduled external
+source learning. `sources/topology/evolution.skill.md` reads the consumer
+topology manifest and workspace evidence, then emits an append-only
+`Proposed_Topology_Diff`. It must reject renumbering, renaming, deleting, or
+moving existing categories and anchor ids.
+
 For ADR, external templates may influence recommended checks through evidence
 and review. They must not become hard-required sections until a human accepts
 the proposal and records the governance change.
+
+For MOC, Folgezettel, and IBIS, external sources may influence thresholds and
+recommended checks only through reviewable evidence packets. They must not
+silently change route-hub thresholds, lineage depth policy, or argumentation
+status semantics during audit or repair.
+
+For Structural Proprioception, Search as Reasoning, and Semantic Consistency,
+local research notes may inform policy evolution only through source skills.
+They must not silently change cycle depth, query predicate policy, or status
+vocabulary during audit or repair.
 
 ## Repository Structure
 
@@ -245,9 +402,17 @@ wendao-episteme/
 │   └── rfcs/
 ├── policies/
 │   ├── adr/
+│   ├── authorship/
+│   ├── conflicts/
 │   ├── diataxis/
 │   ├── evergreen/
-│   └── johnny_decimal/
+│   ├── folgezettel/
+│   ├── ibis/
+│   ├── johnny_decimal/
+│   ├── moc/
+│   ├── proprioception/
+│   ├── search_reasoning/
+│   └── semantic_consistency/
 ├── sources/
 │   ├── adr/
 │   │   ├── sources.toml
@@ -258,7 +423,31 @@ wendao-episteme/
 │   ├── evergreen/
 │   │   ├── sources.toml
 │   │   └── evolution.skill.md
-│   └── johnny_decimal/
+│   ├── folgezettel/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── ibis/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── johnny_decimal/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── moc/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── proprioception/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── search_reasoning/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── semantic_consistency/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── sensemaking/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   └── topology/
 │       ├── sources.toml
 │       └── evolution.skill.md
 ├── prompts/
@@ -292,11 +481,10 @@ Project AnchoR v3 owns byte-range planning, CAS validation, overlap detection,
 and final filesystem mutation.
 
 Topology sync and source learning are separate build-time or review-time skill
-flows. A Topology Architect Skill may scan the Git tree, source manifests,
-external reference sources, and existing notes to propose a diff in the consumer
-repository or in `wendao-episteme`. It must not update topology during
-`wendao audit`, and it must not silently change the meaning of existing category
-numbers.
+flows. A Topology Architect Skill may scan the consumer manifest, workspace
+structure, local symbols, and existing notes to propose an append-only diff in
+the consumer repository. It must not update topology during `wendao audit`, and
+it must not silently change the meaning of existing category numbers.
 
 Compiled BPMN is not the policy source of record. The Markdown skill and source
 registry are the governed source artifacts. Generated BPMN should be treated as
@@ -378,8 +566,17 @@ request.
 The sync flow has three responsibilities:
 
 1. discover candidate topology pressure from code, dependency graphs, and notes;
-2. propose manifest additions or deprecations without changing existing meaning;
+2. propose manifest additions without changing existing meaning;
 3. emit reviewable diffs and provenance for human approval.
+
+The `topology_manifest` contract is append-only. The Topology Architect Skill
+may propose new categories, new subcategories, or unmapped path bindings. It
+must reject proposals that rename existing categories, renumber categories,
+delete categories, rewrite existing anchor ids, or move existing notes.
+
+The sync source files are `sources/topology/sources.toml` and
+`sources/topology/evolution.skill.md`. They are governed source artifacts; the
+consumer `topology.toml` remains outside this repository.
 
 The runtime flow remains deterministic:
 

@@ -1,0 +1,36 @@
+schema_version = 1
+framework = "johnny-decimal"
+registry_kind = "consumer_topology_sync_sources"
+
+[execution]
+skill_path = "evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+output_mode = "reviewable_diff_only"
+runtime_policy_mutation_allowed = false
+human_review_required = true
+
+[[source]]
+id = "consumer-topology-manifest"
+name = "Consumer Topology Manifest"
+type = "consumer_manifest"
+default_path = "topology.toml"
+enabled = true
+authority = "consumer_contract"
+notes = "Project-local semantic map. The sync flow may propose append-only additions but must not renumber existing categories."
+
+[[source]]
+id = "consumer-workspace-structure"
+name = "Consumer Workspace Structure"
+type = "request_scoped_views"
+enabled = true
+authority = "workspace_evidence"
+views = [
+  "local_symbol",
+  "repo_entity",
+  "project_topology_category",
+]
+notes = "Workspace evidence used to detect unmapped directories, crates, packages, and symbol clusters."

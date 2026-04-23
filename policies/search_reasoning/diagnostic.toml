@@ -1,0 +1,29 @@
+id = "search-reasoning.query-fragility-diagnostic"
+framework = "search-reasoning"
+query = "policies/search_reasoning/validation.sql"
+issue_type = "Episteme_SearchReasoning_Violation"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+query_context = "query_context"
+
+[[messages]]
+violation_type = "SEARCH_REASONING_BRITTLE_QUERY"
+message = "Embedded query uses brittle path equality instead of a stable semantic predicate."
+remediation_class = "query_predicate_patch"
+
+[[messages]]
+violation_type = "SEARCH_REASONING_BRITTLE_UID"
+message = "Code symbol reference uses an unstructured name instead of a structural UID."
+remediation_class = "uid_reference_patch"

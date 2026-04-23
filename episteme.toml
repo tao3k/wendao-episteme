@@ -17,6 +17,7 @@ allowed_source_artifacts = [
   "policy_contracts",
   "read_only_validation_queries",
   "anchor_v3_prompt_surfaces",
+  "repair_guard_surfaces",
   "diagnostic_semantic_requirements",
   "source_registries",
   "skillsc_skill_surfaces",
@@ -44,13 +45,16 @@ type_ownership = "xiuxian-wendao-parsers"
 public_catalogs = [
   "wendao_sql_tables",
   "wendao_sql_columns",
+  "wendao_sql_view_sources",
 ]
 stable_views = [
+  "local_symbol",
   "repo_content_chunk",
   "repo_entity",
   "reference_occurrence",
 ]
 optional_project_views = [
+  "project_content_fingerprint",
   "project_topology_category",
   "project_diataxis_path_rule",
 ]
@@ -126,6 +130,7 @@ framework = "evergreen-notes"
 path = "policies/evergreen/validation.sql"
 statement_mode = "select_only"
 reads = [
+  "local_symbol",
   "repo_content_chunk",
   "reference_occurrence",
   "wendao_sql_columns",
@@ -157,6 +162,164 @@ emits = [
   "target_adr_id",
   "target_adr_status",
   "replacement_adr_id",
+]
+
+[[policy_queries]]
+id = "moc.density-validation"
+framework = "moc"
+path = "policies/moc/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "scope_id",
+  "current_metric_name",
+  "current_metric_value",
+]
+
+[[policy_queries]]
+id = "folgezettel.lineage-validation"
+framework = "folgezettel"
+path = "policies/folgezettel/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "local_symbol",
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_sequence",
+  "related_sequence",
+]
+
+[[policy_queries]]
+id = "ibis.argumentation-validation"
+framework = "ibis"
+path = "policies/ibis/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "ibis_node_id",
+  "related_id",
+  "current_metric_value",
+]
+
+[[policy_queries]]
+id = "structural-proprioception.cycle-validation"
+framework = "structural-proprioception"
+path = "policies/proprioception/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "local_symbol",
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_context",
+  "current_metric_value",
+]
+
+[[policy_queries]]
+id = "search-reasoning.query-fragility-validation"
+framework = "search-reasoning"
+path = "policies/search_reasoning/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "local_symbol",
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "query_context",
+]
+
+[[policy_queries]]
+id = "semantic-consistency.status-validation"
+framework = "semantic-consistency"
+path = "policies/semantic_consistency/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_status",
+]
+
+[[policy_queries]]
+id = "semantic-consistency.stale-read-validation"
+framework = "semantic-consistency"
+path = "policies/semantic_consistency/stale_read_validation.sql"
+statement_mode = "select_only"
+requires_optional_view = "project_content_fingerprint"
+reads = [
+  "repo_content_chunk",
+  "project_content_fingerprint",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "dependency_path",
+  "recorded_hash",
+  "live_hash",
+]
+
+[[policy_queries]]
+id = "conflicts.matrix-validation"
+framework = "epistemic-sensemaking"
+path = "policies/conflicts/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "conflict_id",
+  "primary_framework",
+  "secondary_framework",
+  "resolution",
+  "current_context",
 ]
 
 [[diagnostic_mappings]]
@@ -199,6 +362,70 @@ path = "policies/adr/diagnostic.toml"
 issue_type = "Episteme_ADR_Violation"
 renderer_owner = "Project Sentinel"
 
+[[diagnostic_mappings]]
+id = "moc.density-diagnostic"
+framework = "moc"
+query = "moc.density-validation"
+path = "policies/moc/diagnostic.toml"
+issue_type = "Episteme_MOC_Structural_Anomaly"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "folgezettel.lineage-diagnostic"
+framework = "folgezettel"
+query = "folgezettel.lineage-validation"
+path = "policies/folgezettel/diagnostic.toml"
+issue_type = "Episteme_Folgezettel_Broken_Lineage"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "ibis.argumentation-diagnostic"
+framework = "ibis"
+query = "ibis.argumentation-validation"
+path = "policies/ibis/diagnostic.toml"
+issue_type = "Episteme_IBIS_Violation"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "structural-proprioception.cycle-diagnostic"
+framework = "structural-proprioception"
+query = "structural-proprioception.cycle-validation"
+path = "policies/proprioception/diagnostic.toml"
+issue_type = "Episteme_Proprioception_Graph_Health"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "search-reasoning.query-fragility-diagnostic"
+framework = "search-reasoning"
+query = "search-reasoning.query-fragility-validation"
+path = "policies/search_reasoning/diagnostic.toml"
+issue_type = "Episteme_SearchReasoning_Violation"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "semantic-consistency.status-diagnostic"
+framework = "semantic-consistency"
+query = "semantic-consistency.status-validation"
+path = "policies/semantic_consistency/diagnostic.toml"
+issue_type = "Episteme_SemanticConsistency_Violation"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "semantic-consistency.stale-read-diagnostic"
+framework = "semantic-consistency"
+query = "semantic-consistency.stale-read-validation"
+path = "policies/semantic_consistency/stale_read_diagnostic.toml"
+issue_type = "Episteme_SemanticConsistency_StaleRead"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "conflicts.matrix-diagnostic"
+framework = "epistemic-sensemaking"
+query = "conflicts.matrix-validation"
+path = "policies/conflicts/diagnostic.toml"
+issue_type = "Episteme_Conflict_Arbitration"
+renderer_owner = "Project Sentinel"
+
 [[repair_prompts]]
 id = "johnny-decimal.fix-anchor-id"
 framework = "johnny-decimal"
@@ -226,6 +453,79 @@ framework = "adr"
 path = "prompts/anchor_v3_fixers/fix_adr_reference.txt"
 repair_tooling = "Project AnchoR v3"
 write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "moc.fix-empty-hub"
+framework = "moc"
+path = "prompts/anchor_v3_fixers/fix_moc_empty.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "folgezettel.fix-sequence"
+framework = "folgezettel"
+path = "prompts/anchor_v3_fixers/fix_folgezettel.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "ibis.add-pending-position"
+framework = "ibis"
+path = "prompts/anchor_v3_fixers/fix_ibis.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "structural-proprioception.fix-cycle"
+framework = "structural-proprioception"
+path = "prompts/anchor_v3_fixers/fix_proprioception_cycle.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "structural-proprioception.fix-observe-drift"
+framework = "structural-proprioception"
+path = "prompts/anchor_v3_fixers/fix_proprioception_observe.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "search-reasoning.fix-brittle-query"
+framework = "search-reasoning"
+path = "prompts/anchor_v3_fixers/fix_search_reasoning.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "semantic-consistency.fix-status"
+framework = "semantic-consistency"
+path = "prompts/anchor_v3_fixers/fix_semantic_consistency.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "epistemic-sensemaking.fix-decision-intent-conflict"
+framework = "epistemic-sensemaking"
+path = "prompts/anchor_v3_fixers/fix_conflict_decision_intent.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "temporal-scaffolding.replan-authorship-boundary"
+framework = "temporal-scaffolding"
+path = "prompts/anchor_v3_fixers/fix_authorship_boundary.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "diagnostic_disagreement_replan"
+
+[[repair_guards]]
+id = "temporal-scaffolding.authorship-boundary"
+framework = "temporal-scaffolding"
+path = "policies/authorship/diagnostic.toml"
+guard_owner = "Project AnchoR v3"
+enforcement_phase = "pre_write"
+failure_issue_type = "Episteme_AuthorshipBoundary_Violation"
+conflict_id = "authorship-vs-structural-repair"
+replan_prompt = "temporal-scaffolding.replan-authorship-boundary"
 
 [[source_evolution_skill_surfaces]]
 id = "johnny-decimal.source-evolution"
@@ -375,6 +675,302 @@ source_bpmn_elements_excluded_until_qianji_adapter = [
   "manualTask",
 ]
 
+[[source_evolution_skill_surfaces]]
+id = "moc.source-evolution"
+framework = "moc"
+sources_path = "sources/moc/sources.toml"
+skill_path = "sources/moc/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "folgezettel.source-evolution"
+framework = "folgezettel"
+sources_path = "sources/folgezettel/sources.toml"
+skill_path = "sources/folgezettel/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "ibis.source-evolution"
+framework = "ibis"
+sources_path = "sources/ibis/sources.toml"
+skill_path = "sources/ibis/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "structural-proprioception.source-evolution"
+framework = "structural-proprioception"
+sources_path = "sources/proprioception/sources.toml"
+skill_path = "sources/proprioception/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "search-reasoning.source-evolution"
+framework = "search-reasoning"
+sources_path = "sources/search_reasoning/sources.toml"
+skill_path = "sources/search_reasoning/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "semantic-consistency.source-evolution"
+framework = "semantic-consistency"
+sources_path = "sources/semantic_consistency/sources.toml"
+skill_path = "sources/semantic_consistency/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "epistemic-sensemaking.source-evolution"
+framework = "epistemic-sensemaking"
+sources_path = "sources/sensemaking/sources.toml"
+skill_path = "sources/sensemaking/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "topology-manifest.sync"
+framework = "johnny-decimal"
+sources_path = "sources/topology/sources.toml"
+skill_path = "sources/topology/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "on_demand_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
 [[frameworks]]
 id = "johnny-decimal"
 name = "Johnny.Decimal"
@@ -421,13 +1017,28 @@ owner = "consumer_repository"
 default_path = "topology.toml"
 sync_command = "wendao episteme sync"
 sync_mode = "skillsc_bpmn_review_flow"
+sync_sources_path = "sources/topology/sources.toml"
+sync_skill_path = "sources/topology/evolution.skill.md"
 runtime_mutation_allowed = false
 llm_runtime_mutation_allowed = false
 category_identity_mutation_allowed = false
+proposal_mode = "append_only"
 agent_role = "Topology Architect Skill"
 syntax_policy_owner = "wendao-episteme"
 semantic_map_owner = "consumer_repository"
 enactment = "git_commit"
+allowed_proposal_operations = [
+  "append_new_category",
+  "append_new_subcategory",
+  "add_unmapped_path_binding",
+]
+forbidden_proposal_operations = [
+  "rename_existing_category",
+  "renumber_existing_category",
+  "delete_existing_category",
+  "rewrite_existing_anchor_id",
+  "move_existing_note",
+]
 
 [[frameworks]]
 id = "evergreen-notes"
@@ -445,14 +1056,99 @@ owns = [
 conflict_strategy = "recommend_synthesis_without_rewriting_identity"
 
 [[frameworks]]
+id = "moc"
+name = "Map of Content"
+kind = "topological_hub"
+authority_rank = 65
+default_severity = "advisory"
+owns = [
+  "hub.density",
+  "hub.route_index",
+  "index.connectivity",
+  "cluster.navigation",
+]
+conflict_strategy = "recommend_synthesis_without_rewriting_identity"
+
+[[frameworks]]
+id = "folgezettel"
+name = "Zettelkasten Folgezettel"
+kind = "lineage_tracking"
+authority_rank = 85
+default_severity = "error"
+owns = [
+  "lineage.sequence",
+  "lineage.parent",
+  "causal_derivation",
+]
+conflict_strategy = "preserve_lineage_continuity"
+
+[[frameworks]]
+id = "ibis"
+name = "IBIS Argumentation"
+kind = "discourse_graph"
+authority_rank = 75
+default_severity = "warning"
+owns = [
+  "ibis.node_type",
+  "ibis.position_edge",
+  "discourse.resolution",
+]
+conflict_strategy = "surface_open_questions_without_deciding_them"
+
+[[frameworks]]
+id = "structural-proprioception"
+name = "Structural Proprioception"
+kind = "graph_health_monitoring"
+authority_rank = 95
+default_severity = "error"
+owns = [
+  "graph.acyclic_paths",
+  "topology.balance",
+  "cycle.detection",
+  "symbol.drift",
+  "observation.alignment",
+]
+conflict_strategy = "break_circular_dependency_first"
+
+[[frameworks]]
+id = "search-reasoning"
+name = "Search as Reasoning"
+kind = "query_reasoning_contract"
+authority_rank = 72
+default_severity = "warning"
+owns = [
+  "query.semantic_predicate",
+  "search.intent_stability",
+  "reasoning.path_robustness",
+  "uid.structural_encoding",
+]
+conflict_strategy = "prefer_semantic_predicates_over_brittle_paths"
+
+[[frameworks]]
+id = "semantic-consistency"
+name = "Semantic Consistency"
+kind = "protocol_alignment"
+authority_rank = 88
+default_severity = "error"
+owns = [
+  "protocol.status",
+  "metadata.enum_alignment",
+  "cross_runtime_semantics",
+  "stale_read.hash_guard",
+]
+conflict_strategy = "preserve_enacted_protocol_vocabulary"
+
+[[frameworks]]
 id = "temporal-scaffolding"
 name = "Temporal Scaffolding"
 kind = "authorship_boundary"
 authority_rank = 55
 default_severity = "advisory"
 owns = [
+  "authorship_boundary",
   "repair.scope",
   "byte_range_payload",
+  "byte_zone_classification",
   "human_attention_budget",
 ]
 conflict_strategy = "automate_structure_without_rewriting_reasoning"
@@ -510,6 +1206,54 @@ severity = "warning"
 when = "New material references a deprecated or superseded decision without acknowledging the newer decision contract."
 resolution = "Emit a disagreement diagnostic with provenance. Propose a contextual update or supersession note before any write."
 
+[[conflicts]]
+id = "moc-vs-topology"
+primary = "johnny-decimal"
+secondary = "moc"
+severity = "warning"
+when = "A MOC route hub suggests changing the canonical address of notes in a dense cluster."
+resolution = "Keep canonical addresses stable. Add or repair route indexes only through explicit ByteRanges."
+
+[[conflicts]]
+id = "folgezettel-vs-moc"
+primary = "folgezettel"
+secondary = "moc"
+severity = "warning"
+when = "A navigation hub would flatten or obscure an explicit lineage sequence."
+resolution = "Preserve sequence metadata. Use MOCs as supplemental route surfaces, not replacements for lineage."
+
+[[conflicts]]
+id = "ibis-vs-adr"
+primary = "adr"
+secondary = "ibis"
+severity = "warning"
+when = "An open IBIS issue conflicts with an active ADR contract."
+resolution = "Preserve the active ADR. Surface the IBIS issue as a debate scaffold or require a superseding ADR."
+
+[[conflicts]]
+id = "cycle-vs-synthesis"
+primary = "structural-proprioception"
+secondary = "evergreen-notes"
+severity = "error"
+when = "A synthesis link creates a bounded circular dependency in the resolved graph."
+resolution = "Surface the cycle first. Propose relation-edge softening before adding more synthesis links."
+
+[[conflicts]]
+id = "semantic-query-vs-path-shortcut"
+primary = "search-reasoning"
+secondary = "johnny-decimal"
+severity = "warning"
+when = "A query relies on exact path equality instead of stable topology or metadata predicates."
+resolution = "Prefer stable semantic predicates. Keep path shortcuts only when explicitly justified by performance evidence."
+
+[[conflicts]]
+id = "status-protocol-vs-local-label"
+primary = "semantic-consistency"
+secondary = "diataxis"
+severity = "error"
+when = "A local metadata label introduces a lifecycle status outside the enacted protocol vocabulary."
+resolution = "Preserve the enacted status vocabulary. Route new lifecycle labels through source evolution review."
+
 [diagnostics]
 protocol_owner = "Project Sentinel"
 format = "xml"
@@ -534,4 +1278,27 @@ required_guards = [
   "original_content_or_hash",
   "non_overlapping_payloads",
   "provenance",
+  "authorship_boundary",
 ]
+
+[repair.authorship_boundary]
+enabled = true
+zone_source = "xiuxian-wendao-parsers"
+enforcement_phase = "pre_write"
+failure_issue_type = "Episteme_AuthorshipBoundary_Violation"
+conflict_id = "authorship-vs-structural-repair"
+replan_prompt = "temporal-scaffolding.replan-authorship-boundary"
+allowed_zones = [
+  "metadata_drawer",
+  "relation_block",
+  "footer_block",
+  "sentinel_reported_governed_range",
+]
+protected_zones = [
+  "paragraph",
+  "list",
+  "code_block",
+  "math_block",
+  "decision_rationale",
+]
+range_rule = "target_range_must_be_fully_contained_by_one_allowed_zone"

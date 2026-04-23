@@ -1,0 +1,40 @@
+schema_version = 1
+framework = "moc"
+registry_kind = "reference_and_practice_sources"
+
+[execution]
+skill_path = "evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+output_mode = "reviewable_diff_only"
+runtime_policy_mutation_allowed = false
+human_review_required = true
+
+[[source]]
+id = "linking-your-thinking"
+name = "Linking Your Thinking"
+url = "https://www.linkingyourthinking.com/"
+type = "website"
+cron = "0 0 1 * *"
+enabled = true
+entrypoints = [
+  "/",
+]
+authority = "practice_reference"
+notes = "Nick Milo's public Linking Your Thinking surface for MOC and route-hub practice review."
+
+[[source]]
+id = "linking-your-thinking-maps"
+name = "LYT Maps"
+url = "https://blog.linkingyourthinking.com/maps/"
+type = "website"
+cron = "0 0 15 * *"
+enabled = true
+entrypoints = [
+  "/",
+]
+authority = "practice_reference"
+notes = "Public LYT map examples for reviewing hub density and index conventions."

@@ -1,0 +1,24 @@
+id = "semantic-consistency.status-diagnostic"
+framework = "semantic-consistency"
+query = "policies/semantic_consistency/validation.sql"
+issue_type = "Episteme_SemanticConsistency_Violation"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+current_status = "current_status"
+
+[[messages]]
+violation_type = "SEMANTIC_CONSISTENCY_INVALID_STATUS"
+message = "Document status is outside the enacted semantic consistency vocabulary."
+remediation_class = "status_metadata_patch"

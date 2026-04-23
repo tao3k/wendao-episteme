@@ -1,0 +1,38 @@
+id = "conflicts.matrix-diagnostic"
+framework = "epistemic-sensemaking"
+query = "policies/conflicts/validation.sql"
+issue_type = "Episteme_Conflict_Arbitration"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+conflict_id = "conflict_id"
+primary_framework = "primary_framework"
+secondary_framework = "secondary_framework"
+resolution = "resolution"
+current_context = "current_context"
+
+[[messages]]
+violation_type = "CONFLICT_TOPOLOGY_VS_SYNTHESIS"
+message = "Synthesis pressure crosses a Johnny.Decimal boundary and must not rewrite canonical identity."
+remediation_class = "manual_review"
+
+[[messages]]
+violation_type = "CONFLICT_DECISION_VS_INTENT"
+message = "Reader intent conflicts with ADR contract authority."
+remediation_class = "metadata_patch"
+
+[[messages]]
+violation_type = "CONFLICT_DEPRECATED_DECISION_REFERENCE"
+message = "Material references an expired decision contract and needs visible sensemaking before mutation."
+remediation_class = "consensus_review"

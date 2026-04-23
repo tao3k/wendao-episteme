@@ -1,0 +1,27 @@
+id = "authorship.boundary-diagnostic"
+framework = "temporal-scaffolding"
+issue_type = "Episteme_AuthorshipBoundary_Violation"
+renderer_owner = "Project Sentinel"
+guard_owner = "Project AnchoR v3"
+enforcement_phase = "pre_write"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+attempted_start = "attempted_start"
+attempted_end = "attempted_end"
+attempted_zone = "attempted_zone"
+allowed_zones = "allowed_zones"
+conflict_id = "authorship-vs-structural-repair"
+remediation_class = "replan_to_scaffold_zone"
+
+[[messages]]
+violation_type = "AUTHORSHIP_BOUNDARY_VIOLATION"
+message = "Repair payload attempts to modify protected author-owned prose outside governed scaffold zones."
+remediation_class = "replan_to_scaffold_zone"

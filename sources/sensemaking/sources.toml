@@ -1,0 +1,32 @@
+schema_version = 1
+framework = "epistemic-sensemaking"
+registry_kind = "local_conflict_review_sources"
+
+[execution]
+skill_path = "evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+output_mode = "reviewable_diff_only"
+runtime_policy_mutation_allowed = false
+human_review_required = true
+
+[[source]]
+id = "wendao-episteme-conflict-matrix"
+name = "Wendao Episteme Conflict Matrix"
+path = "episteme.toml"
+type = "local_file"
+enabled = true
+authority = "governed_policy"
+notes = "Local conflict arbitration matrix used as the enacted jurisprudence surface."
+
+[[source]]
+id = "wendao-project-sentinel-v2"
+name = "Wendao Project Sentinel v2"
+path = "packages/rust/crates/xiuxian-wendao/docs/PROJECT_SENTINEL_V2.md"
+type = "local_file"
+enabled = true
+authority = "local_research_plan"
+notes = "Sentinel v2 planning surface for semantic drift and provenance-aware diagnostics."

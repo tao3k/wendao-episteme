@@ -1,0 +1,32 @@
+schema_version = 1
+framework = "structural-proprioception"
+registry_kind = "local_research_sources"
+
+[execution]
+skill_path = "evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+output_mode = "reviewable_diff_only"
+runtime_policy_mutation_allowed = false
+human_review_required = true
+
+[[source]]
+id = "wendao-structural-proprioception-research"
+name = "Structural Proprioception Research Note"
+type = "local_doc"
+path = "packages/rust/crates/xiuxian-wendao/docs/05_research/303_structural_proprioception.md"
+enabled = true
+authority = "local_research_plan"
+notes = "Wendao research planning note for graph self-awareness and topology-aware refinement."
+
+[[source]]
+id = "wendao-project-sentinel-v2"
+name = "Project Sentinel v2"
+type = "local_doc"
+path = "packages/rust/crates/xiuxian-wendao/docs/PROJECT_SENTINEL_V2.md"
+enabled = true
+authority = "local_architecture_plan"
+notes = "Wendao Sentinel v2 plan for O(1) symbol lookup, SemanticDriftSignal emission, and stable-file analysis."

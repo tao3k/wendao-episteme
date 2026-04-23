@@ -1,0 +1,35 @@
+id = "folgezettel.lineage-diagnostic"
+framework = "folgezettel"
+query = "policies/folgezettel/validation.sql"
+issue_type = "Episteme_Folgezettel_Broken_Lineage"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+current_sequence = "current_sequence"
+related_sequence = "related_sequence"
+
+[[messages]]
+violation_type = "FOLGEZETTEL_BROKEN_LINEAGE"
+message = "Folgezettel sequence is missing its parent sequence."
+remediation_class = "sequence_metadata_patch"
+
+[[messages]]
+violation_type = "FOLGEZETTEL_DUPLICATE_SEQUENCE"
+message = "Folgezettel sequence id is used by more than one note."
+remediation_class = "manual_review"
+
+[[messages]]
+violation_type = "FOLGEZETTEL_INVALID_SEQUENCE"
+message = "Folgezettel sequence id does not match the accepted alphanumeric lineage format."
+remediation_class = "sequence_metadata_patch"

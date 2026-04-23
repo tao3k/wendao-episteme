@@ -21,3 +21,39 @@ closed-ontology value: `tutorial`, `how-to`, `explanation`, or `reference`.
 only a SurgicalFix JSON payload scoped to the reported decision pointer, and it
 must not rewrite decision rationale, surrounding prose, or the ADR record
 itself.
+
+`fix_moc_empty.txt` is the MOC empty-hub repair prompt. It must emit only a
+SurgicalFix JSON payload scoped to an existing MOC route-index range, and it
+must not create new notes or narrative summaries.
+
+`fix_folgezettel.txt` is the Folgezettel sequence repair prompt. It must emit
+only a SurgicalFix JSON payload scoped to sequence metadata, and it must not
+create parent notes or rewrite note prose.
+
+`fix_ibis.txt` is the IBIS debate-scaffold repair prompt. It must emit only a
+SurgicalFix JSON payload scoped to a placeholder position range, and it must not
+decide issues or fabricate arguments.
+
+`fix_proprioception_cycle.txt` is the Structural Proprioception cycle repair
+prompt. It must emit only a SurgicalFix JSON payload scoped to one selected
+relation edge, and it must not globally rewrite graph topology.
+
+`fix_proprioception_observe.txt` is the Structural Proprioception observation
+drift repair prompt. It must emit only a SurgicalFix JSON payload scoped to one
+reported `OBSERVE` metadata range, and it must not rename code symbols.
+
+`fix_search_reasoning.txt` is the Search Reasoning query repair prompt. It must
+emit only a SurgicalFix JSON payload scoped to a brittle query predicate or
+reported structural UID reference, and it must preserve query intent.
+
+`fix_semantic_consistency.txt` is the Semantic Consistency status repair prompt.
+It must emit only a SurgicalFix JSON payload scoped to status metadata, and it
+must use only enacted lifecycle values.
+
+`fix_conflict_decision_intent.txt` is the conflict-arbitration repair prompt for
+ADR-vs-Diátaxis intent collisions. It must preserve the ADR contract and edit
+only the reported intent metadata range.
+
+`fix_authorship_boundary.txt` is the Temporal Scaffolding replan prompt. It
+must not produce a write into protected author prose. It may target only a
+Sentinel-reported scaffold range with exact original bytes.

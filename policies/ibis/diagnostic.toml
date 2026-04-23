@@ -1,0 +1,31 @@
+id = "ibis.argumentation-diagnostic"
+framework = "ibis"
+query = "policies/ibis/validation.sql"
+issue_type = "Episteme_IBIS_Violation"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+ibis_node_id = "ibis_node_id"
+related_id = "related_id"
+current_metric_value = "current_metric_value"
+
+[[messages]]
+violation_type = "IBIS_UNRESOLVED_ISSUE"
+message = "IBIS issue has no detected Position response."
+remediation_class = "debate_scaffold_insert"
+
+[[messages]]
+violation_type = "IBIS_DANGLING_POSITION"
+message = "IBIS position targets an issue that is not present in the graph."
+remediation_class = "manual_review"

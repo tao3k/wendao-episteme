@@ -28,4 +28,4 @@ SELECT
 FROM repo_content_chunk
 WHERE doc_type = 'markdown'
   AND (properties->>'ID') IS NOT NULL
-  AND NOT regexp_matches(properties->>'ID', '^\\d{2}\\.\\d{2}_[a-z0-9][a-z0-9_-]*$');
+  AND NOT regexp_matches(properties->>'ID', '^[0-9]{2}[.][0-9]{2}_[a-z0-9][a-z0-9_-]*$');

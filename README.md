@@ -24,6 +24,18 @@ The current architecture blueprint is
   consistency.
 - **Evergreen Notes:** Synthesis rules for atomicity, durable links, and
   progressive refinement without creating knowledge silos.
+- **MOC:** Route-hub rules for dense note clusters that need explicit maps of
+  content.
+- **Folgezettel:** Lineage-sequence rules for parent continuity and causal
+  extension chains.
+- **IBIS:** Argumentation-graph rules for issues, positions, and unresolved
+  debate scaffolds.
+- **Structural Proprioception:** Graph-health rules for detecting circular
+  dependencies and topology hazards.
+- **Search as Reasoning:** Query robustness rules for replacing brittle path
+  equality with stable semantic predicates.
+- **Semantic Consistency:** Protocol-alignment rules for lifecycle metadata and
+  cross-surface enum vocabulary.
 - **Temporal Scaffolding:** Human-AI authorship boundaries for structural
   maintenance without whole-document rewrites.
 - **Epistemic Sensemaking:** Consensus-oriented evolution for deprecated
@@ -42,6 +54,7 @@ The manifest records:
 - how conflicts between frameworks should be resolved;
 - which stable Wendao SQL views and catalogs validation queries may read;
 - which project-local semantic manifests consumers must provide;
+- which write-time repair guards must protect author-owned byte ranges;
 - which source-evolution skills may be compiled into BPMN review flows.
 
 This keeps the knowledge laws stable while allowing Wendao to choose the most
@@ -58,6 +71,11 @@ Johnny.Decimal boundary, the canonical topological address remains stable until
 an explicit move decision is recorded. The synthesis signal can become a repair
 recommendation, but it must not silently rewrite identity.
 
+Cross-framework conflicts may also be surfaced by read-only arbitration
+queries under `policies/conflicts/`. Those queries do not execute repair. They
+emit Sentinel diagnostics that carry the winning framework, losing framework,
+and enacted resolution from the manifest.
+
 ## Johnny.Decimal Boundary
 
 Johnny.Decimal is a syntax scaffold, not a universal entity dictionary.
@@ -70,6 +88,11 @@ must own its semantic map, usually as a project-local `topology.toml`. LLM
 analysis may run only through a skillsc-compiled review flow that proposes a
 diff to that local manifest. It must not mutate topology during `wendao audit`
 or `wendao fix`.
+
+`wendao episteme sync` is modeled as an on-demand Topology Architect review
+flow. It reads the consumer manifest and workspace evidence, then emits only an
+append-only topology diff. Existing category identity, assigned coordinates,
+and committed anchor ids are not mutable through this flow.
 
 Diátaxis has a different boundary. It is a closed ontology, so the four allowed
 intents are part of this repository's policy contract.
@@ -92,6 +115,26 @@ For isolated notes, LLM repair may suggest `[[WikiLinks]]` only inside a
 governed `:RELATIONS:` block or an explicitly reported insertion range. It must
 not rewrite author-owned prose to force graph connectivity.
 
+## MOC Boundary
+
+Maps of Content are enforced as navigation hubs for dense scopes. The policy
+detects scopes whose note count exceeds the hub threshold and MOC nodes whose
+out-degree is too low to route readers.
+
+MOC repair is index-scoped. AnchoR may add a compact route index only inside an
+explicit insertion range in an existing MOC file. It must not create new notes,
+move notes, or write narrative summaries as if they were authored conclusions.
+
+## Folgezettel Boundary
+
+Folgezettel policy applies only to notes that opt into sequence metadata. It
+checks parent-chain continuity, uniqueness, and accepted alphanumeric sequence
+shape.
+
+Folgezettel repair is metadata-scoped. A fixer may adjust the reported
+`SEQUENCE` line only when the diagnostic provides exact bytes and a reviewable
+replacement candidate. It must not fabricate a missing parent note.
+
 ## ADR Boundary
 
 ADR policy treats decision records as lifecycle contracts. It checks status
@@ -104,6 +147,86 @@ supersedes or deprecates it. When a document references a `DEPRECATED` or
 may replace the stale decision pointer only when the diagnostic provides an
 exact byte range and a successor id. It must not rewrite decision rationale or
 the ADR record itself.
+
+## IBIS Boundary
+
+IBIS policy treats argumentation as an explicit graph. It checks that `Issue`
+nodes have at least one detected `Position` response and that position targets
+resolve to known issues.
+
+IBIS repair is debate-scaffold scoped. AnchoR may add a placeholder
+`Position: Pending Analysis` only inside an explicit range. It must not decide
+the issue, fabricate arguments, or resolve an architectural disagreement.
+
+## Structural Proprioception Boundary
+
+Structural Proprioception policy gives the graph a bounded self-awareness
+contract. It detects short circular dependencies by resolving reference
+occurrences against known node titles and ids, then walking the graph with a
+bounded recursive query. It also supports Sentinel v2-style semantic drift
+checks by comparing document `OBSERVE` metadata against the `local_symbol`
+view.
+
+Repair is relation- or metadata-scoped. AnchoR may soften one selected relation
+edge or update one reported observation pointer only when Sentinel provides
+exact bytes and the chosen target. It must not globally rewrite topology,
+rename code symbols, or remove multiple links.
+
+## Search Reasoning Boundary
+
+Search as Reasoning policy treats embedded queries as reasoning artifacts. SQL,
+DuckDB, or GraphQL snippets should avoid brittle exact path equality when a
+stable id, topology, intent, or tag predicate is available.
+
+Code-symbol references should use structural UIDs such as
+`path/to/file::owner::symbol` when the parser can resolve the symbol through
+`local_symbol`.
+
+Repair is query-scoped. AnchoR may replace only the brittle predicate range when
+the diagnostic provides a stable semantic replacement. UID repair may replace
+only the reported reference text. It must preserve query intent and leave
+surrounding prose untouched.
+
+## Semantic Consistency Boundary
+
+Semantic Consistency policy keeps lifecycle metadata inside the enacted Wendao
+status vocabulary: `DRAFT`, `PROPOSED`, `ACCEPTED`, `ACTIVE`, `HARDENING`,
+`HARDENED`, `DEPRECATED`, and `SUPERSEDED`.
+
+Agent-maintained notes may opt into stale-read detection through the optional
+`project_content_fingerprint` view. A hash mismatch is a planner review signal,
+not authority for direct prose mutation.
+
+Repair is metadata-scoped. AnchoR may correct only the reported status value
+when the canonical replacement is unambiguous. New lifecycle vocabulary must go
+through source evolution review before it becomes valid.
+
+## Conflict Arbitration Boundary
+
+Conflict arbitration applies the manifest's authority matrix after individual
+policies have produced evidence. `topology-vs-synthesis` preserves
+Johnny.Decimal identity over Evergreen relocation pressure.
+`decision-contract-vs-intent` preserves ADR authority over Diátaxis reader-mode
+metadata. `deprecated-decision-reference` routes stale ADR pointers through
+Sensemaking before mutation.
+
+Only the ADR-vs-Diátaxis case has a bounded metadata repair prompt because its
+safe resolution is local intent reclassification. Topology, authorship, and
+consensus conflicts remain recommendation or review flows unless Sentinel
+reports an explicit safe range.
+
+## Authorship Boundary Defense
+
+Temporal Scaffolding is enforced at write time by Project AnchoR v3. The parser
+substrate owns byte-zone classification. Author-owned zones such as paragraphs,
+lists, code blocks, mathematical content, and decision rationale are protected
+from automated repair.
+
+Only scaffold zones may receive default fixes: metadata drawers, relation
+blocks, footer blocks, or explicit Sentinel-reported governed ranges. If a
+payload crosses into protected prose, AnchoR must reject the write and emit an
+authorship-boundary diagnostic. The replan prompt may move the proposal to a
+safe scaffold range only when Sentinel provides exact bytes for that range.
 
 ## Source Evolution Skills
 
@@ -123,6 +246,11 @@ exists, human review is represented as an output packet rather than a BPMN
 The output is always reviewable evidence or a proposed diff. The skill flow must
 not silently rewrite policy SQL, project topology manifests, or committed
 knowledge graph identity.
+
+Topology sync uses the same skill model, but it is on-demand rather than a
+scheduled external-source review. Its source files live under
+`sources/topology/` and its output is a reviewable consumer `topology.toml`
+diff.
 
 ## Repository Structure
 

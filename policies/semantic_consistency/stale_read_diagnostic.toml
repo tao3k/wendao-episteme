@@ -1,0 +1,26 @@
+id = "semantic-consistency.stale-read-diagnostic"
+framework = "semantic-consistency"
+query = "policies/semantic_consistency/stale_read_validation.sql"
+issue_type = "Episteme_SemanticConsistency_StaleRead"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+dependency_path = "dependency_path"
+recorded_hash = "recorded_hash"
+live_hash = "live_hash"
+
+[[messages]]
+violation_type = "CONSISTENCY_STALE_READ_DETECTED"
+message = "Agent-maintained document depends on a file whose live content hash differs from the recorded hash."
+remediation_class = "planner_review"
