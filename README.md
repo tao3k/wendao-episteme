@@ -74,6 +74,37 @@ or `wendao fix`.
 Diátaxis has a different boundary. It is a closed ontology, so the four allowed
 intents are part of this repository's policy contract.
 
+Diátaxis repair is metadata-scoped. LLM repair may classify a document into one
+of the four intent values, but it must not relocate the node or rewrite prose to
+make the classification fit.
+
+Path and intent conflicts are project-local. Consumers may expose optional
+path-rule views for those checks, but this repository does not hard-code
+workspace directory semantics into the universal Diátaxis policy.
+
+## Evergreen Boundary
+
+Evergreen Notes are enforced as graph and size contracts, not subjective writing
+judgments. `wendao-episteme` checks connectivity and atomicity through stable
+logical views, then limits repair suggestions to relation surfaces.
+
+For isolated notes, LLM repair may suggest `[[WikiLinks]]` only inside a
+governed `:RELATIONS:` block or an explicitly reported insertion range. It must
+not rewrite author-owned prose to force graph connectivity.
+
+## ADR Boundary
+
+ADR policy treats decision records as lifecycle contracts. It checks status
+values, supersession pointers, and references to expired decisions through
+read-only logical views.
+
+An `ACTIVE` ADR remains the governing contract until another ADR explicitly
+supersedes or deprecates it. When a document references a `DEPRECATED` or
+`SUPERSEDED` ADR, Sentinel should emit a disagreement diagnostic. AnchoR repair
+may replace the stale decision pointer only when the diagnostic provides an
+exact byte range and a successor id. It must not rewrite decision rationale or
+the ADR record itself.
+
 ## Source Evolution Skills
 
 External reference analysis is not prompt engineering. The `sources/` tree
@@ -116,8 +147,9 @@ consumer, not source artifacts owned by this repository.
 SQL files in this repository, when present, are policy-local validation queries
 only. They must be read-only `SELECT` statements over request-scoped Wendao SQL
 surfaces such as `wendao_sql_tables`, `wendao_sql_columns`,
-`repo_content_chunk`, and `repo_entity`. They must not define tables, mutate
-state, create schema, or encode Arrow/Rust type ownership.
+`repo_content_chunk`, `repo_entity`, and `reference_occurrence`. They must not
+define tables, mutate state, create schema, or encode Arrow/Rust type
+ownership.
 
 Project Sentinel owns diagnostic rendering and XML emission. Project AnchoR v3
 owns `ByteRange` repair planning, Blake3 compare-and-swap validation, overlap

@@ -1,7 +1,7 @@
 id = "diataxis.intent-diagnostic"
 framework = "diataxis"
 query = "policies/diataxis/validation.sql"
-issue_type = "Episteme_Diataxis_Intent_Violation"
+issue_type = "Episteme_Diataxis_Violation"
 renderer_owner = "Project Sentinel"
 
 [xml]

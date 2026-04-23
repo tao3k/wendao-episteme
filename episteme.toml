@@ -48,9 +48,11 @@ public_catalogs = [
 stable_views = [
   "repo_content_chunk",
   "repo_entity",
+  "reference_occurrence",
 ]
 optional_project_views = [
   "project_topology_category",
+  "project_diataxis_path_rule",
 ]
 forbidden_operations = [
   "CREATE",
@@ -98,6 +100,65 @@ emits = [
   "current_intent",
 ]
 
+[[policy_queries]]
+id = "diataxis.path-intent-validation"
+framework = "diataxis"
+path = "policies/diataxis/path_validation.sql"
+statement_mode = "select_only"
+requires_optional_view = "project_diataxis_path_rule"
+reads = [
+  "repo_content_chunk",
+  "project_diataxis_path_rule",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_intent",
+  "path_pattern",
+]
+
+[[policy_queries]]
+id = "evergreen.connectivity-atomicity-validation"
+framework = "evergreen-notes"
+path = "policies/evergreen/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_metric_name",
+  "current_metric_value",
+]
+
+[[policy_queries]]
+id = "adr.state-reference-validation"
+framework = "adr"
+path = "policies/adr/validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "target_adr_id",
+  "target_adr_status",
+  "replacement_adr_id",
+]
+
 [[diagnostic_mappings]]
 id = "johnny-decimal.anchor-id-diagnostic"
 framework = "johnny-decimal"
@@ -111,7 +172,31 @@ id = "diataxis.intent-diagnostic"
 framework = "diataxis"
 query = "diataxis.intent-validation"
 path = "policies/diataxis/diagnostic.toml"
-issue_type = "Episteme_Diataxis_Intent_Violation"
+issue_type = "Episteme_Diataxis_Violation"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "diataxis.path-intent-diagnostic"
+framework = "diataxis"
+query = "diataxis.path-intent-validation"
+path = "policies/diataxis/path_diagnostic.toml"
+issue_type = "Episteme_Diataxis_Path_Conflict"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "evergreen.connectivity-atomicity-diagnostic"
+framework = "evergreen-notes"
+query = "evergreen.connectivity-atomicity-validation"
+path = "policies/evergreen/diagnostic.toml"
+issue_type = "Episteme_Evergreen_Violation"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "adr.state-reference-diagnostic"
+framework = "adr"
+query = "adr.state-reference-validation"
+path = "policies/adr/diagnostic.toml"
+issue_type = "Episteme_ADR_Violation"
 renderer_owner = "Project Sentinel"
 
 [[repair_prompts]]
@@ -121,11 +206,143 @@ path = "prompts/anchor_v3_fixers/fix_jd_id.txt"
 repair_tooling = "Project AnchoR v3"
 write_mode = "byte_range_compare_and_swap"
 
+[[repair_prompts]]
+id = "evergreen.suggest-relation-links"
+framework = "evergreen-notes"
+path = "prompts/anchor_v3_fixers/fix_evergreen.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "diataxis.fix-intent-metadata"
+framework = "diataxis"
+path = "prompts/anchor_v3_fixers/fix_diataxis.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "adr.fix-expired-reference"
+framework = "adr"
+path = "prompts/anchor_v3_fixers/fix_adr_reference.txt"
+repair_tooling = "Project AnchoR v3"
+write_mode = "byte_range_compare_and_swap"
+
 [[source_evolution_skill_surfaces]]
 id = "johnny-decimal.source-evolution"
 framework = "johnny-decimal"
 sources_path = "sources/johnny_decimal/sources.toml"
 skill_path = "sources/johnny_decimal/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "diataxis.source-evolution"
+framework = "diataxis"
+sources_path = "sources/diataxis/sources.toml"
+skill_path = "sources/diataxis/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "evergreen.source-evolution"
+framework = "evergreen-notes"
+sources_path = "sources/evergreen/sources.toml"
+skill_path = "sources/evergreen/evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:prompt",
+  "skillsc:tools",
+  "skillsc:inputs",
+  "skillsc:outputs",
+]
+supported_prototype_bpmn_elements = [
+  "startEvent",
+  "endEvent",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+  "boundaryEvent:errorEventDefinition",
+  "sequenceFlow",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "manualTask",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "adr.source-evolution"
+framework = "adr"
+sources_path = "sources/adr/sources.toml"
+skill_path = "sources/adr/evolution.skill.md"
 compiler = "skillsc"
 compiled_format = "bpmn"
 prototype_executor = "skillsx"

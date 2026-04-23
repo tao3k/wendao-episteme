@@ -1,0 +1,36 @@
+id = "adr.state-reference-diagnostic"
+framework = "adr"
+query = "policies/adr/validation.sql"
+issue_type = "Episteme_ADR_Violation"
+renderer_owner = "Project Sentinel"
+
+[xml]
+root_element = "Issue"
+file_element = "File"
+target_element = "Target"
+range_element = "ByteRange"
+message_element = "Message"
+
+[columns]
+file_path = "file_path"
+violation_type = "violation_type"
+byte_start = "byte_start"
+byte_end = "byte_end"
+target_adr_id = "target_adr_id"
+target_adr_status = "target_adr_status"
+replacement_adr_id = "replacement_adr_id"
+
+[[messages]]
+violation_type = "ADR_EXPIRED_REFERENCE"
+message = "Reference points to an expired ADR contract."
+remediation_class = "decision_reference_patch"
+
+[[messages]]
+violation_type = "ADR_STATE_MACHINE_BROKEN"
+message = "Superseded ADR is missing a SUPERSEDED_BY pointer."
+remediation_class = "manual_review"
+
+[[messages]]
+violation_type = "ADR_INVALID_STATUS"
+message = "ADR status is missing or outside the accepted lifecycle values."
+remediation_class = "manual_review"

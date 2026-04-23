@@ -91,6 +91,16 @@ An active decision must not semantically drift without an auditable decision
 record. Deprecated references should surface as consensus problems rather than
 silent rewrites.
 
+The hard policy surface is the ADR lifecycle state machine and its dependency
+contagion. A `SUPERSEDED` record must point to a successor contract, and new
+material must not continue to reference `DEPRECATED` or `SUPERSEDED` contracts
+without a visible diagnostic.
+
+Automated repair is pointer-scoped. AnchoR v3 may replace a stale ADR link with
+the successor id reported by Sentinel, but it must not rewrite the decision
+rationale, change status history, or edit the ADR body outside an explicit
+range.
+
 ### Evergreen Notes
 
 Evergreen Notes are modeled as graph constraints, not as a file format. The
@@ -155,7 +165,8 @@ Validation queries may inspect:
 
 - `wendao_sql_tables`;
 - `wendao_sql_columns`;
-- stable logical views such as `repo_content_chunk` and `repo_entity`;
+- stable logical views such as `repo_content_chunk`, `repo_entity`, and
+  `reference_occurrence`;
 - other stable Wendao views explicitly exposed through the same catalog
   contract.
 
@@ -222,6 +233,10 @@ influence policy only through evidence and a reviewable `Evolution_PR_Draft`.
 LLM analysis must not silently edit `policies/johnny_decimal/validation.sql`,
 consumer `topology.toml`, or any committed category meaning.
 
+For ADR, external templates may influence recommended checks through evidence
+and review. They must not become hard-required sections until a human accepts
+the proposal and records the governance change.
+
 ## Repository Structure
 
 ```text
@@ -234,6 +249,15 @@ wendao-episteme/
 │   ├── evergreen/
 │   └── johnny_decimal/
 ├── sources/
+│   ├── adr/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── diataxis/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
+│   ├── evergreen/
+│   │   ├── sources.toml
+│   │   └── evolution.skill.md
 │   └── johnny_decimal/
 │       ├── sources.toml
 │       └── evolution.skill.md
@@ -307,6 +331,43 @@ Johnny.Decimal anchor enforcement is a three-stage policy loop:
 The LLM infers semantic routing. It does not execute writes, bypass CAS guards,
 or rewrite the surrounding document.
 
+## Diátaxis Closed Loop
+
+Diátaxis enforcement is a closed-ontology intent loop:
+
+1. `policies/diataxis/validation.sql` emits read-only diagnostics for missing
+   or unknown intent metadata. It recognizes common property casing variants
+   such as `INTENT`, `intent`, `DIATAXIS`, and `diataxis`.
+2. Project Sentinel maps query rows to `Episteme_Diataxis_Violation` XML
+   diagnostics.
+3. `prompts/anchor_v3_fixers/fix_diataxis.txt` constrains LLM repair output to
+   metadata-scoped `SurgicalFix` payloads. It may choose only `tutorial`,
+   `how-to`, `explanation`, or `reference`.
+
+Diátaxis repair must not relocate a node, rewrite prose, or change topological
+identity. It classifies reader intent only.
+
+Project-local path conflicts are handled separately by
+`policies/diataxis/path_validation.sql`. That optional query requires the
+consumer to expose `project_diataxis_path_rule`; `wendao-episteme` does not
+hard-code workspace path semantics such as which directories may contain
+tutorials.
+
+## Evergreen Closed Loop
+
+Evergreen enforcement is a graph-first policy loop:
+
+1. `policies/evergreen/validation.sql` emits read-only diagnostics for isolated
+   notes and notes that exceed the atomicity line-count threshold.
+2. Project Sentinel maps query rows to `Episteme_Evergreen_Violation` XML
+   diagnostics with metric evidence.
+3. `prompts/anchor_v3_fixers/fix_evergreen.txt` constrains LLM repair output to
+   relation-block `SurgicalFix` payloads. It must not rewrite author-owned
+   prose or force connectivity outside a governed range.
+
+Evergreen policy remains advisory by default. A relation suggestion can improve
+connectivity, but it is not authority to relocate, split, or rewrite the note.
+
 ## Topology Manifest Sync
 
 Johnny.Decimal semantics are enacted through a project-local `topology.toml`.
@@ -345,4 +406,36 @@ Johnny.Decimal source learning is a skill-driven loop:
 5. The BPMN flow routes non-empty audit reports into critique and policy
    proposal tasks.
 6. Any policy change exits as an `Evolution_PR_Draft` for human review, never as
+   an automatic runtime write.
+
+## Diátaxis Source Learning Loop
+
+Diátaxis source learning is a skill-driven loop:
+
+1. `sources/diataxis/sources.toml` selects official and practice sources plus
+   scheduling metadata.
+2. `sources/diataxis/evolution.skill.md` is compiled by the `skillsc` prototype
+   into BPMN with `skillsc:config` service-task metadata.
+3. The target Wendao runtime executes the compiled graph through
+   `qianji-bpmn-engine`, not through the prototype's Node `bpmn-engine`.
+4. The BPMN flow compares canonical Diátaxis guidance against Wendao's closed
+   intent ontology and reviews external intent-classification practice.
+5. Terms such as "concept" or "cookbook" may produce aliasing, routing, or
+   manual-review proposals, but not a fifth Diátaxis intent.
+6. Any policy change exits as an `Evolution_PR_Draft` for human review, never as
+   an automatic runtime write.
+
+## Evergreen Source Learning Loop
+
+Evergreen source learning is a skill-driven loop:
+
+1. `sources/evergreen/sources.toml` selects reference and practice sources plus
+   scheduling metadata.
+2. `sources/evergreen/evolution.skill.md` is compiled by the `skillsc`
+   prototype into BPMN with `skillsc:config` service-task metadata.
+3. The target Wendao runtime executes the compiled graph through
+   `qianji-bpmn-engine`, not through the prototype's Node `bpmn-engine`.
+4. The BPMN flow extracts graph signals such as link density, isolated note
+   examples, typical note length, and visible relation placement conventions.
+5. Any policy change exits as an `Evolution_PR_Draft` for human review, never as
    an automatic runtime write.

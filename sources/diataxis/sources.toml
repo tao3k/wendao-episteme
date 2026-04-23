@@ -1,0 +1,32 @@
+schema_version = 1
+framework = "diataxis"
+registry_kind = "official_reference_sources"
+
+[execution]
+skill_path = "evolution.skill.md"
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+output_mode = "reviewable_diff_only"
+runtime_policy_mutation_allowed = false
+human_review_required = true
+
+[[source]]
+id = "diataxis-official"
+name = "Diátaxis Official Site"
+url = "https://diataxis.fr/"
+type = "website"
+cron = "0 0 1 * *"
+enabled = true
+entrypoints = [
+  "/",
+  "/tutorials/",
+  "/how-to-guides/",
+  "/reference/",
+  "/explanation/",
+  "/application/",
+]
+authority = "canonical_reference"
+notes = "Canonical public Diátaxis reference source for closed ontology and intent-boundary review."
