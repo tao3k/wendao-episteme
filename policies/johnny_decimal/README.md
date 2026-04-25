@@ -23,7 +23,7 @@ read-only law.
 ## Assets
 
 - `validation.sql` contains read-only checks for missing and malformed
-  `:ID:` property drawers.
+  document-level `:ID:` metadata.
 - `diagnostic.toml` maps validation rows to Project Sentinel XML diagnostics.
 - `../../prompts/anchor_v3_fixers/fix_jd_id.txt` constrains Project AnchoR v3
   repair payload generation.

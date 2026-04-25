@@ -508,7 +508,8 @@ a build artifact unless a downstream release process explicitly pins it.
 Johnny.Decimal anchor enforcement is a three-stage policy loop:
 
 1. `policies/johnny_decimal/validation.sql` emits read-only diagnostics for
-   missing `:ID:` property drawers and invalid `XX.YY_semantic_name` anchors.
+   missing document-level `:ID:` metadata and invalid `XX.YY_semantic_name`
+   anchors.
 2. Project Sentinel maps query rows to
    `Episteme_JohnnyDecimal_Violation` XML diagnostics with `ByteRange`
    coordinates and original bytes.
