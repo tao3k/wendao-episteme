@@ -21,17 +21,17 @@ proposal only.
      documentation structure.
 3. Read the current Diátaxis policy from `policies/diataxis/validation.sql`.
 4. If the source has `authority = "canonical_reference"`, compare the official
-   guidance with Wendao's four accepted intent values.
+   guidance with Wendao's four accepted document-kind values.
 5. If the source is a practice source, inspect how it separates tutorials,
    how-to guides, explanation, and reference.
 6. If there are no findings, return an empty proposal and set
    `humanReviewRequired` to `false`.
 7. If there are findings, write a concise evolution analysis with evidence,
-   benefits, risks, and compatibility with a closed intent ontology.
+   benefits, risks, and compatibility with a closed document-kind ontology.
 8. Draft the smallest reviewable policy proposal only when the finding is
    general, testable, and compatible with preserving document identity.
-   Do not propose a fifth Diátaxis intent. For terms such as "concept" or
-   "cookbook", propose aliasing, routing guidance, or manual review instead.
+   Do not propose a fifth Diátaxis document kind. For terms such as "concept"
+   or "cookbook", propose aliasing, routing guidance, or manual review instead.
 9. Return a JSON object with exactly these keys:
    - `markdownEvolutionAnalysis`
    - `evolutionPrDraft`

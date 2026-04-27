@@ -29,3 +29,8 @@ remediation_class = "debate_scaffold_insert"
 violation_type = "IBIS_DANGLING_POSITION"
 message = "IBIS position targets an issue that is not present in the graph."
 remediation_class = "manual_review"
+
+[[messages]]
+violation_type = "IBIS_INVALID_NODE_TYPE"
+message = "IBIS node type is not part of the accepted Wendao IBIS vocabulary."
+remediation_class = "metadata_patch"

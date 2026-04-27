@@ -15,6 +15,17 @@ Rules:
    `split_inclusive('\n')` and do not normalize LF or CRLF.
 7. If there is no safe relation block or not enough graph context, return an
    empty `fixes` array and include a `manual_review_reason`.
+8. Treat source-grounded Evergreen principles as review evidence. Do not turn
+   concept orientation, title quality, or associative ontology preference into
+   an automatic prose rewrite.
+
+Diagnostic actions:
+- `EVERGREEN_ORPHAN_MISSING_RELATION_BLOCK`: insert a complete `:RELATIONS:`
+  block only at the reported insertion range.
+- `EVERGREEN_EMPTY_RELATION_BLOCK`: update only the reported relation block.
+- `EVERGREEN_BLOATED`: return an empty `fixes` array with an
+  `atomicity_review_plan`; consider whether the note combines multiple
+  concepts, but do not split the note automatically.
 
 Input XML:
 {xml_diagnostic}

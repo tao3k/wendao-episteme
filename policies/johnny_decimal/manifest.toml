@@ -1,0 +1,75 @@
+[[policy_queries]]
+id = "johnny-decimal.anchor-id-validation"
+framework = "johnny-decimal"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_id",
+]
+
+[[authoring_templates]]
+id = "johnny-decimal.path-first-authoring-template"
+framework = "johnny-decimal"
+path = "authoring_template.toml"
+command = "wendao audit --template johnny-decimal"
+mode = "path_first"
+output_mode = "template_guided_generation"
+authority_rule = "topology.toml, existing path index, and deterministic audit diagnostics outrank LLM suggestions."
+
+[[diagnostic_mappings]]
+id = "johnny-decimal.anchor-id-diagnostic"
+framework = "johnny-decimal"
+query = "johnny-decimal.anchor-id-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_JohnnyDecimal_Violation"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "johnny-decimal"
+name = "Johnny.Decimal"
+kind = "topological_addressing"
+authority_rank = 100
+default_severity = "error"
+owns = [
+  "node.address",
+  "collection.boundary",
+  "canonical_path",
+  "anchor.syntax",
+]
+conflict_strategy = "preserve_topological_identity"
+
+[topology_manifest]
+owner = "consumer_repository"
+default_path = "topology.toml"
+sync_command = "wendao episteme sync"
+sync_mode = "skillsc_bpmn_review_flow"
+sync_sources_path = "sources/topology/sources.toml"
+sync_skill_path = "sources/topology/evolution.skill.md"
+runtime_mutation_allowed = false
+llm_runtime_mutation_allowed = false
+category_identity_mutation_allowed = false
+proposal_mode = "append_only"
+agent_role = "Topology Architect Skill"
+syntax_policy_owner = "wendao-episteme"
+semantic_map_owner = "consumer_repository"
+enactment = "git_commit"
+allowed_proposal_operations = [
+  "append_new_category",
+  "append_new_subcategory",
+  "add_unmapped_path_binding",
+]
+forbidden_proposal_operations = [
+  "rename_existing_category",
+  "renumber_existing_category",
+  "delete_existing_category",
+  "rewrite_existing_anchor_id",
+  "move_existing_note",
+]

@@ -1,0 +1,139 @@
+[[policy_queries]]
+id = "conflicts.matrix-validation"
+framework = "epistemic-sensemaking"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "conflict_id",
+  "primary_framework",
+  "secondary_framework",
+  "resolution",
+  "current_context",
+]
+
+[[authoring_templates]]
+id = "epistemic-sensemaking.conflict-authoring-template"
+framework = "epistemic-sensemaking"
+path = "authoring_template.toml"
+command = "wendao audit --template epistemic-sensemaking"
+mode = "conflict_arbitration"
+output_mode = "template_guided_generation"
+authority_rule = "Epistemic Sensemaking surfaces disagreement with provenance before mutation and applies the enacted framework authority matrix."
+
+[[diagnostic_mappings]]
+id = "conflicts.matrix-diagnostic"
+framework = "epistemic-sensemaking"
+query = "conflicts.matrix-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_Conflict_Arbitration"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "epistemic-sensemaking"
+name = "Epistemic Sensemaking"
+kind = "consensus_evolution"
+authority_rank = 80
+default_severity = "warning"
+owns = [
+  "diagnostic.disagreement",
+  "provenance.bundle",
+  "consensus.proposal",
+]
+conflict_strategy = "surface_disagreement_before_mutation"
+
+[[conflicts]]
+id = "topology-vs-synthesis"
+primary = "johnny-decimal"
+secondary = "evergreen-notes"
+severity = "warning"
+when = "A synthesis link crosses a topological boundary or suggests relocating a note."
+resolution = "Keep the canonical address stable. Emit a repair recommendation or require an explicit move decision before relocation."
+
+[[conflicts]]
+id = "decision-contract-vs-document-kind"
+primary = "adr"
+secondary = "diataxis"
+severity = "error"
+when = "A document's common frontmatter kind contradicts its recorded decision contract."
+resolution = "Preserve the ADR contract. Reclassify the document kind or create a superseding decision record."
+
+[[conflicts]]
+id = "topology-vs-document-kind"
+primary = "johnny-decimal"
+secondary = "diataxis"
+severity = "warning"
+when = "A document's common frontmatter kind suggests a different collection than its canonical topological address."
+resolution = "Keep the address stable. Flag the mismatch for explicit curation instead of moving the node automatically."
+
+[[conflicts]]
+id = "authorship-vs-structural-repair"
+primary = "temporal-scaffolding"
+secondary = "evergreen-notes"
+severity = "warning"
+when = "A repair proposal would improve graph connectivity by editing author-owned prose outside a declared repair range."
+resolution = "Reject whole-document rewriting. Restrict the proposal to explicit relation blocks, metadata drawers, or another governed ByteRange."
+
+[[conflicts]]
+id = "deprecated-decision-reference"
+primary = "epistemic-sensemaking"
+secondary = "adr"
+severity = "warning"
+when = "New material references a deprecated or superseded decision without acknowledging the newer decision contract."
+resolution = "Emit a disagreement diagnostic with provenance. Propose a contextual update or supersession note before any write."
+
+[[conflicts]]
+id = "moc-vs-topology"
+primary = "johnny-decimal"
+secondary = "moc"
+severity = "warning"
+when = "A MOC route hub suggests changing the canonical address of notes in a dense cluster."
+resolution = "Keep canonical addresses stable. Add or repair route indexes only through explicit ByteRanges."
+
+[[conflicts]]
+id = "folgezettel-vs-moc"
+primary = "folgezettel"
+secondary = "moc"
+severity = "warning"
+when = "A navigation hub would flatten or obscure an explicit lineage sequence."
+resolution = "Preserve sequence metadata. Use MOCs as supplemental route surfaces, not replacements for lineage."
+
+[[conflicts]]
+id = "ibis-vs-adr"
+primary = "adr"
+secondary = "ibis"
+severity = "warning"
+when = "An open IBIS issue conflicts with an active ADR contract."
+resolution = "Preserve the active ADR. Surface the IBIS issue as a debate scaffold or require a superseding ADR."
+
+[[conflicts]]
+id = "cycle-vs-synthesis"
+primary = "structural-proprioception"
+secondary = "evergreen-notes"
+severity = "error"
+when = "A synthesis link creates a bounded circular dependency in the resolved graph."
+resolution = "Surface the cycle first. Propose relation-edge softening before adding more synthesis links."
+
+[[conflicts]]
+id = "semantic-query-vs-path-shortcut"
+primary = "search-reasoning"
+secondary = "johnny-decimal"
+severity = "warning"
+when = "A query relies on exact path equality instead of stable topology or metadata predicates."
+resolution = "Prefer stable semantic predicates. Keep path shortcuts only when explicitly justified by performance evidence."
+
+[[conflicts]]
+id = "status-protocol-vs-local-label"
+primary = "semantic-consistency"
+secondary = "diataxis"
+severity = "error"
+when = "A local metadata label introduces a lifecycle status outside the enacted protocol vocabulary."
+resolution = "Preserve the enacted status vocabulary. Route new lifecycle labels through source evolution review."

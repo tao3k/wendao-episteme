@@ -1,0 +1,55 @@
+id = "moc.navigation-hub-authoring-template"
+framework = "moc"
+mode = "navigation_hub"
+coordinate_source = "path-first Johnny.Decimal category scope plus route links"
+topology_source = "repo_content_chunk plus reference_occurrence"
+authority = "template_guided_generation"
+llm_role = "route_hub_planner"
+authority_rule = "MOC repair may add or refine route indexes, but it must not move notes, rewrite linked prose, or override canonical topology."
+
+[paths]
+category_directory_shape = "AC_* directory or AC.ID_* note path"
+note_file_shape = "AC.00_* MOC hub or metadata.moc.role = hub"
+coordinate_shape = "AC category scope plus outgoing route references"
+inbox_directory = "project-defined"
+inbox_policy = "Dense scopes may be flagged for a MOC without creating a hub automatically."
+
+[[diagnostics]]
+code = "required_for_density"
+severity = "advisory"
+meaning = "A dense scope exceeds the note-count threshold without a declared MOC."
+llm_action = "Propose a route-hub note or index location for review; do not create one without approval."
+
+[[diagnostics]]
+code = "empty_hub"
+severity = "warning"
+meaning = "A declared MOC has too few outgoing route links."
+llm_action = "Add a compact route index only inside a reported safe range."
+
+[[llm_inputs]]
+name = "scope_inventory"
+description = "Johnny.Decimal category scope, note count, and candidate hub notes."
+
+[[llm_inputs]]
+name = "route_references"
+description = "Outgoing references from declared MOC nodes."
+
+[[llm_outputs]]
+name = "route_index_patch"
+description = "A reviewable index-only patch for the reported MOC range."
+
+[[llm_outputs]]
+name = "hub_proposal"
+description = "A non-mutating proposal for a missing dense-scope hub."
+
+[[examples]]
+kind = "moc_hub"
+path = "tests/fixtures/frameworks/moc/docs/10.00_moc.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

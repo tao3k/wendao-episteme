@@ -1,0 +1,79 @@
+id = "diataxis.frontmatter-authoring-template"
+framework = "diataxis"
+mode = "frontmatter_kind"
+coordinate_source = "leading frontmatter"
+topology_source = "optional project_diataxis_path_rule"
+authority = "template_guided_generation"
+llm_role = "document_kind_planner"
+authority_rule = "The four Diataxis document kinds are a closed ontology for ordinary documentation records. Path rules may request review, but they do not authorize moving a document, classifying parser-owned contract files, or inventing a fifth kind."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "*.md"
+coordinate_shape = "frontmatter kind: tutorial | how-to | explanation | reference"
+inbox_directory = "project-defined"
+inbox_policy = "Ordinary documentation drafts should receive kind during generation; governed docs must carry one closed-ontology value."
+
+[[diagnostics]]
+code = "invalid_document_kind"
+severity = "warning"
+meaning = "A document declares a kind outside the common closed ontology."
+llm_action = "For ordinary documentation records, replace the value with exactly one closed-ontology kind without changing body prose. For SKILL.md or other parser-owned contract files, return manual review."
+
+[[diagnostics]]
+code = "diataxis_path_conflict"
+severity = "warning"
+meaning = "A project-local path rule conflicts with the declared kind."
+llm_action = "Prefer frontmatter reclassification or manual review; do not move the document automatically."
+
+[[llm_inputs]]
+name = "document_frontmatter"
+description = "Leading YAML frontmatter for the target ordinary Markdown documentation record."
+
+[[llm_inputs]]
+name = "document_excerpt"
+description = "A bounded body excerpt used only to classify the reader need."
+
+[[llm_inputs]]
+name = "document_role"
+description = "Whether the file is ordinary documentation or a parser-owned contract file such as SKILL.md."
+
+[[llm_inputs]]
+name = "optional_path_rules"
+description = "Project-local path-to-kind rules, if the consumer exposes them."
+
+[[llm_outputs]]
+name = "frontmatter_patch"
+description = "A bounded metadata-only patch that sets or replaces kind."
+
+[[llm_outputs]]
+name = "manual_review_reason"
+description = "A short reason when the document cannot be safely classified from the provided evidence."
+
+[[examples]]
+kind = "valid_tutorial"
+path = "docs/tutorials/getting-started.md"
+
+[[examples]]
+kind = "valid_how_to"
+path = "docs/how-to/rotate-keys.md"
+
+[[examples]]
+kind = "valid_explanation"
+path = "docs/explanation/cache-coherence.md"
+
+[[examples]]
+kind = "valid_reference"
+path = "docs/reference/api.md"
+
+[[examples]]
+kind = "path_conflict"
+path = "docs/tutorials/cache_reference.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "episteme_review"
+command = "wendao audit --load wendao-episteme docs"

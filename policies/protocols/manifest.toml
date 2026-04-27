@@ -1,0 +1,140 @@
+[diagnostics]
+protocol_owner = "Project Sentinel"
+format = "xml"
+required_fields = [
+  "policy_id",
+  "framework_id",
+  "severity",
+  "source_path",
+  "byte_range",
+  "provenance",
+  "remediation_class",
+]
+
+[repair]
+protocol_owner = "Project AnchoR v3"
+hash_algorithm = "blake3"
+default_write_mode = "byte_range_compare_and_swap"
+allow_whole_document_rewrite = false
+llm_authority_source = false
+required_guards = [
+  "byte_range",
+  "original_content_or_hash",
+  "non_overlapping_payloads",
+  "provenance",
+  "authorship_boundary",
+]
+
+[repair.authorship_boundary]
+enabled = true
+zone_source = "xiuxian-wendao-parsers"
+enforcement_phase = "pre_write"
+failure_issue_type = "Episteme_AuthorshipBoundary_Violation"
+conflict_id = "authorship-vs-structural-repair"
+replan_prompt = "temporal-scaffolding.replan-authorship-boundary"
+allowed_zones = [
+  "metadata_drawer",
+  "relation_block",
+  "footer_block",
+  "sentinel_reported_governed_range",
+]
+protected_zones = [
+  "paragraph",
+  "list",
+  "code_block",
+  "math_block",
+  "decision_rationale",
+]
+range_rule = "target_range_must_be_fully_contained_by_one_allowed_zone"
+
+[common_frontmatter]
+owner = "xiuxian-wendao-parsers"
+surface = "common_markdown_frontmatter"
+applies_to = "all_markdown"
+metadata_carrier = "leading_yaml_frontmatter"
+required_fields = [
+  "title",
+  "kind",
+  "category",
+  "tags",
+  "description",
+  "author",
+  "date",
+  "metadata.retrieval.saliency_base",
+  "metadata.retrieval.decay_rate",
+]
+
+[common_frontmatter.title]
+field = "title"
+owner = "common_frontmatter"
+kind = "string"
+description = "Human-readable document title for display, diagnostics, and target-title repair guidance."
+
+[common_frontmatter.kind]
+field = "kind"
+owner = "common_frontmatter"
+kind = "string"
+description = "Reading and use mode for every Markdown file. This is the controlled semantic axis; individual policy modules may register closed subsets."
+
+[common_frontmatter.category]
+field = "category"
+owner = "common_frontmatter"
+kind = "string"
+description = "Primary knowledge bucket for the document. This is the project/domain axis."
+
+[common_frontmatter.tags]
+field = "tags"
+owner = "common_frontmatter"
+kind = "string_array"
+description = "Flexible cross-cutting retrieval hints for concepts that should recall the document."
+
+[common_frontmatter.description]
+field = "description"
+owner = "common_frontmatter"
+kind = "string"
+description = "Short document summary for retrieval, compact diagnostics, and LLM repair context."
+
+[common_frontmatter.author]
+field = "author"
+owner = "common_frontmatter"
+kind = "string"
+description = "Top-level provenance author for the Markdown document."
+
+[common_frontmatter.date]
+field = "date"
+owner = "common_frontmatter"
+kind = "minute_precision_timestamp"
+description = "Document provenance timestamp precise to the minute, formatted as YYYY-MM-DDTHH:MM±HH:MM or YYYY-MM-DDTHH:MMZ."
+
+[common_frontmatter.metadata.retrieval]
+owner = "common_frontmatter"
+kind = "retrieval_entropy"
+required_fields = [
+  "saliency_base",
+  "decay_rate",
+]
+description = "Common retrieval entropy parameters kept under metadata instead of top-level document identity."
+
+[common_frontmatter.skill_extension]
+base_contract = "common_frontmatter"
+applies_to = "SKILL.md"
+required_extension_fields = [
+  "type",
+  "name",
+  "metadata.version",
+  "metadata.source",
+  "metadata.routing_keywords",
+]
+optional_extension_fields = [
+  "metadata.intents",
+]
+description = "SKILL.md frontmatter extends the common Markdown frontmatter contract. Only metadata.intents is optional inside the skill-specific extension."
+
+[common_frontmatter.kind.closed_sets.diataxis]
+applies_to = "ordinary_documentation"
+values = [
+  "tutorial",
+  "how-to",
+  "explanation",
+  "reference",
+]

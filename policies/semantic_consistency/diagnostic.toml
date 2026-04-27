@@ -20,5 +20,5 @@ current_status = "current_status"
 
 [[messages]]
 violation_type = "SEMANTIC_CONSISTENCY_INVALID_STATUS"
-message = "Document status is outside the enacted semantic consistency vocabulary."
+message = "Document metadata.lifecycle.status is outside the enacted semantic consistency vocabulary."
 remediation_class = "status_metadata_patch"

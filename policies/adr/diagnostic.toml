@@ -32,5 +32,5 @@ remediation_class = "manual_review"
 
 [[messages]]
 violation_type = "ADR_INVALID_STATUS"
-message = "ADR status is missing or outside the accepted lifecycle values."
+message = "ADR status is missing or outside the accepted lifecycle values: PROPOSED, REJECTED, ACCEPTED, ACTIVE, DEPRECATED, SUPERSEDED."
 remediation_class = "manual_review"

@@ -2,21 +2,10 @@ schema_version = 1
 framework = "epistemic-sensemaking"
 registry_kind = "local_conflict_review_sources"
 
-[execution]
-skill_path = "evolution.skill.md"
-compiler = "skillsc"
-compiled_format = "bpmn"
-prototype_executor = "skillsx"
-prototype_engine = "bpmn-engine"
-target_engine = "qianji-bpmn-engine"
-output_mode = "reviewable_diff_only"
-runtime_policy_mutation_allowed = false
-human_review_required = true
-
 [[source]]
 id = "wendao-episteme-conflict-matrix"
 name = "Wendao Episteme Conflict Matrix"
-path = "episteme.toml"
+path = "policies/conflicts/manifest.toml"
 type = "local_file"
 enabled = true
 authority = "governed_policy"

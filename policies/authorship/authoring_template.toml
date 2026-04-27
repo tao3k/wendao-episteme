@@ -1,0 +1,65 @@
+id = "temporal-scaffolding.authorship-boundary-template"
+framework = "temporal-scaffolding"
+mode = "pre_write_authorship_boundary"
+coordinate_source = "repair payload ByteRange plus parser-owned byte-zone classification"
+topology_source = "repair_payload_target plus parser_byte_zone"
+authority = "template_guided_generation"
+llm_role = "authorship_boundary_replanner"
+authority_rule = "Temporal Scaffolding rejects writes into protected author-owned prose and permits replan only into explicit governed scaffold zones with exact original bytes."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "file_path plus attempted_start and attempted_end"
+inbox_directory = "project-defined"
+inbox_policy = "Write attempts without parser-owned byte-zone evidence must be treated as manual review."
+
+[zones]
+allowed = [
+  "metadata_drawer",
+  "relation_block",
+  "footer_block",
+  "sentinel_reported_governed_range",
+]
+protected = [
+  "paragraph",
+  "list",
+  "code_block",
+  "math_block",
+  "decision_rationale",
+]
+range_rule = "target_range_must_be_fully_contained_by_one_allowed_zone"
+
+[[diagnostics]]
+code = "authorship_boundary_violation"
+severity = "error"
+meaning = "A repair payload attempts to modify protected author-owned prose or spans outside one governed scaffold zone."
+llm_action = "Return a replan that targets an explicit safe scaffold range only when Sentinel provides exact original bytes; otherwise return manual review."
+
+[[llm_inputs]]
+name = "rejected_payload"
+description = "Rejected SurgicalFix target path, attempted byte range, original bytes or hash, provenance, and remediation class."
+
+[[llm_inputs]]
+name = "byte_zone_evidence"
+description = "Parser-owned byte-zone classifications for the target file."
+
+[[llm_outputs]]
+name = "replan_to_scaffold_zone"
+description = "A SurgicalFix JSON payload constrained to one allowed scaffold zone with exact original bytes."
+
+[[llm_outputs]]
+name = "manual_review_reason"
+description = "A concise reason when no governed safe range is present."
+
+[[examples]]
+kind = "authorship_boundary"
+path = "tests/fixtures/frameworks/authorship/docs/protected_note.md"
+
+[[verification]]
+phase = "pre_write"
+command = "wendao audit --template temporal-scaffolding"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"

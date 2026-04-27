@@ -1,0 +1,51 @@
+[[policy_queries]]
+id = "structural-proprioception.cycle-validation"
+framework = "structural-proprioception"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "local_symbol",
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_context",
+  "current_metric_value",
+]
+
+[[authoring_templates]]
+id = "structural-proprioception.graph-health-authoring-template"
+framework = "structural-proprioception"
+path = "authoring_template.toml"
+command = "wendao audit --template structural-proprioception"
+mode = "graph_health"
+output_mode = "template_guided_generation"
+authority_rule = "Structural Proprioception diagnostics protect graph health; cycle repair is relation-scoped and drift repair is observation-scoped."
+
+[[diagnostic_mappings]]
+id = "structural-proprioception.cycle-diagnostic"
+framework = "structural-proprioception"
+query = "structural-proprioception.cycle-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_Proprioception_Graph_Health"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "structural-proprioception"
+name = "Structural Proprioception"
+kind = "graph_health_monitoring"
+authority_rank = 95
+default_severity = "error"
+owns = [
+  "graph.acyclic_paths",
+  "topology.balance",
+  "cycle.detection",
+  "symbol.drift",
+  "observation.alignment",
+]
+conflict_strategy = "break_circular_dependency_first"

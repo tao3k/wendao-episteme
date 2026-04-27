@@ -1,0 +1,65 @@
+id = "adr.decision-contract-authoring-template"
+framework = "adr"
+mode = "decision_contract"
+coordinate_source = "decision metadata and references"
+topology_source = "repo_content_chunk plus reference_occurrence"
+authority = "template_guided_generation"
+llm_role = "decision_contract_planner"
+authority_rule = "ADR status, supersession, and active decision references outrank document-kind suggestions and synthesis pressure."
+
+[paths]
+category_directory_shape = "project-defined ADR location"
+note_file_shape = "project-defined ADR filename"
+coordinate_shape = "stable ADR id plus status and supersession metadata"
+inbox_directory = "project-defined"
+inbox_policy = "Proposed decisions may remain draft until status metadata is enacted."
+
+[[diagnostics]]
+code = "expired_reference"
+severity = "warning"
+meaning = "A document references a deprecated or superseded ADR."
+llm_action = "Replace only the stale ADR pointer when Sentinel reports a successor id and an exact range."
+
+[[diagnostics]]
+code = "state_machine_broken"
+severity = "error"
+meaning = "A superseded ADR lacks a superseding decision pointer."
+llm_action = "Add a supersession pointer only when the replacement ADR is explicit in SUPERSEDED_BY metadata or an inline superseded-by status."
+
+[[diagnostics]]
+code = "invalid_status"
+severity = "error"
+meaning = "ADR status is missing or outside PROPOSED, REJECTED, ACCEPTED, ACTIVE, DEPRECATED, or SUPERSEDED."
+llm_action = "Set a valid status only when the document evidence makes the lifecycle state unambiguous."
+
+[[llm_inputs]]
+name = "decision_metadata"
+description = "ADR id, status, optional inline superseded-by status, supersession pointer, and referenced decision ids."
+
+[[llm_inputs]]
+name = "decision_rationale"
+description = "Context, decision outcome, consequences, and considered options used for review evidence, not automatic rewrite."
+
+[[llm_inputs]]
+name = "decision_references"
+description = "References to ADR nodes observed in the current document set."
+
+[[llm_outputs]]
+name = "decision_metadata_patch"
+description = "A metadata-only patch for ADR status or supersession fields."
+
+[[llm_outputs]]
+name = "stale_reference_patch"
+description = "A bounded pointer replacement for expired ADR references."
+
+[[examples]]
+kind = "adr_reference"
+path = "tests/fixtures/frameworks/adr/docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

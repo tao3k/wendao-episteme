@@ -1,0 +1,55 @@
+id = "structural-proprioception.graph-health-authoring-template"
+framework = "structural-proprioception"
+mode = "graph_health"
+coordinate_source = "resolved graph edges and metadata.proprioception.observe observation metadata"
+topology_source = "reference_occurrence plus local_symbol"
+authority = "template_guided_generation"
+llm_role = "graph_health_planner"
+authority_rule = "Structural Proprioception diagnostics protect graph health; cycle repair is relation-scoped and drift repair is observation-scoped."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "resolved node id, reference edge, or observed symbol"
+inbox_directory = "project-defined"
+inbox_policy = "Unresolved observations should remain review signals until parser-owned evidence exists."
+
+[[diagnostics]]
+code = "circular_dependency"
+severity = "error"
+meaning = "A bounded resolved reference walk returns to its starting node."
+llm_action = "Suggest softening or removing one reported relation edge; do not restructure the graph globally."
+
+[[diagnostics]]
+code = "semantic_drift"
+severity = "warning"
+meaning = "Observation metadata references a code symbol that no longer resolves."
+llm_action = "Update only metadata.proprioception.observe when a current symbol is explicit."
+
+[[llm_inputs]]
+name = "resolved_edges"
+description = "Reference edges resolved against known node ids and titles."
+
+[[llm_inputs]]
+name = "symbol_inventory"
+description = "Parser-owned local symbol names and signatures."
+
+[[llm_outputs]]
+name = "relation_edge_patch"
+description = "A bounded relation-only patch for one selected cycle edge."
+
+[[llm_outputs]]
+name = "observation_metadata_patch"
+description = "A metadata-only patch for stale observation pointers."
+
+[[examples]]
+kind = "cycle"
+path = "tests/fixtures/frameworks/proprioception/docs/graph_health.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

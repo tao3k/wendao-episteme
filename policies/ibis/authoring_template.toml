@@ -1,0 +1,61 @@
+id = "ibis.argumentation-authoring-template"
+framework = "ibis"
+mode = "argumentation_graph"
+coordinate_source = "IBIS node metadata and issue references"
+topology_source = "repo_content_chunk plus reference_occurrence"
+authority = "template_guided_generation"
+llm_role = "argumentation_scaffold_planner"
+authority_rule = "IBIS repair may scaffold unresolved debate, but it must not decide the issue or fabricate arguments."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "issue and position node ids with explicit target edges"
+inbox_directory = "project-defined"
+inbox_policy = "Documents without IBIS metadata stay outside argumentation policy."
+
+[[diagnostics]]
+code = "unresolved_issue"
+severity = "warning"
+meaning = "An Issue node has no detected Position response."
+llm_action = "Add only a placeholder position scaffold inside an explicit safe range."
+
+[[diagnostics]]
+code = "dangling_position"
+severity = "error"
+meaning = "A Position targets an issue that does not resolve."
+llm_action = "Repair the target pointer only when the intended issue is explicit."
+
+[[diagnostics]]
+code = "invalid_node_type"
+severity = "error"
+meaning = "An IBIS metadata type is outside the accepted Wendao IBIS vocabulary."
+llm_action = "Normalize metadata.ibis.type only when the intended node role is explicit."
+
+[[llm_inputs]]
+name = "ibis_nodes"
+description = "IBIS metadata exposed through parser-owned logical views."
+
+[[llm_inputs]]
+name = "issue_references"
+description = "References that connect positions to issue nodes."
+
+[[llm_outputs]]
+name = "debate_scaffold_patch"
+description = "A bounded scaffold patch that keeps the issue unresolved."
+
+[[llm_outputs]]
+name = "target_pointer_patch"
+description = "A metadata-only repair for a dangling position target."
+
+[[examples]]
+kind = "open_issue"
+path = "tests/fixtures/frameworks/ibis/docs/open_issue.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

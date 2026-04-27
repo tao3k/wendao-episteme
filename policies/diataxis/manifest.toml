@@ -1,0 +1,75 @@
+[[policy_queries]]
+id = "diataxis.kind-validation"
+framework = "diataxis"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_kind",
+]
+
+[[policy_queries]]
+id = "diataxis.path-kind-validation"
+framework = "diataxis"
+path = "path_validation.sql"
+statement_mode = "select_only"
+requires_optional_view = "project_diataxis_path_rule"
+reads = [
+  "repo_content_chunk",
+  "project_diataxis_path_rule",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_kind",
+  "path_pattern",
+]
+
+[[authoring_templates]]
+id = "diataxis.frontmatter-authoring-template"
+framework = "diataxis"
+path = "authoring_template.toml"
+command = "wendao audit --template diataxis"
+mode = "frontmatter_kind"
+output_mode = "template_guided_generation"
+authority_rule = "The four common frontmatter kind values governed by Diátaxis are closed ontology values. Path conflicts require review and do not authorize automatic document moves."
+
+[[diagnostic_mappings]]
+id = "diataxis.kind-diagnostic"
+framework = "diataxis"
+query = "diataxis.kind-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_Diataxis_Violation"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "diataxis.path-kind-diagnostic"
+framework = "diataxis"
+query = "diataxis.path-kind-validation"
+path = "path_diagnostic.toml"
+issue_type = "Episteme_Diataxis_Path_Conflict"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "diataxis"
+name = "Diátaxis"
+kind = "document_kind_classification"
+authority_rank = 70
+default_severity = "warning"
+owns = [
+  "reader_task",
+  "frontmatter.kind",
+  "document_kind",
+  "diataxis.closed_ontology",
+]
+conflict_strategy = "reclassify_document_kind_without_rewriting_identity"

@@ -71,12 +71,12 @@ manifest.
 
 ### Diátaxis
 
-Diátaxis defines document intent policy. It maps knowledge nodes into tutorials,
-how-to guides, explanations, and reference material.
+Diátaxis defines common frontmatter document-kind policy. It maps knowledge
+nodes into tutorials, how-to guides, explanations, and reference material.
 
 It governs reader-task classification, not physical identity. A Diátaxis
-mismatch should normally reclassify intent metadata or request curation rather
-than relocate a node.
+mismatch should normally reclassify document-kind metadata or request curation
+rather than relocate a node.
 
 Unlike Johnny.Decimal semantics, Diátaxis is a closed ontology. The allowed
 values are part of this repository's policy contract: `tutorial`, `how-to`,
@@ -240,23 +240,24 @@ authority, provenance, and conflict visibility.
 
 ### Conflict Arbitration Matrix
 
-The conflict matrix in `episteme.toml` is the jurisprudence layer for
-cross-framework disagreement. `authority_rank` chooses the governing invariant;
-`[[conflicts]]` records the enacted precedent and resolution text.
+The conflict matrix in `policies/conflicts/manifest.toml` is the jurisprudence
+layer for cross-framework disagreement. `authority_rank` chooses the governing
+invariant; `[[conflicts]]` records the enacted precedent and resolution text.
 
 `policies/conflicts/validation.sql` exposes a read-only Sentinel surface for
 selected conflicts:
 
 - `topology-vs-synthesis` keeps Johnny.Decimal identity stable when synthesis
   pressure crosses a topological boundary;
-- `decision-contract-vs-intent` preserves ADR contract authority when reader
-  intent metadata classifies a decision as tutorial or explanation material;
+- `decision-contract-vs-document-kind` preserves ADR contract authority when
+  common frontmatter kind classifies a decision as tutorial or explanation
+  material;
 - `deprecated-decision-reference` routes stale ADR pointers through
   Sensemaking before mutation.
 
 Conflict diagnostics are arbitration packets. They do not perform repair.
 Only the ADR-vs-Diátaxis case has a bounded AnchoR prompt because its safe
-resolution is local intent metadata reclassification.
+resolution is local document-kind metadata reclassification.
 The `sources/sensemaking` skill surface is the review flow for evolving these
 precedents without runtime mutation.
 
@@ -456,10 +457,20 @@ wendao-episteme/
 └── episteme.toml
 ```
 
-The `policies/` tree contains portable policy contracts. The `prompts/` tree
-contains repair-template surfaces for bounded AnchoR v3 payload generation.
-The `sources/` tree contains skillsc source files for reference and practice
-evolution workflows. It must not contain static source `prompt.txt` flows.
+The `policies/` tree contains portable policy contracts and distributed
+manifests. The `prompts/` tree contains repair-template surfaces for bounded
+AnchoR v3 payload generation. The `sources/` tree contains skillsc source files
+for reference and practice evolution workflows. It must not contain static
+source `prompt.txt` flows. The root `episteme.toml` imports these distributed
+manifests instead of duplicating theory registrations.
+
+`prompts/anchor_v3_fixers/manifest.toml` owns shared repair-prompt defaults
+such as repair tooling. Per-prompt entries keep only prompt-specific identity,
+framework, path, and write-mode fields.
+
+`sources/manifest.toml` owns execution defaults for source-evolution flows.
+Per-framework `sources/*/sources.toml` registries declare source metadata only
+and must not redeclare `[execution]`.
 
 Policy directories may contain read-only `validation.sql` diagnostics. The
 repository intentionally has no `schemas/` tree and no DDL source model.
@@ -522,11 +533,10 @@ or rewrite the surrounding document.
 
 ## Diátaxis Closed Loop
 
-Diátaxis enforcement is a closed-ontology intent loop:
+Diátaxis enforcement is a closed-ontology document-kind loop:
 
 1. `policies/diataxis/validation.sql` emits read-only diagnostics for missing
-   or unknown intent metadata. It recognizes common property casing variants
-   such as `INTENT`, `intent`, `DIATAXIS`, and `diataxis`.
+   or unknown common frontmatter kind.
 2. Project Sentinel maps query rows to `Episteme_Diataxis_Violation` XML
    diagnostics.
 3. `prompts/anchor_v3_fixers/fix_diataxis.txt` constrains LLM repair output to
@@ -617,9 +627,10 @@ Diátaxis source learning is a skill-driven loop:
 3. The target Wendao runtime executes the compiled graph through
    `qianji-bpmn-engine`, not through the prototype's Node `bpmn-engine`.
 4. The BPMN flow compares canonical Diátaxis guidance against Wendao's closed
-   intent ontology and reviews external intent-classification practice.
+   document-kind ontology and reviews external document-classification
+   practice.
 5. Terms such as "concept" or "cookbook" may produce aliasing, routing, or
-   manual-review proposals, but not a fifth Diátaxis intent.
+   manual-review proposals, but not a fifth Diátaxis document kind.
 6. Any policy change exits as an `Evolution_PR_Draft` for human review, never as
    an automatic runtime write.
 

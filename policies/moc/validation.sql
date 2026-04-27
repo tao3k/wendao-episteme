@@ -4,20 +4,55 @@
 -- assembled the request-scoped SQL surface and exposed parser-owned logical
 -- views.
 
-WITH content_nodes AS (
+WITH raw_content_nodes AS (
   SELECT
     path AS file_path,
-    lower(COALESCE(properties->>'KIND', properties->>'kind', '')) AS node_kind,
+    lower(
+      COALESCE(
+        properties->>'MOC_ROLE',
+        properties->>'moc_role',
+        json_extract_string(properties, '$.metadata.moc.role'),
+        ''
+      )
+    ) AS moc_role,
     COALESCE(
-      NULLIF(COALESCE(properties->>'JD_CATEGORY', properties->>'jd_category'), ''),
       NULLIF(
-        regexp_extract(COALESCE(properties->>'ID', properties->>'id', ''), '^([0-9]{2}[.][0-9]{2})', 1),
+        regexp_extract(COALESCE(properties->>'JD_CATEGORY', properties->>'jd_category'), '^([0-9]{2})', 1),
+        ''
+      ),
+      NULLIF(
+        regexp_extract(
+          json_extract_string(properties, '$.metadata.johnny_decimal.category'),
+          '^([0-9]{2})',
+          1
+        ),
+        ''
+      ),
+      NULLIF(
+        regexp_extract(COALESCE(properties->>'ID', properties->>'id', ''), '^([0-9]{2})[.][0-9]{2}', 1),
+        ''
+      ),
+      NULLIF(
+        regexp_extract(path, '(^|/)([0-9]{2})[_-][^/]+/', 2),
+        ''
+      ),
+      NULLIF(
+        regexp_extract(path, '(^|/)([0-9]{2})[.][0-9]{2}[^/]*[.]md$', 2),
         ''
       )
     ) AS scope_id,
     property_drawer_end
   FROM repo_content_chunk
   WHERE doc_type = 'markdown'
+),
+content_nodes AS (
+  SELECT
+    file_path,
+    scope_id,
+    property_drawer_end,
+    moc_role IN ('moc', 'hub', 'route_hub')
+      OR regexp_matches(lower(file_path), '(^|/)[0-9]{2}[.]00[^/]*[.]md$') AS is_moc
+  FROM raw_content_nodes
 ),
 category_counts AS (
   SELECT
@@ -26,14 +61,14 @@ category_counts AS (
     COUNT(DISTINCT file_path) AS note_count
   FROM content_nodes
   WHERE scope_id IS NOT NULL
-    AND node_kind <> 'moc'
+    AND NOT is_moc
   GROUP BY scope_id
 ),
 moc_scopes AS (
   SELECT DISTINCT scope_id
   FROM content_nodes
   WHERE scope_id IS NOT NULL
-    AND node_kind = 'moc'
+    AND is_moc
 ),
 density_without_moc AS (
   SELECT
@@ -60,7 +95,7 @@ moc_out_degree AS (
   FROM content_nodes moc
   LEFT JOIN reference_occurrence out_ref
     ON moc.file_path = out_ref.path
-  WHERE moc.node_kind = 'moc'
+  WHERE moc.is_moc
   GROUP BY
     moc.file_path,
     moc.property_drawer_end,

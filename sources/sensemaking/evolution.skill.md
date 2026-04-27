@@ -14,7 +14,8 @@ files. Return evidence and a reviewable proposal only.
 ## Steps
 
 1. Read the selected source entry from `sources.toml`.
-2. Read `episteme.toml` and identify the relevant `[[conflicts]]` record.
+2. Read `policies/conflicts/manifest.toml` and identify the relevant
+   `[[conflicts]]` record.
 3. Read `policies/conflicts/validation.sql` and its diagnostic mapping.
 4. If the selected source is Sentinel v2 planning material, extract only
    provenance, drift, and disagreement-routing requirements.

@@ -18,7 +18,7 @@ The current architecture blueprint is
 
 - **Johnny.Decimal:** Topological addressing rules for stable knowledge
   coordinates, bounded collections, and deterministic path identity.
-- **Diátaxis:** Intent classification rules for tutorials, how-to guides,
+- **Diátaxis:** Document-kind classification rules for tutorials, how-to guides,
   explanations, and reference material.
 - **ADR:** Decision-record contracts for status, supersession, and architectural
   consistency.
@@ -44,10 +44,12 @@ The current architecture blueprint is
 ## Contract Model
 
 The repository treats each epistemology as a policy module with explicit
-authority, ownership, and conflict behavior. The current manifest is
-[`episteme.toml`](episteme.toml).
+authority, ownership, and conflict behavior. The root
+[`episteme.toml`](episteme.toml) is intentionally thin: it records global
+boundaries and imports distributed manifests from `policies/`, `prompts/`, and
+`sources/`.
 
-The manifest records:
+The distributed manifests record:
 
 - which knowledge fields a framework owns;
 - whether violations are errors, warnings, or advisory signals;
@@ -60,11 +62,22 @@ The manifest records:
 This keeps the knowledge laws stable while allowing Wendao to choose the most
 appropriate execution substrate for a given environment.
 
+The common Markdown frontmatter contract is parser-owned and applies to every
+Markdown document. It requires `title`, `kind`, `category`, `tags`,
+`description`, `author`, minute-precision `date`, and
+`metadata.retrieval.saliency_base` / `metadata.retrieval.decay_rate`. `kind`
+is the controlled reading/use-mode axis, `category` is the primary project or
+domain bucket, and `tags` are flexible cross-cutting retrieval hints. `SKILL.md`
+frontmatter extends this common contract with `type`, `name`,
+`metadata.version`, `metadata.source`, and `metadata.routing_keywords`; only
+`metadata.intents` is optional in the skill-specific extension.
+
 ## Conflict Policy
 
-`episteme.toml` should define priority and conflict behavior between theories.
-The priority is not a simple execution order. It is an authority model for
-deciding which invariant wins when two frameworks disagree.
+`policies/conflicts/manifest.toml` defines priority and conflict behavior
+between theories. The priority is not a simple execution order. It is an
+authority model for deciding which invariant wins when two frameworks
+disagree.
 
 For example, if an Evergreen synthesis link suggests relocating a note across a
 Johnny.Decimal boundary, the canonical topological address remains stable until
@@ -95,15 +108,15 @@ append-only topology diff. Existing category identity, assigned coordinates,
 and committed anchor ids are not mutable through this flow.
 
 Diátaxis has a different boundary. It is a closed ontology, so the four allowed
-intents are part of this repository's policy contract.
+ordinary-document kinds are part of the common frontmatter contract.
 
 Diátaxis repair is metadata-scoped. LLM repair may classify a document into one
-of the four intent values, but it must not relocate the node or rewrite prose to
-make the classification fit.
+of the four document-kind values, but it must not relocate the node or rewrite
+prose to make the classification fit.
 
-Path and intent conflicts are project-local. Consumers may expose optional
-path-rule views for those checks, but this repository does not hard-code
-workspace directory semantics into the universal Diátaxis policy.
+Path and document-kind conflicts are project-local. Consumers may expose
+optional path-rule views for those checks, but this repository does not
+hard-code workspace directory semantics into the universal Diátaxis policy.
 
 ## Evergreen Boundary
 
@@ -206,12 +219,12 @@ through source evolution review before it becomes valid.
 Conflict arbitration applies the manifest's authority matrix after individual
 policies have produced evidence. `topology-vs-synthesis` preserves
 Johnny.Decimal identity over Evergreen relocation pressure.
-`decision-contract-vs-intent` preserves ADR authority over Diátaxis reader-mode
-metadata. `deprecated-decision-reference` routes stale ADR pointers through
+`decision-contract-vs-document-kind` preserves ADR authority over Diátaxis
+document-kind metadata. `deprecated-decision-reference` routes stale ADR pointers through
 Sensemaking before mutation.
 
 Only the ADR-vs-Diátaxis case has a bounded metadata repair prompt because its
-safe resolution is local intent reclassification. Topology, authorship, and
+safe resolution is local document-kind reclassification. Topology, authorship, and
 consensus conflicts remain recommendation or review flows unless Sentinel
 reports an explicit safe range.
 
@@ -228,6 +241,10 @@ payload crosses into protected prose, AnchoR must reject the write and emit an
 authorship-boundary diagnostic. The replan prompt may move the proposal to a
 safe scaffold range only when Sentinel provides exact bytes for that range.
 
+Repair prompt defaults live in `prompts/anchor_v3_fixers/manifest.toml`.
+Individual prompt entries declare prompt identity, framework, path, and
+write-mode only; shared repair tooling must not be repeated per entry.
+
 ## Source Evolution Skills
 
 External reference analysis is not prompt engineering. The `sources/` tree
@@ -236,6 +253,17 @@ framework. Consumers compile that skill with `skillsc` into BPMN. The upstream
 prototype proves the model: a large model compiles Markdown into a BPMN subset,
 and each compiled `serviceTask` carries `skillsc:config` with a focused prompt,
 tools, inputs, and outputs.
+
+Execution defaults live in `sources/manifest.toml`. Individual
+`sources/*/sources.toml` files declare only source metadata; they must not
+redeclare `[execution]` blocks.
+
+The repository-local `tools/wendao_episteme_align` runner prepares
+Codex-assisted alignment reports from those source registries. It fetches
+practice sources, normalizes Markdown, chunks source text, and writes a Codex
+evidence-extraction prompt packet under `$PRJ_CACHE_HOME/episteme/alignment/`.
+It is report preparation only: it does not call an external model API, execute
+policy, mutate `policies/`, or replace `wendao audit` / `wendao lint`.
 
 The prototype executor uses Node `bpmn-engine`; that is not the Wendao runtime
 contract. The intended execution target is `qianji-bpmn-engine` with a host
@@ -258,11 +286,11 @@ diff.
 .
 ├── docs/
 │   └── rfcs/           # Architecture and policy blueprints
-├── policies/           # Portable framework policy contracts
-├── prompts/            # AnchoR v3 repair-template surfaces
-├── sources/            # Skillsc/BPMN source evolution flows
+├── policies/           # Portable framework policy manifests and contracts
+├── prompts/            # AnchoR v3 repair-template manifests and surfaces
+├── sources/            # Skillsc/BPMN source evolution manifests and flows
 ├── README.md
-└── episteme.toml       # Manifest for framework authority and conflict policy
+└── episteme.toml       # Thin root manifest that imports distributed policy
 ```
 
 ## Integration Boundary

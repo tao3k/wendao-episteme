@@ -1,0 +1,49 @@
+[[policy_queries]]
+id = "ibis.argumentation-validation"
+framework = "ibis"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "ibis_node_id",
+  "related_id",
+  "current_metric_value",
+]
+
+[[authoring_templates]]
+id = "ibis.argumentation-authoring-template"
+framework = "ibis"
+path = "authoring_template.toml"
+command = "wendao audit --template ibis"
+mode = "argumentation_graph"
+output_mode = "template_guided_generation"
+authority_rule = "IBIS repair may scaffold unresolved debate, but it must not decide the issue or fabricate arguments."
+
+[[diagnostic_mappings]]
+id = "ibis.argumentation-diagnostic"
+framework = "ibis"
+query = "ibis.argumentation-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_IBIS_Violation"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "ibis"
+name = "IBIS Argumentation"
+kind = "discourse_graph"
+authority_rank = 75
+default_severity = "warning"
+owns = [
+  "ibis.node_type",
+  "ibis.position_edge",
+  "discourse.resolution",
+]
+conflict_strategy = "surface_open_questions_without_deciding_them"

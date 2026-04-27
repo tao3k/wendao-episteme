@@ -2,14 +2,15 @@
 --
 -- This file is intentionally read-only. It assumes Wendao has already
 -- assembled the request-scoped SQL surface and exposed parser-owned logical
--- views.
+-- views. ADR status may be represented as a normalized lifecycle value or as a
+-- MADR-style inline value such as `superseded by ADR-0123`.
 
-WITH adr_nodes AS (
+WITH raw_adr_nodes AS (
   SELECT
     path AS file_path,
     title AS adr_title,
     COALESCE(properties->>'ID', properties->>'id', title) AS adr_id,
-    upper(COALESCE(properties->>'STATUS', properties->>'status')) AS adr_status,
+    COALESCE(properties->>'STATUS', properties->>'status') AS raw_status,
     COALESCE(
       properties->>'SUPERSEDED_BY',
       properties->>'superseded_by',
@@ -24,6 +25,23 @@ WITH adr_nodes AS (
       lower(path) LIKE '%/adr/%'
       OR upper(COALESCE(properties->>'TYPE', properties->>'type', '')) = 'ADR'
     )
+),
+adr_nodes AS (
+  SELECT
+    file_path,
+    adr_title,
+    adr_id,
+    CASE
+      WHEN upper(raw_status) LIKE 'SUPERSEDED BY %' THEN 'SUPERSEDED'
+      ELSE upper(raw_status)
+    END AS adr_status,
+    COALESCE(
+      superseded_by,
+      nullif(regexp_extract(raw_status, '^[Ss][Uu][Pp][Ee][Rr][Ss][Ee][Dd][Ee][Dd][[:space:]]+[Bb][Yy][[:space:]]+(.+)$', 1), '')
+    ) AS superseded_by,
+    property_drawer_start,
+    property_drawer_end
+  FROM raw_adr_nodes
 ),
 expired_adr_references AS (
   SELECT
@@ -66,6 +84,7 @@ invalid_status AS (
   WHERE adr_status IS NULL
     OR adr_status NOT IN (
       'PROPOSED',
+      'REJECTED',
       'ACCEPTED',
       'ACTIVE',
       'DEPRECATED',

@@ -1,0 +1,48 @@
+[[policy_queries]]
+id = "folgezettel.lineage-validation"
+framework = "folgezettel"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "local_symbol",
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_sequence",
+  "related_sequence",
+]
+
+[[authoring_templates]]
+id = "folgezettel.lineage-authoring-template"
+framework = "folgezettel"
+path = "authoring_template.toml"
+command = "wendao audit --template folgezettel"
+mode = "lineage_sequence"
+output_mode = "template_guided_generation"
+authority_rule = "Folgezettel sequence metadata preserves causal continuity; repair is metadata-scoped and must not fabricate missing parent notes."
+
+[[diagnostic_mappings]]
+id = "folgezettel.lineage-diagnostic"
+framework = "folgezettel"
+query = "folgezettel.lineage-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_Folgezettel_Broken_Lineage"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "folgezettel"
+name = "Zettelkasten Folgezettel"
+kind = "lineage_tracking"
+authority_rank = 85
+default_severity = "error"
+owns = [
+  "lineage.sequence",
+  "lineage.parent",
+  "causal_derivation",
+]
+conflict_strategy = "preserve_lineage_continuity"

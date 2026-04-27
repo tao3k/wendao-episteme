@@ -1,0 +1,62 @@
+id = "semantic-consistency.protocol-authoring-template"
+framework = "semantic-consistency"
+mode = "protocol_alignment"
+coordinate_source = "metadata status and dependency hash fields"
+topology_source = "repo_content_chunk plus optional project_content_fingerprint"
+authority = "template_guided_generation"
+llm_role = "protocol_alignment_planner"
+authority_rule = "Semantic Consistency preserves enacted protocol vocabulary and treats stale-read findings as planner review signals before writes."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "metadata status or dependency hash contract"
+inbox_directory = "project-defined"
+inbox_policy = "Documents without lifecycle status metadata are outside this status check."
+
+[frontmatter]
+status_field = "metadata.lifecycle.status"
+agent_maintainer_field = "metadata.agent.maintainer"
+dependency_file_field = "metadata.dependencies.file"
+dependency_hash_field = "metadata.dependencies.hash"
+property_drawer_policy = "Property-drawer status and dependency fields are parser input compatibility surfaces, not the preferred authoring target."
+
+[[diagnostics]]
+code = "invalid_status"
+severity = "error"
+meaning = "A metadata status value is outside the enacted Wendao protocol vocabulary."
+llm_action = "Correct only the reported status value when a canonical replacement is unambiguous."
+
+[[diagnostics]]
+code = "stale_read_detected"
+severity = "warning"
+meaning = "An agent-maintained note records a dependency hash that no longer matches the live fingerprint."
+llm_action = "Produce a review plan before any write; do not refresh prose directly from stale context."
+
+[[llm_inputs]]
+name = "status_metadata"
+description = "Lifecycle status values exposed by parser-owned metadata views, preferably metadata.lifecycle.status."
+
+[[llm_inputs]]
+name = "dependency_fingerprints"
+description = "Recorded metadata.dependencies.hash values and live dependency hashes when the optional fingerprint view exists."
+
+[[llm_outputs]]
+name = "status_metadata_patch"
+description = "A metadata-only patch for a reported invalid status."
+
+[[llm_outputs]]
+name = "stale_read_review_plan"
+description = "A non-mutating plan for refreshing agent-maintained material."
+
+[[examples]]
+kind = "invalid_status"
+path = "tests/fixtures/frameworks/semantic_consistency_status/docs/invalid_status.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

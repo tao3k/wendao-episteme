@@ -1,0 +1,52 @@
+[[policy_queries]]
+id = "evergreen.connectivity-atomicity-validation"
+framework = "evergreen-notes"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "local_symbol",
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_metric_name",
+  "current_metric_value",
+  "relation_block_state",
+]
+
+[[authoring_templates]]
+id = "evergreen-notes.relation-authoring-template"
+framework = "evergreen-notes"
+path = "authoring_template.toml"
+command = "wendao audit --template evergreen-notes"
+mode = "relation_graph"
+output_mode = "template_guided_generation"
+authority_rule = "Evergreen diagnostics recommend synthesis links and atomicity repair without rewriting author-owned prose or changing canonical identity."
+
+[[diagnostic_mappings]]
+id = "evergreen.connectivity-atomicity-diagnostic"
+framework = "evergreen-notes"
+query = "evergreen.connectivity-atomicity-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_Evergreen_Violation"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "evergreen-notes"
+name = "Evergreen Notes"
+kind = "atomic_synthesis"
+authority_rank = 60
+default_severity = "advisory"
+owns = [
+  "note.atomicity",
+  "note.link_density",
+  "graph.connectivity",
+  "relation_block",
+  "semantic_neighbors",
+]
+conflict_strategy = "recommend_synthesis_without_rewriting_identity"

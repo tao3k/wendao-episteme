@@ -1,0 +1,76 @@
+[[policy_queries]]
+id = "semantic-consistency.status-validation"
+framework = "semantic-consistency"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "current_status",
+]
+
+[[policy_queries]]
+id = "semantic-consistency.stale-read-validation"
+framework = "semantic-consistency"
+path = "stale_read_validation.sql"
+statement_mode = "select_only"
+requires_optional_view = "project_content_fingerprint"
+reads = [
+  "repo_content_chunk",
+  "project_content_fingerprint",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "dependency_path",
+  "recorded_hash",
+  "live_hash",
+]
+
+[[authoring_templates]]
+id = "semantic-consistency.protocol-authoring-template"
+framework = "semantic-consistency"
+path = "authoring_template.toml"
+command = "wendao audit --template semantic-consistency"
+mode = "protocol_alignment"
+output_mode = "template_guided_generation"
+authority_rule = "Semantic Consistency preserves enacted protocol vocabulary and treats stale-read findings as planner review signals before writes."
+
+[[diagnostic_mappings]]
+id = "semantic-consistency.status-diagnostic"
+framework = "semantic-consistency"
+query = "semantic-consistency.status-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_SemanticConsistency_Violation"
+renderer_owner = "Project Sentinel"
+
+[[diagnostic_mappings]]
+id = "semantic-consistency.stale-read-diagnostic"
+framework = "semantic-consistency"
+query = "semantic-consistency.stale-read-validation"
+path = "stale_read_diagnostic.toml"
+issue_type = "Episteme_SemanticConsistency_StaleRead"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "semantic-consistency"
+name = "Semantic Consistency"
+kind = "protocol_alignment"
+authority_rank = 88
+default_severity = "error"
+owns = [
+  "protocol.status",
+  "metadata.enum_alignment",
+  "cross_runtime_semantics",
+  "stale_read.hash_guard",
+]
+conflict_strategy = "preserve_enacted_protocol_vocabulary"

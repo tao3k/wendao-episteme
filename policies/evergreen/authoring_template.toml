@@ -1,0 +1,81 @@
+id = "evergreen-notes.relation-authoring-template"
+framework = "evergreen-notes"
+mode = "relation_graph"
+coordinate_source = "common frontmatter and wiki-style references"
+topology_source = "repo_content_chunk plus reference_occurrence"
+authority = "template_guided_generation"
+llm_role = "synthesis_planner"
+authority_rule = "Source-grounded Evergreen principles inform review, but only mechanically observable graph and atomicity signals become deterministic diagnostics."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "stable title, canonical path, and reference graph membership"
+inbox_directory = "project-defined"
+inbox_policy = "Draft notes may remain unlinked until they opt into durable knowledge graph publication."
+
+[[diagnostics]]
+code = "EVERGREEN_ORPHAN_MISSING_RELATION_BLOCK"
+severity = "advisory"
+meaning = "A Markdown note has no incoming or outgoing reference edges and no governed relation block."
+llm_action = "Suggest inserting a compact relation block only when the diagnostic reports an explicit insertion range and graph evidence supports candidate links."
+
+[[diagnostics]]
+code = "EVERGREEN_EMPTY_RELATION_BLOCK"
+severity = "advisory"
+meaning = "A governed relation block exists but contains no detected wiki links."
+llm_action = "Patch only the reported relation block with 2-3 evidence-backed wiki links, or return manual review when evidence is insufficient."
+
+[[diagnostics]]
+code = "EVERGREEN_BLOATED"
+severity = "advisory"
+meaning = "A note exceeds the enacted atomicity threshold."
+llm_action = "Propose a review plan for splitting or extracting related notes; do not rewrite prose directly."
+
+[[llm_inputs]]
+name = "note_frontmatter"
+description = "Common frontmatter identifying the note and its retrieval context."
+
+[[llm_inputs]]
+name = "reference_graph"
+description = "Incoming and outgoing references exposed through Wendao logical views."
+
+[[llm_inputs]]
+name = "relation_block_state"
+description = "Whether the note has a missing, empty, or present relation block."
+
+[[llm_inputs]]
+name = "source_grounding"
+description = "Evergreen source principles: atomic notes, concept orientation, dense links, associative structure, title handles, and incremental writing."
+
+[[llm_outputs]]
+name = "relation_patch"
+description = "A reviewable relation-block insertion or update proposal."
+
+[[llm_outputs]]
+name = "atomicity_review_plan"
+description = "A non-mutating plan for decomposing oversized notes."
+
+[[llm_outputs]]
+name = "principle_review"
+description = "A non-mutating explanation when concept orientation, title quality, or associative structure needs human review instead of deterministic repair."
+
+[[examples]]
+kind = "orphan"
+path = "tests/fixtures/frameworks/evergreen/docs/orphan.md"
+
+[[examples]]
+kind = "empty_relation_block"
+path = "tests/fixtures/frameworks/evergreen/docs/empty_relations.md"
+
+[[examples]]
+kind = "bloated_note"
+path = "tests/fixtures/frameworks/evergreen/docs/bloated_note.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

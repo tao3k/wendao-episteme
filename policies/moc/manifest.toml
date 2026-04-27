@@ -1,0 +1,50 @@
+[[policy_queries]]
+id = "moc.density-validation"
+framework = "moc"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "scope_id",
+  "current_metric_name",
+  "current_metric_value",
+]
+
+[[authoring_templates]]
+id = "moc.navigation-hub-authoring-template"
+framework = "moc"
+path = "authoring_template.toml"
+command = "wendao audit --template moc"
+mode = "navigation_hub"
+output_mode = "template_guided_generation"
+authority_rule = "MOC repair may add or refine route indexes, but it must not move notes, rewrite linked prose, or override canonical topology."
+
+[[diagnostic_mappings]]
+id = "moc.density-diagnostic"
+framework = "moc"
+query = "moc.density-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_MOC_Structural_Anomaly"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "moc"
+name = "Map of Content"
+kind = "topological_hub"
+authority_rank = 65
+default_severity = "advisory"
+owns = [
+  "hub.density",
+  "hub.route_index",
+  "index.connectivity",
+  "cluster.navigation",
+]
+conflict_strategy = "recommend_synthesis_without_rewriting_identity"

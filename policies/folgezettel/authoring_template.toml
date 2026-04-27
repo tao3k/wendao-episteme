@@ -1,0 +1,57 @@
+id = "folgezettel.lineage-authoring-template"
+framework = "folgezettel"
+mode = "lineage_sequence"
+coordinate_source = "common frontmatter metadata.folgezettel.sequence or parser-owned sequence metadata"
+topology_source = "repo_content_chunk sequence inventory"
+authority = "template_guided_generation"
+llm_role = "lineage_planner"
+authority_rule = "Folgezettel sequence metadata preserves opt-in sequence continuity; repair is metadata-scoped and must not fabricate missing parent notes."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "Wendao-local alphanumeric sequence id with parent continuity"
+inbox_directory = "project-defined"
+inbox_policy = "Notes without sequence metadata stay outside Folgezettel policy."
+
+[[diagnostics]]
+code = "broken_lineage"
+severity = "error"
+meaning = "A child sequence has no existing parent sequence."
+llm_action = "Propose a metadata correction only when a real parent sequence exists."
+
+[[diagnostics]]
+code = "duplicate_sequence"
+severity = "error"
+meaning = "The same sequence id appears in more than one document."
+llm_action = "Propose a reviewable sequence reassignment for one duplicate; do not change both sides blindly."
+
+[[diagnostics]]
+code = "invalid_sequence"
+severity = "error"
+meaning = "A sequence id does not match the Wendao-local alphanumeric shape."
+llm_action = "Normalize only the reported sequence metadata range."
+
+[[llm_inputs]]
+name = "sequence_inventory"
+description = "Observed sequence ids and parent candidates."
+
+[[llm_outputs]]
+name = "sequence_metadata_patch"
+description = "A metadata-only patch for the reported sequence field."
+
+[[llm_outputs]]
+name = "manual_review_reason"
+description = "Reason a lineage repair cannot be inferred safely."
+
+[[examples]]
+kind = "broken_lineage"
+path = "tests/fixtures/frameworks/folgezettel/docs/broken_lineage.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

@@ -18,12 +18,26 @@ WITH allowed_statuses(status) AS (
 content_statuses AS (
   SELECT
     path AS file_path,
-    upper(trim(COALESCE(properties->>'STATUS', properties->>'status'))) AS current_status,
+    upper(
+      trim(
+        COALESCE(
+          properties->>'STATUS',
+          properties->>'status',
+          json_extract_string(properties, '$.metadata.status'),
+          json_extract_string(properties, '$.metadata.lifecycle.status')
+        )
+      )
+    ) AS current_status,
     COALESCE(property_drawer_start, 0) AS byte_start,
     COALESCE(property_drawer_end, 0) AS byte_end
   FROM repo_content_chunk
   WHERE doc_type = 'markdown'
-    AND COALESCE(properties->>'STATUS', properties->>'status') IS NOT NULL
+    AND COALESCE(
+      properties->>'STATUS',
+      properties->>'status',
+      json_extract_string(properties, '$.metadata.status'),
+      json_extract_string(properties, '$.metadata.lifecycle.status')
+    ) IS NOT NULL
 )
 SELECT
   content.file_path,

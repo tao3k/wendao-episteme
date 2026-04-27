@@ -2,17 +2,6 @@ schema_version = 1
 framework = "search-reasoning"
 registry_kind = "local_research_sources"
 
-[execution]
-skill_path = "evolution.skill.md"
-compiler = "skillsc"
-compiled_format = "bpmn"
-prototype_executor = "skillsx"
-prototype_engine = "bpmn-engine"
-target_engine = "qianji-bpmn-engine"
-output_mode = "reviewable_diff_only"
-runtime_policy_mutation_allowed = false
-human_review_required = true
-
 [[source]]
 id = "wendao-search-as-reasoning-research"
 name = "Search as Reasoning Research Note"

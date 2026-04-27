@@ -1,0 +1,49 @@
+[[policy_queries]]
+id = "search-reasoning.query-fragility-validation"
+framework = "search-reasoning"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "local_symbol",
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "query_context",
+]
+
+[[authoring_templates]]
+id = "search-reasoning.query-authoring-template"
+framework = "search-reasoning"
+path = "authoring_template.toml"
+command = "wendao audit --template search-reasoning"
+mode = "query_reasoning_contract"
+output_mode = "template_guided_generation"
+authority_rule = "Search Reasoning prefers stable semantic predicates over brittle exact paths while preserving query intent and result shape."
+
+[[diagnostic_mappings]]
+id = "search-reasoning.query-fragility-diagnostic"
+framework = "search-reasoning"
+query = "search-reasoning.query-fragility-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_SearchReasoning_Violation"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "search-reasoning"
+name = "Search as Reasoning"
+kind = "query_reasoning_contract"
+authority_rank = 72
+default_severity = "warning"
+owns = [
+  "query.semantic_predicate",
+  "search.intent_stability",
+  "reasoning.path_robustness",
+  "uid.structural_encoding",
+]
+conflict_strategy = "prefer_semantic_predicates_over_brittle_paths"

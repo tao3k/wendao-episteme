@@ -35,10 +35,14 @@ brittle_queries AS (
     line_number AS byte_end,
     query_context
   FROM query_fences
-  WHERE query_context LIKE '%where path =%'
-    OR query_context LIKE '%where file_path =%'
-    OR query_context LIKE '% path: "%'
-    OR query_context LIKE '% file_path: "%'
+  WHERE regexp_matches(
+      query_context,
+      '(^|[[:space:]])where[[:space:]]+([a-z_][a-z0-9_]*[.])?(path|file_path)[[:space:]]*='
+    )
+    OR regexp_matches(
+      query_context,
+      '(^|[[:space:]])(path|file_path)[[:space:]]*:[[:space:]]*["'']'
+    )
 ),
 code_symbol_references AS (
   SELECT DISTINCT

@@ -1,0 +1,30 @@
+schema_version = 1
+framework = "temporal-scaffolding"
+registry_kind = "local_authorship_boundary_sources"
+
+[[source]]
+id = "wendao-episteme-blueprint-authorship"
+name = "Wendao Episteme Authorship Boundary Blueprint"
+path = "docs/rfcs/wendao-episteme-cognitive-policy-blueprint-rfc.md"
+type = "local_doc"
+enabled = true
+authority = "governed_rfc"
+notes = "Local RFC sections defining Temporal Scaffolding, AnchoR v3 repair constraints, and authorship-boundary defense."
+
+[[source]]
+id = "wendao-episteme-repair-protocol"
+name = "Wendao Episteme Repair Protocol"
+path = "policies/protocols/manifest.toml"
+type = "local_file"
+enabled = true
+authority = "governed_policy"
+notes = "Global diagnostic and repair protocol contract, including allowed and protected byte zones."
+
+[[source]]
+id = "anchor-v3-authorship-replan-prompt"
+name = "AnchoR v3 Authorship Boundary Replan Prompt"
+path = "prompts/anchor_v3_fixers/fix_authorship_boundary.txt"
+type = "local_file"
+enabled = true
+authority = "governed_prompt"
+notes = "Repair prompt that constrains replan output after an authorship-boundary rejection."

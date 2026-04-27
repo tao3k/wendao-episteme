@@ -1,4 +1,4 @@
-id = "diataxis.intent-diagnostic"
+id = "diataxis.kind-diagnostic"
 framework = "diataxis"
 query = "policies/diataxis/validation.sql"
 issue_type = "Episteme_Diataxis_Violation"
@@ -16,14 +16,9 @@ file_path = "file_path"
 violation_type = "violation_type"
 byte_start = "byte_start"
 byte_end = "byte_end"
-current_intent = "current_intent"
+current_kind = "current_kind"
 
 [[messages]]
-violation_type = "MISSING_DIATAXIS_INTENT"
-message = "Markdown node is missing a Diátaxis intent. Expected one of: tutorial, how-to, explanation, reference."
-remediation_class = "metadata_patch"
-
-[[messages]]
-violation_type = "INVALID_DIATAXIS_INTENT"
-message = "Diátaxis intent is outside the closed ontology. Expected one of: tutorial, how-to, explanation, reference."
+violation_type = "INVALID_DOCUMENT_KIND"
+message = "Ordinary document frontmatter kind is outside the Diátaxis document-kind ontology. Expected one of: tutorial, how-to, explanation, reference."
 remediation_class = "metadata_patch"

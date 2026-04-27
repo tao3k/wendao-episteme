@@ -8,19 +8,37 @@ WITH ibis_nodes AS (
   SELECT
     path AS file_path,
     title,
-    COALESCE(properties->>'ID', properties->>'id', title) AS node_id,
-    lower(COALESCE(properties->>'IBIS_TYPE', properties->>'ibis_type', '')) AS ibis_type,
     COALESCE(
-      properties->>'ISSUE',
-      properties->>'issue',
-      properties->>'TARGET_ISSUE',
-      properties->>'target_issue'
+      NULLIF(properties->>'ID', ''),
+      NULLIF(properties->>'id', ''),
+      NULLIF(json_extract_string(properties, '$.metadata.ibis.id'), ''),
+      title
+    ) AS node_id,
+    lower(
+      COALESCE(
+        NULLIF(properties->>'IBIS_TYPE', ''),
+        NULLIF(properties->>'ibis_type', ''),
+        NULLIF(json_extract_string(properties, '$.metadata.ibis.type'), ''),
+        ''
+      )
+    ) AS ibis_type,
+    COALESCE(
+      NULLIF(properties->>'ISSUE', ''),
+      NULLIF(properties->>'issue', ''),
+      NULLIF(properties->>'TARGET_ISSUE', ''),
+      NULLIF(properties->>'target_issue', ''),
+      NULLIF(json_extract_string(properties, '$.metadata.ibis.issue'), ''),
+      NULLIF(json_extract_string(properties, '$.metadata.ibis.target_issue'), '')
     ) AS target_issue,
     COALESCE(property_drawer_start, 0) AS byte_start,
     COALESCE(property_drawer_end, 0) AS byte_end
   FROM repo_content_chunk
   WHERE doc_type = 'markdown'
-    AND COALESCE(properties->>'IBIS_TYPE', properties->>'ibis_type') IS NOT NULL
+    AND COALESCE(
+      NULLIF(properties->>'IBIS_TYPE', ''),
+      NULLIF(properties->>'ibis_type', ''),
+      NULLIF(json_extract_string(properties, '$.metadata.ibis.type'), '')
+    ) IS NOT NULL
 ),
 issues AS (
   SELECT *
@@ -31,6 +49,26 @@ positions AS (
   SELECT *
   FROM ibis_nodes
   WHERE ibis_type = 'position'
+),
+invalid_node_types AS (
+  SELECT
+    file_path,
+    'IBIS_INVALID_NODE_TYPE' AS violation_type,
+    byte_start,
+    byte_end,
+    node_id AS ibis_node_id,
+    ibis_type AS related_id,
+    0 AS current_metric_value
+  FROM ibis_nodes
+  WHERE ibis_type NOT IN (
+    'argument',
+    'issue',
+    'model_problem',
+    'position',
+    'question',
+    'question_of_fact',
+    'topic'
+  )
 ),
 position_issue_links AS (
   SELECT DISTINCT
@@ -99,6 +137,18 @@ SELECT
   related_id,
   current_metric_value
 FROM unresolved_issues
+
+UNION ALL
+
+SELECT
+  file_path,
+  violation_type,
+  byte_start,
+  byte_end,
+  ibis_node_id,
+  related_id,
+  current_metric_value
+FROM invalid_node_types
 
 UNION ALL
 

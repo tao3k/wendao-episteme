@@ -31,5 +31,5 @@ remediation_class = "manual_review"
 
 [[messages]]
 violation_type = "FOLGEZETTEL_INVALID_SEQUENCE"
-message = "Folgezettel sequence id does not match the accepted alphanumeric lineage format."
+message = "Folgezettel sequence id does not match the Wendao-local alphanumeric lineage format."
 remediation_class = "sequence_metadata_patch"

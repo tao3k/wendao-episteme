@@ -28,11 +28,11 @@ message = "Synthesis pressure crosses a Johnny.Decimal boundary and must not rew
 remediation_class = "manual_review"
 
 [[messages]]
-violation_type = "CONFLICT_DECISION_VS_INTENT"
-message = "Reader intent conflicts with ADR contract authority."
+violation_type = "CONFLICT_DECISION_VS_DOCUMENT_KIND"
+message = "Common frontmatter kind conflicts with ADR contract authority."
 remediation_class = "metadata_patch"
 
 [[messages]]
 violation_type = "CONFLICT_DEPRECATED_DECISION_REFERENCE"
-message = "Material references an expired decision contract and needs visible sensemaking before mutation."
+message = "Material references a deprecated or superseded ADR contract and needs visible sensemaking before mutation."
 remediation_class = "consensus_review"

@@ -2,17 +2,6 @@ schema_version = 1
 framework = "moc"
 registry_kind = "reference_and_practice_sources"
 
-[execution]
-skill_path = "evolution.skill.md"
-compiler = "skillsc"
-compiled_format = "bpmn"
-prototype_executor = "skillsx"
-prototype_engine = "bpmn-engine"
-target_engine = "qianji-bpmn-engine"
-output_mode = "reviewable_diff_only"
-runtime_policy_mutation_allowed = false
-human_review_required = true
-
 [[source]]
 id = "linking-your-thinking"
 name = "Linking Your Thinking"
@@ -29,12 +18,21 @@ notes = "Nick Milo's public Linking Your Thinking surface for MOC and route-hub 
 [[source]]
 id = "linking-your-thinking-maps"
 name = "LYT Maps"
-url = "https://blog.linkingyourthinking.com/maps/"
+url = "https://blog.linkingyourthinking.com/"
 type = "website"
 cron = "0 0 15 * *"
 enabled = true
 entrypoints = [
-  "/",
+  "/maps/",
+  "/notes/mocs-overview",
+  "/notes/mocs-%28defn%29",
+  "/notes/the-3-phases-of-mocs",
+  "/notes/habits-map",
+  "/notes/mental-squeeze-point",
+  "/notes/lyt-glossary",
+  "/notes/lyt-faq",
+  "/essays/in-what-ways-can-we-form-useful-relationships-between-notes",
+  "/notes/set-up-your-home-note",
 ]
 authority = "practice_reference"
 notes = "Public LYT map examples for reviewing hub density and index conventions."

@@ -1,0 +1,49 @@
+[[policy_queries]]
+id = "adr.state-reference-validation"
+framework = "adr"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repo_content_chunk",
+  "reference_occurrence",
+  "wendao_sql_columns",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "byte_start",
+  "byte_end",
+  "target_adr_id",
+  "target_adr_status",
+  "replacement_adr_id",
+]
+
+[[authoring_templates]]
+id = "adr.decision-contract-authoring-template"
+framework = "adr"
+path = "authoring_template.toml"
+command = "wendao audit --template adr"
+mode = "decision_contract"
+output_mode = "template_guided_generation"
+authority_rule = "ADR status, supersession, and active decision references outrank document-kind suggestions and synthesis pressure."
+
+[[diagnostic_mappings]]
+id = "adr.state-reference-diagnostic"
+framework = "adr"
+query = "adr.state-reference-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_ADR_Violation"
+renderer_owner = "Project Sentinel"
+
+[[frameworks]]
+id = "adr"
+name = "Architecture Decision Records"
+kind = "decision_contract"
+authority_rank = 90
+default_severity = "error"
+owns = [
+  "decision.status",
+  "decision.supersession",
+  "decision.scope",
+]
+conflict_strategy = "preserve_recorded_decision_contract"

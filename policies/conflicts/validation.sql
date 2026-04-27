@@ -8,29 +8,65 @@ WITH content_nodes AS (
   SELECT
     path AS file_path,
     title,
-    COALESCE(properties->>'ID', properties->>'id', title) AS node_id,
+    COALESCE(
+      properties->>'ID',
+      properties->>'id',
+      json_extract_string(properties, '$.metadata.id'),
+      json_extract_string(properties, '$.metadata.adr.id'),
+      title
+    ) AS node_id,
     CASE
-      WHEN regexp_matches(COALESCE(properties->>'ID', properties->>'id', ''), '^[0-9]{2}[.][0-9]{2}')
-        THEN substr(COALESCE(properties->>'ID', properties->>'id', ''), 1, 2)
+      WHEN regexp_matches(
+        COALESCE(
+          properties->>'ID',
+          properties->>'id',
+          json_extract_string(properties, '$.metadata.id'),
+          json_extract_string(properties, '$.metadata.johnny_decimal.coordinate'),
+          ''
+        ),
+        '^[0-9]{2}[.][0-9]{2}'
+      )
+        THEN substr(
+          COALESCE(
+            properties->>'ID',
+            properties->>'id',
+            json_extract_string(properties, '$.metadata.id'),
+            json_extract_string(properties, '$.metadata.johnny_decimal.coordinate')
+          ),
+          1,
+          2
+        )
       ELSE ''
     END AS jd_root,
-    lower(COALESCE(properties->>'KIND', properties->>'kind', '')) AS node_kind,
-    lower(COALESCE(properties->>'TYPE', properties->>'type', '')) AS node_type,
-    lower(
-      COALESCE(
-        properties->>'INTENT',
-        properties->>'intent',
-        properties->>'DIATAXIS',
-        properties->>'diataxis',
-        ''
-      )
-    ) AS intent,
-    upper(COALESCE(properties->>'STATUS', properties->>'status', '')) AS status,
+    lower(COALESCE(
+      properties->>'KIND',
+      properties->>'kind',
+      json_extract_string(properties, '$.metadata.kind'),
+      ''
+    )) AS node_kind,
+    lower(COALESCE(
+      properties->>'TYPE',
+      properties->>'type',
+      json_extract_string(properties, '$.metadata.type'),
+      json_extract_string(properties, '$.metadata.adr.type'),
+      json_extract_string(properties, '$.metadata.ibis.type'),
+      ''
+    )) AS node_type,
+    upper(COALESCE(
+      properties->>'STATUS',
+      properties->>'status',
+      json_extract_string(properties, '$.metadata.status'),
+      json_extract_string(properties, '$.metadata.lifecycle.status'),
+      json_extract_string(properties, '$.metadata.adr.status'),
+      ''
+    )) AS status,
     COALESCE(
       properties->>'SUPERSEDED_BY',
       properties->>'superseded_by',
       properties->>'Superseded-By',
-      properties->>'superseded-by'
+      properties->>'superseded-by',
+      json_extract_string(properties, '$.metadata.superseded_by'),
+      json_extract_string(properties, '$.metadata.adr.superseded_by')
     ) AS superseded_by,
     COALESCE(property_drawer_start, 0) AS property_drawer_start,
     COALESCE(property_drawer_end, 0) AS property_drawer_end
@@ -76,23 +112,23 @@ topology_vs_synthesis AS (
       OR edge_context LIKE '%move_suggestion%'
     )
 ),
-decision_contract_vs_intent AS (
+decision_contract_vs_document_kind AS (
   SELECT
     file_path,
-    'CONFLICT_DECISION_VS_INTENT' AS violation_type,
+    'CONFLICT_DECISION_VS_DOCUMENT_KIND' AS violation_type,
     property_drawer_start AS byte_start,
     property_drawer_end AS byte_end,
-    'decision-contract-vs-intent' AS conflict_id,
+    'decision-contract-vs-document-kind' AS conflict_id,
     'adr' AS primary_framework,
     'diataxis' AS secondary_framework,
-    'Preserve the ADR contract. Reclassify the intent layer or require a superseding decision record.' AS resolution,
-    concat(node_id, ' intent=', intent) AS current_context
+    'Preserve the ADR contract. Reclassify the document kind or require a superseding decision record.' AS resolution,
+    concat(node_id, ' document_kind=', node_kind) AS current_context
   FROM content_nodes
   WHERE (
       lower(file_path) LIKE '%/adr/%'
       OR node_type = 'adr'
     )
-    AND intent IN ('tutorial', 'explanation')
+    AND node_kind IN ('tutorial', 'explanation')
 ),
 deprecated_decision_reference AS (
   SELECT
@@ -138,7 +174,7 @@ SELECT
   secondary_framework,
   resolution,
   current_context
-FROM decision_contract_vs_intent
+FROM decision_contract_vs_document_kind
 
 UNION ALL
 

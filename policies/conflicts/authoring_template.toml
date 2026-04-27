@@ -1,0 +1,69 @@
+id = "epistemic-sensemaking.conflict-authoring-template"
+framework = "epistemic-sensemaking"
+mode = "conflict_arbitration"
+coordinate_source = "framework diagnostics and resolved references"
+topology_source = "conflict authority matrix plus read-only policy evidence"
+authority = "template_guided_generation"
+llm_role = "conflict_resolution_planner"
+authority_rule = "Epistemic Sensemaking surfaces disagreement with provenance before mutation and applies the enacted framework authority matrix."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "conflict id, primary framework, secondary framework, and evidence range"
+inbox_directory = "project-defined"
+inbox_policy = "Unclassified disagreements remain review findings until a framework conflict is enacted."
+
+[frontmatter]
+document_kind_field = "kind"
+adr_type_field = "metadata.adr.type"
+adr_status_field = "metadata.adr.status"
+adr_superseded_by_field = "metadata.adr.superseded_by"
+johnny_decimal_coordinate_field = "metadata.johnny_decimal.coordinate"
+policy = "Use common frontmatter and framework-specific metadata for new material; legacy flat property names remain parser input surfaces only."
+
+[[diagnostics]]
+code = "topology_vs_synthesis"
+severity = "warning"
+meaning = "A synthesis signal crosses or pressures canonical topology."
+llm_action = "Preserve topology and emit a move-review proposal instead of relocating content."
+
+[[diagnostics]]
+code = "decision_vs_document_kind"
+severity = "error"
+meaning = "A document kind conflicts with an ADR decision contract."
+llm_action = "Preserve the ADR contract and reclassify metadata only when the range is safe."
+
+[[diagnostics]]
+code = "deprecated_decision_reference"
+severity = "warning"
+meaning = "A document references a deprecated or superseded decision."
+llm_action = "Surface provenance and propose a contextual update before any pointer replacement."
+
+[[llm_inputs]]
+name = "conflict_matrix"
+description = "Enacted primary and secondary framework authority rules."
+
+[[llm_inputs]]
+name = "diagnostic_evidence"
+description = "Conflict rows with evidence ranges and current context."
+
+[[llm_outputs]]
+name = "provenance_bundle"
+description = "A compact explanation of the winning authority and evidence."
+
+[[llm_outputs]]
+name = "reviewable_resolution_plan"
+description = "A non-mutating or metadata-scoped resolution proposal."
+
+[[examples]]
+kind = "conflict"
+path = "tests/fixtures/frameworks/conflicts/docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

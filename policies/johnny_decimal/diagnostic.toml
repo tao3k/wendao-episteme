@@ -19,11 +19,6 @@ byte_end = "byte_end"
 current_id = "current_id"
 
 [[messages]]
-violation_type = "MISSING_ID"
-message = "Markdown node is missing document-level Johnny.Decimal :ID: metadata."
-remediation_class = "metadata_patch"
-
-[[messages]]
 violation_type = "INVALID_JD_FORMAT"
-message = "ID violates Johnny.Decimal topology. Expected format: XX.YY_semantic_name."
-remediation_class = "metadata_patch"
+message = "Johnny.Decimal ID violates topology. Expected a canonical AC.ID numeric coordinate; any filename slug is local path metadata."
+remediation_class = "metadata_review"

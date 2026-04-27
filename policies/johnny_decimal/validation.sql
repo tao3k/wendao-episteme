@@ -1,31 +1,24 @@
--- Johnny.Decimal anchor syntax validation for Wendao Episteme.
+-- Johnny.Decimal topology validation for Wendao Episteme.
 --
 -- This file is intentionally read-only. It assumes Wendao has already
 -- assembled the request-scoped SQL surface and exposed parser-owned logical
 -- views. Do not add DDL, mutations, schema setup, or physical type mirrors.
 --
--- Semantic category meaning is project-local and must come from the consumer
--- repository's enacted topology manifest.
+-- Semantic area/category meaning, standard-zero reservations, and any JDex
+-- evidence are project-local and must come from the consumer repository's
+-- enacted topology manifest.
+--
+-- Wendao Episteme does not define a custom property-drawer syntax. Until a
+-- parser-owned Johnny.Decimal metadata surface exists, this query preserves the
+-- policy contract shape without emitting syntax-derived findings. That surface
+-- should expose the numeric AC.ID coordinate separately from any path slug.
 
 SELECT
   path AS file_path,
-  'MISSING_ID' AS violation_type,
+  CAST(NULL AS VARCHAR) AS violation_type,
   0 AS byte_start,
   0 AS byte_end,
   CAST(NULL AS VARCHAR) AS current_id
 FROM repo_content_chunk
 WHERE doc_type = 'markdown'
-  AND (properties->>'ID') IS NULL
-
-UNION ALL
-
-SELECT
-  path AS file_path,
-  'INVALID_JD_FORMAT' AS violation_type,
-  property_drawer_start AS byte_start,
-  property_drawer_end AS byte_end,
-  properties->>'ID' AS current_id
-FROM repo_content_chunk
-WHERE doc_type = 'markdown'
-  AND (properties->>'ID') IS NOT NULL
-  AND NOT regexp_matches(properties->>'ID', '^[0-9]{2}[.][0-9]{2}_[a-z0-9][a-z0-9_-]*$');
+  AND FALSE;

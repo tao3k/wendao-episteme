@@ -1,0 +1,55 @@
+id = "search-reasoning.query-authoring-template"
+framework = "search-reasoning"
+mode = "query_reasoning_contract"
+coordinate_source = "embedded query ranges, CodeGraph structural UIDs, and resolved local symbols"
+topology_source = "repo_content_chunk plus local_symbol"
+authority = "template_guided_generation"
+llm_role = "query_repair_planner"
+authority_rule = "Search Reasoning prefers stable semantic predicates over brittle exact paths while preserving query intent and result shape."
+
+[paths]
+category_directory_shape = "project-defined"
+note_file_shape = "project-defined"
+coordinate_shape = "reported query range or path/to/file::class::method structural UID"
+inbox_directory = "project-defined"
+inbox_policy = "Queries without brittle predicates require no Search Reasoning repair."
+
+[[diagnostics]]
+code = "brittle_query"
+severity = "warning"
+meaning = "An embedded query uses exact path or file_path equality where semantic predicates should be preferred."
+llm_action = "Replace only the brittle predicate range when a stable semantic predicate is explicit."
+
+[[diagnostics]]
+code = "brittle_uid"
+severity = "warning"
+meaning = "A code-symbol reference lacks a structural UID even though the symbol can be resolved."
+llm_action = "Replace only the reported reference text with the structural UID."
+
+[[llm_inputs]]
+name = "query_context"
+description = "The reported query range and nearby code fence context."
+
+[[llm_inputs]]
+name = "symbol_matches"
+description = "Resolved symbols that can provide stable structural UIDs."
+
+[[llm_outputs]]
+name = "query_predicate_patch"
+description = "A bounded predicate-only query patch."
+
+[[llm_outputs]]
+name = "uid_reference_patch"
+description = "A bounded structural UID replacement."
+
+[[examples]]
+kind = "brittle_query"
+path = "tests/fixtures/frameworks/search_reasoning/docs/brittle_query.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

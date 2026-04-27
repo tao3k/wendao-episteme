@@ -22,5 +22,5 @@ live_hash = "live_hash"
 
 [[messages]]
 violation_type = "CONSISTENCY_STALE_READ_DETECTED"
-message = "Agent-maintained document depends on a file whose live content hash differs from the recorded hash."
+message = "Agent-maintained document metadata.dependencies.hash differs from the live content hash."
 remediation_class = "planner_review"

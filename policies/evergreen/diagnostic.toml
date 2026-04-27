@@ -18,13 +18,19 @@ byte_start = "byte_start"
 byte_end = "byte_end"
 current_metric_name = "current_metric_name"
 current_metric_value = "current_metric_value"
+relation_block_state = "relation_block_state"
 
 [[messages]]
-violation_type = "EVERGREEN_ORPHAN"
-message = "Note is topologically isolated. It has no detected incoming or outgoing references."
+violation_type = "EVERGREEN_ORPHAN_MISSING_RELATION_BLOCK"
+message = "Note is topologically isolated and has no governed relation block for bounded link repair."
 remediation_class = "relation_block_insert"
+
+[[messages]]
+violation_type = "EVERGREEN_EMPTY_RELATION_BLOCK"
+message = "Note has a governed relation block, but the relation block contains no detected wiki links."
+remediation_class = "relation_block_update"
 
 [[messages]]
 violation_type = "EVERGREEN_BLOATED"
 message = "Note exceeds the Evergreen atomicity line-count threshold."
-remediation_class = "manual_review"
+remediation_class = "atomicity_review"

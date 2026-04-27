@@ -2,17 +2,6 @@ schema_version = 1
 framework = "evergreen-notes"
 registry_kind = "reference_and_practice_sources"
 
-[execution]
-skill_path = "evolution.skill.md"
-compiler = "skillsc"
-compiled_format = "bpmn"
-prototype_executor = "skillsx"
-prototype_engine = "bpmn-engine"
-target_engine = "qianji-bpmn-engine"
-output_mode = "reviewable_diff_only"
-runtime_policy_mutation_allowed = false
-human_review_required = true
-
 [[source]]
 id = "andy-matuschak-working-notes"
 name = "Andy Matuschak Working Notes"
@@ -22,6 +11,14 @@ cron = "0 0 1 * *"
 enabled = true
 entrypoints = [
   "/About_these_notes",
+  "/Evergreen_notes",
+  "/Evergreen_notes_should_be_atomic",
+  "/Evergreen_notes_should_be_concept-oriented",
+  "/Evergreen_notes_should_be_densely_linked",
+  "/Prefer_associative_ontologies_to_hierarchical_taxonomies",
+  "/Evergreen_note_titles_are_like_APIs",
+  "/Evergreen_note_maintenance_approximates_spaced_repetition",
+  "/Evergreen_notes_permit_smooth_incremental_progress_in_writing_%28%E2%80%9Cincremental_writing%E2%80%9D%29",
 ]
 authority = "practice_reference"
-notes = "Public working-notes practice source for Evergreen note topology and atomicity review."
+notes = "Public working-notes practice source for Evergreen note topology, atomicity, concept orientation, associative structure, and incremental writing review."

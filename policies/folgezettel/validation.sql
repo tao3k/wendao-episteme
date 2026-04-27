@@ -11,7 +11,8 @@ WITH sequence_nodes AS (
       properties->>'SEQUENCE',
       properties->>'sequence',
       properties->>'FOLGEZETTEL',
-      properties->>'folgezettel'
+      properties->>'folgezettel',
+      json_extract_string(properties, '$.metadata.folgezettel.sequence')
     ) AS sequence_id,
     property_drawer_start,
     property_drawer_end
@@ -22,7 +23,12 @@ normalized_sequences AS (
   SELECT
     file_path,
     sequence_id,
-    regexp_replace(sequence_id, '[A-Za-z0-9]$', '') AS parent_sequence_id,
+    regexp_matches(sequence_id, '^[0-9]+[A-Za-z0-9]*$') AS is_valid_sequence,
+    CASE
+      WHEN regexp_matches(sequence_id, '^[0-9]+[A-Za-z0-9]*$') THEN
+        regexp_replace(sequence_id, '[A-Za-z0-9]$', '')
+      ELSE NULL
+    END AS parent_sequence_id,
     COALESCE(property_drawer_start, 0) AS byte_start,
     COALESCE(property_drawer_end, 0) AS byte_end
   FROM sequence_nodes
@@ -40,7 +46,8 @@ broken_lineage AS (
   FROM normalized_sequences child
   LEFT JOIN normalized_sequences parent
     ON child.parent_sequence_id = parent.sequence_id
-  WHERE child.parent_sequence_id <> ''
+  WHERE child.is_valid_sequence
+    AND child.parent_sequence_id <> ''
     AND parent.sequence_id IS NULL
 ),
 duplicate_sequences AS (
@@ -56,6 +63,7 @@ duplicate_sequences AS (
     SELECT
       sequence_id
     FROM normalized_sequences
+    WHERE is_valid_sequence
     GROUP BY sequence_id
     HAVING COUNT(DISTINCT file_path) > 1
   ) duplicate
@@ -70,7 +78,7 @@ invalid_sequences AS (
     sequence_id AS current_sequence,
     CAST(NULL AS VARCHAR) AS related_sequence
   FROM normalized_sequences
-  WHERE NOT regexp_matches(sequence_id, '^[0-9]+[A-Za-z0-9]*$')
+  WHERE NOT is_valid_sequence
 )
 SELECT
   file_path,

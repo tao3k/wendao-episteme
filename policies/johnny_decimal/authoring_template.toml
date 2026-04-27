@@ -1,0 +1,91 @@
+id = "johnny-decimal.path-first-authoring-template"
+framework = "johnny-decimal"
+mode = "path_first"
+coordinate_source = "path"
+topology_source = "topology.toml"
+authority = "template_guided_generation"
+llm_role = "proposal_planner"
+authority_rule = "topology.toml, existing path index, and deterministic audit diagnostics outrank LLM suggestions."
+
+[paths]
+category_directory_shape = "project-defined directory whose leading category prefix agrees with AC"
+note_file_shape = "AC.ID_semantic_name.md"
+coordinate_shape = "AC.ID numeric coordinate plus local filename slug"
+inbox_directory = "project-defined inbox or standard-zero inbox"
+inbox_policy = "Unassigned drafts may live under a governed inbox without a durable AC.ID coordinate until reviewed."
+
+[[diagnostics]]
+code = "invalid_coordinate_shape"
+severity = "error"
+meaning = "A path-first note coordinate does not contain a valid AC.ID numeric prefix and local slug."
+llm_action = "Propose a conforming filename without changing category authority."
+
+[[diagnostics]]
+code = "unknown_category"
+severity = "error"
+meaning = "The AC category prefix is not declared in topology.toml."
+llm_action = "Choose an existing category or propose a topology.toml diff for human review."
+
+[[diagnostics]]
+code = "duplicate_coordinate"
+severity = "error"
+meaning = "More than one note occupies the same AC.ID numeric coordinate."
+llm_action = "Propose a new unused ID slot for one note and explain the evidence."
+
+[[diagnostics]]
+code = "path_category_mismatch"
+severity = "error"
+meaning = "The note filename category prefix disagrees with its parent category directory."
+llm_action = "Propose a move or rename that preserves the selected topology category."
+
+[[diagnostics]]
+code = "unassigned_note_advisory"
+severity = "advisory"
+meaning = "A draft is outside the path-first coordinate system."
+llm_action = "Suggest an existing category and coordinate, or keep it in the inbox when evidence is weak."
+
+[[diagnostics]]
+code = "category_capacity_warning"
+severity = "warning"
+meaning = "A category is approaching its AC.ID coordinate capacity after any project-governed standard-zero reservations."
+llm_action = "Avoid assigning new coordinates there unless the user confirms the category boundary."
+
+[[llm_inputs]]
+name = "topology_manifest"
+description = "Project-local topology.toml area, category, and reservation catalog."
+
+[[llm_inputs]]
+name = "existing_path_index"
+description = "Current path-first coordinates and occupied ID slots."
+
+[[llm_inputs]]
+name = "audit_diagnostics"
+description = "Deterministic diagnostics emitted by wendao audit."
+
+[[llm_inputs]]
+name = "note_context"
+description = "Title, local links, headings, and nearby path context for candidate placement."
+
+[[llm_inputs]]
+name = "jdex_or_index"
+description = "Optional project-local JDex or index evidence for occupied coordinates and external locations."
+
+[[llm_outputs]]
+name = "reviewable_move_plan"
+description = "A JSON proposal for create, move, or rename actions. It is not authority."
+
+[[examples]]
+kind = "valid_path"
+path = "docs/10_wendao/10.03_audit_template_flow.md"
+
+[[examples]]
+kind = "inbox_path"
+path = "docs/00_inbox/audit-template-draft.md"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao lint markdown docs"
+
+[[verification]]
+phase = "post_generation"
+command = "wendao audit --load wendao-episteme docs"

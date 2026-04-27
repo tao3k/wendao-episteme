@@ -22,7 +22,7 @@ current_metric_value = "current_metric_value"
 
 [[messages]]
 violation_type = "MOC_REQUIRED_FOR_DENSITY"
-message = "Dense knowledge scope has no declared MOC route hub."
+message = "Dense Johnny.Decimal category has no declared MOC route hub."
 remediation_class = "manual_review"
 
 [[messages]]

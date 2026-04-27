@@ -68,12 +68,22 @@ doc_observations AS (
   FROM repo_content_chunk,
     unnest(
       string_split(
-        COALESCE(properties->>'OBSERVE', properties->>'observe'),
+        COALESCE(
+          properties->>'OBSERVE',
+          properties->>'observe',
+          json_extract_string(properties, '$.metadata.proprioception.observe'),
+          json_extract_string(properties, '$.metadata.proprioception.observed_symbols')
+        ),
         ','
       )
     ) AS observed(observed_symbol)
   WHERE doc_type = 'markdown'
-    AND COALESCE(properties->>'OBSERVE', properties->>'observe') IS NOT NULL
+    AND COALESCE(
+      properties->>'OBSERVE',
+      properties->>'observe',
+      json_extract_string(properties, '$.metadata.proprioception.observe'),
+      json_extract_string(properties, '$.metadata.proprioception.observed_symbols')
+    ) IS NOT NULL
 ),
 semantic_drift AS (
   SELECT
@@ -86,7 +96,6 @@ semantic_drift AS (
   FROM doc_observations observation
   LEFT JOIN local_symbol symbol
     ON lower(observation.observed_symbol) = lower(symbol.name)
-    OR lower(observation.observed_symbol) LIKE concat('%', lower(symbol.name), '%')
     OR lower(symbol.signature) LIKE concat('%', lower(observation.observed_symbol), '%')
   WHERE observation.observed_symbol <> ''
     AND symbol.name IS NULL

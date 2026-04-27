@@ -9,11 +9,29 @@ WITH agent_generated_notes AS (
     path AS file_path,
     COALESCE(property_drawer_start, 0) AS byte_start,
     COALESCE(property_drawer_end, 0) AS byte_end,
-    COALESCE(properties->>'DEPENDS_ON_FILE', properties->>'depends_on_file') AS dependency_path,
-    COALESCE(properties->>'DEPENDS_ON_HASH', properties->>'depends_on_hash') AS recorded_hash
+    COALESCE(
+      properties->>'DEPENDS_ON_FILE',
+      properties->>'depends_on_file',
+      json_extract_string(properties, '$.metadata.dependencies.file'),
+      json_extract_string(properties, '$.metadata.depends_on.file')
+    ) AS dependency_path,
+    COALESCE(
+      properties->>'DEPENDS_ON_HASH',
+      properties->>'depends_on_hash',
+      json_extract_string(properties, '$.metadata.dependencies.hash'),
+      json_extract_string(properties, '$.metadata.depends_on.hash')
+    ) AS recorded_hash
   FROM repo_content_chunk
   WHERE doc_type = 'markdown'
-    AND lower(COALESCE(properties->>'MAINTAINER', properties->>'maintainer', '')) = 'agent'
+    AND lower(
+      COALESCE(
+        properties->>'MAINTAINER',
+        properties->>'maintainer',
+        json_extract_string(properties, '$.metadata.maintainer'),
+        json_extract_string(properties, '$.metadata.agent.maintainer'),
+        ''
+      )
+    ) = 'agent'
 )
 SELECT
   agent.file_path,

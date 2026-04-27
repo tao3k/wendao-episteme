@@ -1,0 +1,62 @@
+[[policy_queries]]
+id = "temporal-scaffolding.authorship-boundary-validation"
+framework = "temporal-scaffolding"
+path = "validation.sql"
+statement_mode = "select_only"
+reads = [
+  "repair_payload_target",
+  "parser_byte_zone",
+]
+emits = [
+  "file_path",
+  "violation_type",
+  "attempted_start",
+  "attempted_end",
+  "attempted_zone",
+  "allowed_zones",
+  "conflict_id",
+  "provenance",
+  "remediation_class",
+]
+
+[[authoring_templates]]
+id = "temporal-scaffolding.authorship-boundary-template"
+framework = "temporal-scaffolding"
+path = "authoring_template.toml"
+command = "wendao audit --template temporal-scaffolding"
+mode = "pre_write_authorship_boundary"
+output_mode = "template_guided_generation"
+authority_rule = "Temporal Scaffolding rejects writes into protected author-owned prose and permits replan only into explicit governed scaffold zones with exact original bytes."
+
+[[diagnostic_mappings]]
+id = "authorship.boundary-diagnostic"
+framework = "temporal-scaffolding"
+query = "temporal-scaffolding.authorship-boundary-validation"
+path = "diagnostic.toml"
+issue_type = "Episteme_AuthorshipBoundary_Violation"
+renderer_owner = "Project Sentinel"
+
+[[repair_guards]]
+id = "temporal-scaffolding.authorship-boundary"
+framework = "temporal-scaffolding"
+path = "diagnostic.toml"
+guard_owner = "Project AnchoR v3"
+enforcement_phase = "pre_write"
+failure_issue_type = "Episteme_AuthorshipBoundary_Violation"
+conflict_id = "authorship-vs-structural-repair"
+replan_prompt = "temporal-scaffolding.replan-authorship-boundary"
+
+[[frameworks]]
+id = "temporal-scaffolding"
+name = "Temporal Scaffolding"
+kind = "authorship_boundary"
+authority_rank = 55
+default_severity = "advisory"
+owns = [
+  "authorship_boundary",
+  "repair.scope",
+  "byte_range_payload",
+  "byte_zone_classification",
+  "human_attention_budget",
+]
+conflict_strategy = "automate_structure_without_rewriting_reasoning"

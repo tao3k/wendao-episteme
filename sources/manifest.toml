@@ -1,0 +1,112 @@
+[defaults]
+compiler = "skillsc"
+compiled_format = "bpmn"
+prototype_executor = "skillsx"
+prototype_engine = "bpmn-engine"
+target_engine = "qianji-bpmn-engine"
+execution_mode = "scheduled_review_flow"
+output_mode = "reviewable_diff_only"
+human_review_required = true
+runtime_policy_mutation_allowed = false
+policy_write_allowed = false
+service_task_implementation = "${environment.services.runAgent}"
+extension_namespace = "http://skillsc.dev/bpmn/extensions"
+extension_config = [
+  "skillsc:implementation",
+  "skillsc:executor",
+  "skillsc:contract",
+]
+supported_prototype_bpmn_elements = [
+  "process",
+  "startEvent",
+  "endEvent",
+  "sequenceFlow",
+  "serviceTask",
+  "exclusiveGateway",
+  "parallelGateway",
+]
+source_bpmn_elements_excluded_until_qianji_adapter = [
+  "userTask",
+  "boundaryEvent",
+  "timerEventDefinition",
+  "errorEventDefinition",
+]
+
+[[source_evolution_skill_surfaces]]
+id = "johnny-decimal.source-evolution"
+framework = "johnny-decimal"
+sources_path = "johnny_decimal/sources.toml"
+skill_path = "johnny_decimal/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "diataxis.source-evolution"
+framework = "diataxis"
+sources_path = "diataxis/sources.toml"
+skill_path = "diataxis/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "evergreen.source-evolution"
+framework = "evergreen-notes"
+sources_path = "evergreen/sources.toml"
+skill_path = "evergreen/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "adr.source-evolution"
+framework = "adr"
+sources_path = "adr/sources.toml"
+skill_path = "adr/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "moc.source-evolution"
+framework = "moc"
+sources_path = "moc/sources.toml"
+skill_path = "moc/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "folgezettel.source-evolution"
+framework = "folgezettel"
+sources_path = "folgezettel/sources.toml"
+skill_path = "folgezettel/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "ibis.source-evolution"
+framework = "ibis"
+sources_path = "ibis/sources.toml"
+skill_path = "ibis/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "structural-proprioception.source-evolution"
+framework = "structural-proprioception"
+sources_path = "proprioception/sources.toml"
+skill_path = "proprioception/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "search-reasoning.source-evolution"
+framework = "search-reasoning"
+sources_path = "search_reasoning/sources.toml"
+skill_path = "search_reasoning/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "semantic-consistency.source-evolution"
+framework = "semantic-consistency"
+sources_path = "semantic_consistency/sources.toml"
+skill_path = "semantic_consistency/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "epistemic-sensemaking.source-evolution"
+framework = "epistemic-sensemaking"
+sources_path = "sensemaking/sources.toml"
+skill_path = "sensemaking/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "temporal-scaffolding.source-evolution"
+framework = "temporal-scaffolding"
+sources_path = "authorship/sources.toml"
+skill_path = "authorship/evolution.skill.md"
+
+[[source_evolution_skill_surfaces]]
+id = "topology-manifest.sync"
+framework = "johnny-decimal"
+sources_path = "topology/sources.toml"
+skill_path = "topology/evolution.skill.md"
+execution_mode = "on_demand_review_flow"

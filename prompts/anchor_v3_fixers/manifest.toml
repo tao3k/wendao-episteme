@@ -1,0 +1,80 @@
+[defaults]
+repair_tooling = "Project AnchoR v3"
+
+[[repair_prompts]]
+id = "johnny-decimal.fix-anchor-id"
+framework = "johnny-decimal"
+path = "fix_jd_id.txt"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "evergreen.suggest-relation-links"
+framework = "evergreen-notes"
+path = "fix_evergreen.txt"
+write_mode = "reviewable_diff_only"
+
+[[repair_prompts]]
+id = "diataxis.fix-document-kind-metadata"
+framework = "diataxis"
+path = "fix_diataxis.txt"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "adr.fix-expired-reference"
+framework = "adr"
+path = "fix_adr_reference.txt"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "moc.fix-empty-hub"
+framework = "moc"
+path = "fix_moc_empty.txt"
+write_mode = "reviewable_diff_only"
+
+[[repair_prompts]]
+id = "folgezettel.fix-sequence"
+framework = "folgezettel"
+path = "fix_folgezettel.txt"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "ibis.add-pending-position"
+framework = "ibis"
+path = "fix_ibis.txt"
+write_mode = "reviewable_diff_only"
+
+[[repair_prompts]]
+id = "structural-proprioception.fix-cycle"
+framework = "structural-proprioception"
+path = "fix_proprioception_cycle.txt"
+write_mode = "reviewable_diff_only"
+
+[[repair_prompts]]
+id = "structural-proprioception.fix-observe-drift"
+framework = "structural-proprioception"
+path = "fix_proprioception_observe.txt"
+write_mode = "reviewable_diff_only"
+
+[[repair_prompts]]
+id = "search-reasoning.fix-brittle-query"
+framework = "search-reasoning"
+path = "fix_search_reasoning.txt"
+write_mode = "reviewable_diff_only"
+
+[[repair_prompts]]
+id = "semantic-consistency.fix-status"
+framework = "semantic-consistency"
+path = "fix_semantic_consistency.txt"
+write_mode = "byte_range_compare_and_swap"
+
+[[repair_prompts]]
+id = "epistemic-sensemaking.fix-decision-kind-conflict"
+framework = "epistemic-sensemaking"
+path = "fix_conflict_decision_document_kind.txt"
+write_mode = "reviewable_diff_only"
+
+[[repair_prompts]]
+id = "temporal-scaffolding.replan-authorship-boundary"
+framework = "temporal-scaffolding"
+path = "fix_authorship_boundary.txt"
+write_mode = "reviewable_diff_only"

@@ -2,17 +2,6 @@ schema_version = 1
 framework = "johnny-decimal"
 registry_kind = "official_reference_sources"
 
-[execution]
-skill_path = "evolution.skill.md"
-compiler = "skillsc"
-compiled_format = "bpmn"
-prototype_executor = "skillsx"
-prototype_engine = "bpmn-engine"
-target_engine = "qianji-bpmn-engine"
-output_mode = "reviewable_diff_only"
-runtime_policy_mutation_allowed = false
-human_review_required = true
-
 [[source]]
 id = "johnny-decimal-official"
 name = "Johnny.Decimal Official Site"
@@ -22,6 +11,14 @@ cron = "0 0 1 * *"
 enabled = true
 entrypoints = [
   "/",
+  "/10-19-concepts/11-core/",
+  "/10-19-concepts/11-core/11.02-areas-and-categories/",
+  "/10-19-concepts/11-core/11.03-ids/",
+  "/10-19-concepts/11-core/11.05-the-index/",
+  "/10-19-concepts/11-core/11.06-saving-files/",
+  "/10-19-concepts/12-advanced/12.03-the-standard-zeros/",
+  "/10-19-concepts/12-advanced/12.05-acid-notation/",
+  "/10-19-concepts/13-system-expansion/13.21-expand-an-area/",
 ]
 authority = "canonical_reference"
 notes = "Canonical public Johnny.Decimal reference source. This source audits policy drift against official guidance; it does not provide a universal project category catalog."
