@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:wendao="https://wendao.ai/ontology/core#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/core/relation">
+    <rdfs:label>Wendao L0 Relation and Topology Primitives</rdfs:label>
+    <rdfs:comment>Defines directional topology and composition relations for Wendao ontology objects.</rdfs:comment>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/entity"/>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/core#dependsOn">
+    <rdfs:label>depends on</rdfs:label>
+    <rdfs:comment>Directional prerequisite relation. If A depends on B, B must be available before A.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/core#partOf">
+    <rdfs:label>part of</rdfs:label>
+    <rdfs:comment>Compositional relation. If A is part of B, A belongs to B's lifecycle boundary.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

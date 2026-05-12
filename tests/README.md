@@ -46,6 +46,14 @@ complete LLM-facing contract.
 - The Python alignment runner tests cover source URL resolution and Markdown
   chunking for report preparation. These tests do not perform network fetches
   and do not execute policy.
+- The ontology contract tests validate source-level RDF, TOML extension, SQL
+  rule declarations, and the SDK-facing API surface manifest. They prove that
+  `ontology.metadata.extends` points to a known domain, that the selected
+  domain's rules are mounted from its own `rules/` directory only, and that
+  object, link, action, query, and interface API declarations reference known
+  RDF terms or declared validation rules. They also verify that the deterministic
+  ontology registry snapshot matches the current source contracts. They do not
+  execute SQL.
 
 Leading frontmatter is the required document-level metadata carrier in these
 fixtures. The common frontmatter contract applies to every Markdown fixture:

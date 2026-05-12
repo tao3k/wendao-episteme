@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:wendao="https://wendao.ai/ontology/core#"
+  xmlns:mfg="https://wendao.ai/ontology/manufacturing#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/manufacturing">
+    <rdfs:label>Wendao L1 Manufacturing Ontology</rdfs:label>
+    <rdfs:comment>First L1 vertical ontology for production equipment, work orders, parts, sensors, and quality checks.</rdfs:comment>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/entity"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/relation"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/action"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/lifespan"/>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/manufacturing#Machine">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Machine</rdfs:label>
+    <rdfs:comment>Production equipment or automated manufacturing asset.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/manufacturing#Sensor">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Sensor</rdfs:label>
+    <rdfs:comment>A monitoring device that observes machine or production state.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/manufacturing#WorkOrder">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Action"/>
+    <rdfs:label>Work Order</rdfs:label>
+    <rdfs:comment>A production job or manufacturing execution instruction.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/manufacturing#Part">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Part</rdfs:label>
+    <rdfs:comment>A component, material, or inventory item used by production.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/manufacturing#QualityInspection">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Evidence"/>
+    <rdfs:label>Quality Inspection</rdfs:label>
+    <rdfs:comment>An inspection result that provides evidence about production quality.</rdfs:comment>
+  </owl:Class>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/manufacturing#monitoredBy">
+    <rdfs:label>monitored by</rdfs:label>
+    <rdfs:comment>Links a machine to the sensor observing it.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/manufacturing#Machine"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/manufacturing#Sensor"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/manufacturing#executesWorkOrder">
+    <rdfs:label>executes work order</rdfs:label>
+    <rdfs:comment>Links a machine to a work order it executes.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/manufacturing#Machine"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/manufacturing#WorkOrder"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/manufacturing#consumesPart">
+    <rdfs:label>consumes part</rdfs:label>
+    <rdfs:comment>Links a work order to a part consumed during production.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/manufacturing#WorkOrder"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/manufacturing#Part"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

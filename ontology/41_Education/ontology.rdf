@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:wendao="https://wendao.ai/ontology/core#"
+  xmlns:edu="https://wendao.ai/ontology/education#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/education">
+    <rdfs:label>Wendao L1 Education Ontology</rdfs:label>
+    <rdfs:comment>First L1 vertical ontology for learners, instructors, courses, departments, and enrollments.</rdfs:comment>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/entity"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/relation"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/action"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/lifespan"/>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/education#Learner">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Learner</rdfs:label>
+    <rdfs:comment>A student, participant, or person enrolled in a learning program.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/education#Instructor">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Actor"/>
+    <rdfs:label>Instructor</rdfs:label>
+    <rdfs:comment>A teacher, professor, mentor, or facilitator responsible for instruction.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/education#Course">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Course</rdfs:label>
+    <rdfs:comment>A class, training unit, or structured learning offering.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/education#Department">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Department</rdfs:label>
+    <rdfs:comment>An academic, training, or organizational unit that offers courses.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/education#Enrollment">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Action"/>
+    <rdfs:label>Enrollment</rdfs:label>
+    <rdfs:comment>A learner's registration or participation record for a course.</rdfs:comment>
+  </owl:Class>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/education#enrollsIn">
+    <rdfs:label>enrolls in</rdfs:label>
+    <rdfs:comment>Links a learner to an enrollment record.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/education#Learner"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/education#Enrollment"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/education#forCourse">
+    <rdfs:label>for course</rdfs:label>
+    <rdfs:comment>Links an enrollment to the course it records participation in.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/education#Enrollment"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/education#Course"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/education#teaches">
+    <rdfs:label>teaches</rdfs:label>
+    <rdfs:comment>Links an instructor to a course they teach.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/education#Instructor"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/education#Course"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/education#offeredBy">
+    <rdfs:label>offered by</rdfs:label>
+    <rdfs:comment>Links a course to the department that offers it.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/education#Course"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/education#Department"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

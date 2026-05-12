@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+  xmlns:wendao="https://wendao.ai/ontology/core#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/core/entity">
+    <rdfs:label>Wendao L0 Entity and Identity Primitives</rdfs:label>
+    <rdfs:comment>Defines the root existence contract for all Wendao ontology objects.</rdfs:comment>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/core#BaseEntity">
+    <rdfs:label>Base Entity</rdfs:label>
+    <rdfs:comment>The root class for every object that can exist in the Wendao semantic universe.</rdfs:comment>
+  </owl:Class>
+
+  <owl:DatatypeProperty rdf:about="https://wendao.ai/ontology/core#id">
+    <rdfs:label>id</rdfs:label>
+    <rdfs:comment>Globally unique identity for a materialized ontology object.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+  </owl:DatatypeProperty>
+
+  <owl:DatatypeProperty rdf:about="https://wendao.ai/ontology/core#createdAt">
+    <rdfs:label>created at</rdfs:label>
+    <rdfs:comment>Immutable creation timestamp for a materialized ontology object.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTime"/>
+  </owl:DatatypeProperty>
+</rdf:RDF>

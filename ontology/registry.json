@@ -1,0 +1,800 @@
+{
+  "api": {
+    "action_types": [
+      {
+        "affected_object_types": [
+          "Transaction",
+          "FinancialAccount"
+        ],
+        "api_name": "postTransaction",
+        "domain": "episteme://20_Commercial_Finance",
+        "requires_evidence": true,
+        "validation_rules": [
+          "20_Commercial_Finance/rules/01_transaction_must_post_to_account.sql"
+        ]
+      },
+      {
+        "affected_object_types": [
+          "Encounter",
+          "Patient",
+          "CareProvider"
+        ],
+        "api_name": "recordEncounter",
+        "domain": "episteme://30_Healthcare",
+        "requires_evidence": true,
+        "validation_rules": [
+          "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql"
+        ]
+      }
+    ],
+    "interface_types": [
+      {
+        "api_name": "AccountableAction",
+        "implemented_by": [
+          "Encounter",
+          "Transaction"
+        ]
+      },
+      {
+        "api_name": "Asset",
+        "implemented_by": [
+          "FinancialAccount",
+          "Collateral"
+        ]
+      },
+      {
+        "api_name": "Event",
+        "implemented_by": [
+          "Encounter",
+          "Transaction"
+        ]
+      },
+      {
+        "api_name": "Party",
+        "implemented_by": [
+          "Patient",
+          "CareProvider",
+          "Customer"
+        ]
+      }
+    ],
+    "link_types": [
+      {
+        "api_name": "Customer.accounts",
+        "cardinality": "one_to_many",
+        "domain": "episteme://20_Commercial_Finance",
+        "from_object_type": "Customer",
+        "rdf_property": "https://wendao.ai/ontology/commercial-finance#ownsAccount",
+        "to_object_type": "FinancialAccount"
+      },
+      {
+        "api_name": "FinancialAccount.transactions",
+        "cardinality": "one_to_many",
+        "domain": "episteme://20_Commercial_Finance",
+        "from_object_type": "FinancialAccount",
+        "rdf_property": "https://wendao.ai/ontology/commercial-finance#postsTransaction",
+        "to_object_type": "Transaction"
+      },
+      {
+        "api_name": "Patient.conditions",
+        "cardinality": "one_to_many",
+        "domain": "episteme://30_Healthcare",
+        "from_object_type": "Patient",
+        "rdf_property": "https://wendao.ai/ontology/healthcare#diagnosedWith",
+        "to_object_type": "MedicalCondition"
+      },
+      {
+        "api_name": "Patient.encounters",
+        "cardinality": "one_to_many",
+        "domain": "episteme://30_Healthcare",
+        "from_object_type": "Patient",
+        "rdf_property": "https://wendao.ai/ontology/healthcare#hasEncounter",
+        "to_object_type": "Encounter"
+      }
+    ],
+    "object_types": [
+      {
+        "api_name": "CareProvider",
+        "display_name_property": "providerName",
+        "domain": "episteme://30_Healthcare",
+        "interfaces": [
+          "Party"
+        ],
+        "primary_key": [
+          "providerId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/healthcare#CareProvider"
+      },
+      {
+        "api_name": "Collateral",
+        "display_name_property": "collateralLabel",
+        "domain": "episteme://20_Commercial_Finance",
+        "interfaces": [
+          "Asset"
+        ],
+        "primary_key": [
+          "collateralId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/commercial-finance#Collateral"
+      },
+      {
+        "api_name": "Customer",
+        "display_name_property": "customerName",
+        "domain": "episteme://20_Commercial_Finance",
+        "interfaces": [
+          "Party"
+        ],
+        "primary_key": [
+          "customerId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/commercial-finance#Customer"
+      },
+      {
+        "api_name": "Encounter",
+        "display_name_property": "encounterLabel",
+        "domain": "episteme://30_Healthcare",
+        "interfaces": [
+          "Event",
+          "AccountableAction"
+        ],
+        "primary_key": [
+          "encounterId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/healthcare#Encounter"
+      },
+      {
+        "api_name": "FinancialAccount",
+        "display_name_property": "accountLabel",
+        "domain": "episteme://20_Commercial_Finance",
+        "interfaces": [
+          "Asset"
+        ],
+        "primary_key": [
+          "accountId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/commercial-finance#FinancialAccount"
+      },
+      {
+        "api_name": "MedicalCondition",
+        "display_name_property": "conditionName",
+        "domain": "episteme://30_Healthcare",
+        "interfaces": [],
+        "primary_key": [
+          "conditionId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/healthcare#MedicalCondition"
+      },
+      {
+        "api_name": "Patient",
+        "display_name_property": "patientName",
+        "domain": "episteme://30_Healthcare",
+        "interfaces": [
+          "Party"
+        ],
+        "primary_key": [
+          "patientId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/healthcare#Patient"
+      },
+      {
+        "api_name": "Transaction",
+        "display_name_property": "transactionLabel",
+        "domain": "episteme://20_Commercial_Finance",
+        "interfaces": [
+          "Event",
+          "AccountableAction"
+        ],
+        "primary_key": [
+          "transactionId"
+        ],
+        "rdf_class": "https://wendao.ai/ontology/commercial-finance#Transaction"
+      }
+    ],
+    "query_types": [
+      {
+        "api_name": "accountsForCustomer",
+        "domain": "episteme://20_Commercial_Finance",
+        "parameters": [
+          "customerId"
+        ],
+        "returns": "FinancialAccount"
+      },
+      {
+        "api_name": "conditionsForPatient",
+        "domain": "episteme://30_Healthcare",
+        "parameters": [
+          "patientId"
+        ],
+        "returns": "MedicalCondition"
+      },
+      {
+        "api_name": "encountersForPatient",
+        "domain": "episteme://30_Healthcare",
+        "parameters": [
+          "patientId"
+        ],
+        "returns": "Encounter"
+      },
+      {
+        "api_name": "transactionsForAccount",
+        "domain": "episteme://20_Commercial_Finance",
+        "parameters": [
+          "accountId"
+        ],
+        "returns": "Transaction"
+      }
+    ]
+  },
+  "compatibility": "semantic_api_compatibility",
+  "domains": [
+    {
+      "category": "00",
+      "id": "episteme://00_Core_Primitives",
+      "layer": "L0",
+      "name": "Core Primitives",
+      "rdf_files": [
+        "00_Core_Primitives/00.01_entity.rdf",
+        "00_Core_Primitives/00.02_relation.rdf",
+        "00_Core_Primitives/00.03_action.rdf",
+        "00_Core_Primitives/00.04_lifespan.rdf"
+      ],
+      "rules": []
+    },
+    {
+      "category": "10",
+      "id": "episteme://10_Software_Engineering",
+      "layer": "L1",
+      "name": "Software Engineering",
+      "policies": [
+        "10_Software_Engineering/policies/architectural_decision_making.md"
+      ],
+      "rdf_files": [
+        "10_Software_Engineering/ontology.rdf"
+      ],
+      "rules": [
+        "10_Software_Engineering/rules/01_architecture_dependency_dag.sql",
+        "10_Software_Engineering/rules/02_implementation_must_link_decision.sql"
+      ]
+    },
+    {
+      "category": "20",
+      "id": "episteme://20_Commercial_Finance",
+      "layer": "L1",
+      "name": "Commercial Finance",
+      "rdf_files": [
+        "20_Commercial_Finance/ontology.rdf"
+      ],
+      "rules": [
+        "20_Commercial_Finance/rules/01_transaction_must_post_to_account.sql"
+      ]
+    },
+    {
+      "category": "30",
+      "id": "episteme://30_Healthcare",
+      "layer": "L1",
+      "name": "Healthcare",
+      "rdf_files": [
+        "30_Healthcare/ontology.rdf"
+      ],
+      "rules": [
+        "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql"
+      ]
+    },
+    {
+      "category": "40",
+      "id": "episteme://40_Manufacturing",
+      "layer": "L1",
+      "name": "Manufacturing",
+      "rdf_files": [
+        "40_Manufacturing/ontology.rdf"
+      ],
+      "rules": [
+        "40_Manufacturing/rules/01_work_order_must_have_execution_context.sql"
+      ]
+    },
+    {
+      "category": "41",
+      "id": "episteme://41_Education",
+      "layer": "L1",
+      "name": "Education",
+      "rdf_files": [
+        "41_Education/ontology.rdf"
+      ],
+      "rules": [
+        "41_Education/rules/01_enrollment_must_link_learner_course.sql"
+      ]
+    },
+    {
+      "category": "50",
+      "id": "episteme://50_Xiuxian_Internal",
+      "layer": "L2",
+      "name": "Xiuxian Internal",
+      "rdf_files": [
+        "50_Xiuxian_Internal/ontology.rdf"
+      ],
+      "rules": []
+    }
+  ],
+  "ontology": "wendao",
+  "policies": [
+    {
+      "domain": "episteme://10_Software_Engineering",
+      "kind": "policy_markdown",
+      "path": "10_Software_Engineering/policies/architectural_decision_making.md"
+    }
+  ],
+  "rdf_terms": {
+    "classes": [
+      {
+        "api_candidate": "Action",
+        "domain": "episteme://00_Core_Primitives",
+        "iri": "https://wendao.ai/ontology/core#Action",
+        "label": "Action",
+        "source_file": "00_Core_Primitives/00.03_action.rdf"
+      },
+      {
+        "api_candidate": "Actor",
+        "domain": "episteme://00_Core_Primitives",
+        "iri": "https://wendao.ai/ontology/core#Actor",
+        "label": "Actor",
+        "source_file": "00_Core_Primitives/00.03_action.rdf"
+      },
+      {
+        "api_candidate": "BaseEntity",
+        "domain": "episteme://00_Core_Primitives",
+        "iri": "https://wendao.ai/ontology/core#BaseEntity",
+        "label": "Base Entity",
+        "source_file": "00_Core_Primitives/00.01_entity.rdf"
+      },
+      {
+        "api_candidate": "Evidence",
+        "domain": "episteme://00_Core_Primitives",
+        "iri": "https://wendao.ai/ontology/core#Evidence",
+        "label": "Evidence",
+        "source_file": "00_Core_Primitives/00.03_action.rdf"
+      },
+      {
+        "api_candidate": "Lifespan",
+        "domain": "episteme://00_Core_Primitives",
+        "iri": "https://wendao.ai/ontology/core#Lifespan",
+        "label": "Lifespan",
+        "source_file": "00_Core_Primitives/00.04_lifespan.rdf"
+      },
+      {
+        "api_candidate": "DecisionRecord",
+        "domain": "episteme://10_Software_Engineering",
+        "iri": "https://wendao.ai/ontology/software-engineering#DecisionRecord",
+        "label": "Decision Record",
+        "source_file": "10_Software_Engineering/ontology.rdf"
+      },
+      {
+        "api_candidate": "ImplementationArtifact",
+        "domain": "episteme://10_Software_Engineering",
+        "iri": "https://wendao.ai/ontology/software-engineering#ImplementationArtifact",
+        "label": "Implementation Artifact",
+        "source_file": "10_Software_Engineering/ontology.rdf"
+      },
+      {
+        "api_candidate": "SoftwareComponent",
+        "domain": "episteme://10_Software_Engineering",
+        "iri": "https://wendao.ai/ontology/software-engineering#SoftwareComponent",
+        "label": "Software Component",
+        "source_file": "10_Software_Engineering/ontology.rdf"
+      },
+      {
+        "api_candidate": "Collateral",
+        "domain": "episteme://20_Commercial_Finance",
+        "iri": "https://wendao.ai/ontology/commercial-finance#Collateral",
+        "label": "Collateral",
+        "source_file": "20_Commercial_Finance/ontology.rdf"
+      },
+      {
+        "api_candidate": "Customer",
+        "domain": "episteme://20_Commercial_Finance",
+        "iri": "https://wendao.ai/ontology/commercial-finance#Customer",
+        "label": "Customer",
+        "source_file": "20_Commercial_Finance/ontology.rdf"
+      },
+      {
+        "api_candidate": "FinancialAccount",
+        "domain": "episteme://20_Commercial_Finance",
+        "iri": "https://wendao.ai/ontology/commercial-finance#FinancialAccount",
+        "label": "Financial Account",
+        "source_file": "20_Commercial_Finance/ontology.rdf"
+      },
+      {
+        "api_candidate": "Loan",
+        "domain": "episteme://20_Commercial_Finance",
+        "iri": "https://wendao.ai/ontology/commercial-finance#Loan",
+        "label": "Loan",
+        "source_file": "20_Commercial_Finance/ontology.rdf"
+      },
+      {
+        "api_candidate": "Transaction",
+        "domain": "episteme://20_Commercial_Finance",
+        "iri": "https://wendao.ai/ontology/commercial-finance#Transaction",
+        "label": "Transaction",
+        "source_file": "20_Commercial_Finance/ontology.rdf"
+      },
+      {
+        "api_candidate": "CareProvider",
+        "domain": "episteme://30_Healthcare",
+        "iri": "https://wendao.ai/ontology/healthcare#CareProvider",
+        "label": "Care Provider",
+        "source_file": "30_Healthcare/ontology.rdf"
+      },
+      {
+        "api_candidate": "ClinicalProcedure",
+        "domain": "episteme://30_Healthcare",
+        "iri": "https://wendao.ai/ontology/healthcare#ClinicalProcedure",
+        "label": "Clinical Procedure",
+        "source_file": "30_Healthcare/ontology.rdf"
+      },
+      {
+        "api_candidate": "Encounter",
+        "domain": "episteme://30_Healthcare",
+        "iri": "https://wendao.ai/ontology/healthcare#Encounter",
+        "label": "Encounter",
+        "source_file": "30_Healthcare/ontology.rdf"
+      },
+      {
+        "api_candidate": "MedicalCondition",
+        "domain": "episteme://30_Healthcare",
+        "iri": "https://wendao.ai/ontology/healthcare#MedicalCondition",
+        "label": "Medical Condition",
+        "source_file": "30_Healthcare/ontology.rdf"
+      },
+      {
+        "api_candidate": "Patient",
+        "domain": "episteme://30_Healthcare",
+        "iri": "https://wendao.ai/ontology/healthcare#Patient",
+        "label": "Patient",
+        "source_file": "30_Healthcare/ontology.rdf"
+      },
+      {
+        "api_candidate": "Machine",
+        "domain": "episteme://40_Manufacturing",
+        "iri": "https://wendao.ai/ontology/manufacturing#Machine",
+        "label": "Machine",
+        "source_file": "40_Manufacturing/ontology.rdf"
+      },
+      {
+        "api_candidate": "Part",
+        "domain": "episteme://40_Manufacturing",
+        "iri": "https://wendao.ai/ontology/manufacturing#Part",
+        "label": "Part",
+        "source_file": "40_Manufacturing/ontology.rdf"
+      },
+      {
+        "api_candidate": "QualityInspection",
+        "domain": "episteme://40_Manufacturing",
+        "iri": "https://wendao.ai/ontology/manufacturing#QualityInspection",
+        "label": "Quality Inspection",
+        "source_file": "40_Manufacturing/ontology.rdf"
+      },
+      {
+        "api_candidate": "Sensor",
+        "domain": "episteme://40_Manufacturing",
+        "iri": "https://wendao.ai/ontology/manufacturing#Sensor",
+        "label": "Sensor",
+        "source_file": "40_Manufacturing/ontology.rdf"
+      },
+      {
+        "api_candidate": "WorkOrder",
+        "domain": "episteme://40_Manufacturing",
+        "iri": "https://wendao.ai/ontology/manufacturing#WorkOrder",
+        "label": "Work Order",
+        "source_file": "40_Manufacturing/ontology.rdf"
+      },
+      {
+        "api_candidate": "Course",
+        "domain": "episteme://41_Education",
+        "iri": "https://wendao.ai/ontology/education#Course",
+        "label": "Course",
+        "source_file": "41_Education/ontology.rdf"
+      },
+      {
+        "api_candidate": "Department",
+        "domain": "episteme://41_Education",
+        "iri": "https://wendao.ai/ontology/education#Department",
+        "label": "Department",
+        "source_file": "41_Education/ontology.rdf"
+      },
+      {
+        "api_candidate": "Enrollment",
+        "domain": "episteme://41_Education",
+        "iri": "https://wendao.ai/ontology/education#Enrollment",
+        "label": "Enrollment",
+        "source_file": "41_Education/ontology.rdf"
+      },
+      {
+        "api_candidate": "Instructor",
+        "domain": "episteme://41_Education",
+        "iri": "https://wendao.ai/ontology/education#Instructor",
+        "label": "Instructor",
+        "source_file": "41_Education/ontology.rdf"
+      },
+      {
+        "api_candidate": "Learner",
+        "domain": "episteme://41_Education",
+        "iri": "https://wendao.ai/ontology/education#Learner",
+        "label": "Learner",
+        "source_file": "41_Education/ontology.rdf"
+      },
+      {
+        "api_candidate": "EpistemePolicyModule",
+        "domain": "episteme://50_Xiuxian_Internal",
+        "iri": "https://wendao.ai/ontology/xiuxian-internal#EpistemePolicyModule",
+        "label": "Episteme Policy Module",
+        "source_file": "50_Xiuxian_Internal/ontology.rdf"
+      },
+      {
+        "api_candidate": "WendaoSemanticSurface",
+        "domain": "episteme://50_Xiuxian_Internal",
+        "iri": "https://wendao.ai/ontology/xiuxian-internal#WendaoSemanticSurface",
+        "label": "Wendao Semantic Surface",
+        "source_file": "50_Xiuxian_Internal/ontology.rdf"
+      }
+    ],
+    "object_properties": [
+      {
+        "api_candidate": "basedOn",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": null,
+        "iri": "https://wendao.ai/ontology/core#basedOn",
+        "label": "based on",
+        "source_file": "00_Core_Primitives/00.03_action.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#Evidence"
+      },
+      {
+        "api_candidate": "creates",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": "https://wendao.ai/ontology/core#Action",
+        "iri": "https://wendao.ai/ontology/core#creates",
+        "label": "creates",
+        "source_file": "00_Core_Primitives/00.03_action.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#BaseEntity"
+      },
+      {
+        "api_candidate": "dependsOn",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": "https://wendao.ai/ontology/core#BaseEntity",
+        "iri": "https://wendao.ai/ontology/core#dependsOn",
+        "label": "depends on",
+        "source_file": "00_Core_Primitives/00.02_relation.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#BaseEntity"
+      },
+      {
+        "api_candidate": "hasLifespan",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": "https://wendao.ai/ontology/core#BaseEntity",
+        "iri": "https://wendao.ai/ontology/core#hasLifespan",
+        "label": "has lifespan",
+        "source_file": "00_Core_Primitives/00.04_lifespan.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#Lifespan"
+      },
+      {
+        "api_candidate": "modifies",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": "https://wendao.ai/ontology/core#Action",
+        "iri": "https://wendao.ai/ontology/core#modifies",
+        "label": "modifies",
+        "source_file": "00_Core_Primitives/00.03_action.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#BaseEntity"
+      },
+      {
+        "api_candidate": "partOf",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": "https://wendao.ai/ontology/core#BaseEntity",
+        "iri": "https://wendao.ai/ontology/core#partOf",
+        "label": "part of",
+        "source_file": "00_Core_Primitives/00.02_relation.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#BaseEntity"
+      },
+      {
+        "api_candidate": "performs",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": "https://wendao.ai/ontology/core#Actor",
+        "iri": "https://wendao.ai/ontology/core#performs",
+        "label": "performs",
+        "source_file": "00_Core_Primitives/00.03_action.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#Action"
+      },
+      {
+        "api_candidate": "supersedes",
+        "domain": "episteme://00_Core_Primitives",
+        "from_iri": "https://wendao.ai/ontology/core#BaseEntity",
+        "iri": "https://wendao.ai/ontology/core#supersedes",
+        "label": "supersedes",
+        "source_file": "00_Core_Primitives/00.04_lifespan.rdf",
+        "to_iri": "https://wendao.ai/ontology/core#BaseEntity"
+      },
+      {
+        "api_candidate": "implementsDecision",
+        "domain": "episteme://10_Software_Engineering",
+        "from_iri": "https://wendao.ai/ontology/core#BaseEntity",
+        "iri": "https://wendao.ai/ontology/software-engineering#implementsDecision",
+        "label": "implements decision",
+        "source_file": "10_Software_Engineering/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/software-engineering#DecisionRecord"
+      },
+      {
+        "api_candidate": "ownsArtifact",
+        "domain": "episteme://10_Software_Engineering",
+        "from_iri": "https://wendao.ai/ontology/software-engineering#SoftwareComponent",
+        "iri": "https://wendao.ai/ontology/software-engineering#ownsArtifact",
+        "label": "owns artifact",
+        "source_file": "10_Software_Engineering/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/software-engineering#ImplementationArtifact"
+      },
+      {
+        "api_candidate": "ownsAccount",
+        "domain": "episteme://20_Commercial_Finance",
+        "from_iri": "https://wendao.ai/ontology/commercial-finance#Customer",
+        "iri": "https://wendao.ai/ontology/commercial-finance#ownsAccount",
+        "label": "owns account",
+        "source_file": "20_Commercial_Finance/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/commercial-finance#FinancialAccount"
+      },
+      {
+        "api_candidate": "postsTransaction",
+        "domain": "episteme://20_Commercial_Finance",
+        "from_iri": "https://wendao.ai/ontology/commercial-finance#FinancialAccount",
+        "iri": "https://wendao.ai/ontology/commercial-finance#postsTransaction",
+        "label": "posts transaction",
+        "source_file": "20_Commercial_Finance/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/commercial-finance#Transaction"
+      },
+      {
+        "api_candidate": "securedBy",
+        "domain": "episteme://20_Commercial_Finance",
+        "from_iri": "https://wendao.ai/ontology/commercial-finance#Loan",
+        "iri": "https://wendao.ai/ontology/commercial-finance#securedBy",
+        "label": "secured by",
+        "source_file": "20_Commercial_Finance/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/commercial-finance#Collateral"
+      },
+      {
+        "api_candidate": "diagnosedWith",
+        "domain": "episteme://30_Healthcare",
+        "from_iri": "https://wendao.ai/ontology/healthcare#Patient",
+        "iri": "https://wendao.ai/ontology/healthcare#diagnosedWith",
+        "label": "diagnosed with",
+        "source_file": "30_Healthcare/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/healthcare#MedicalCondition"
+      },
+      {
+        "api_candidate": "hasEncounter",
+        "domain": "episteme://30_Healthcare",
+        "from_iri": "https://wendao.ai/ontology/healthcare#Patient",
+        "iri": "https://wendao.ai/ontology/healthcare#hasEncounter",
+        "label": "has encounter",
+        "source_file": "30_Healthcare/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/healthcare#Encounter"
+      },
+      {
+        "api_candidate": "performedBy",
+        "domain": "episteme://30_Healthcare",
+        "from_iri": "https://wendao.ai/ontology/healthcare#ClinicalProcedure",
+        "iri": "https://wendao.ai/ontology/healthcare#performedBy",
+        "label": "performed by",
+        "source_file": "30_Healthcare/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/healthcare#CareProvider"
+      },
+      {
+        "api_candidate": "consumesPart",
+        "domain": "episteme://40_Manufacturing",
+        "from_iri": "https://wendao.ai/ontology/manufacturing#WorkOrder",
+        "iri": "https://wendao.ai/ontology/manufacturing#consumesPart",
+        "label": "consumes part",
+        "source_file": "40_Manufacturing/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/manufacturing#Part"
+      },
+      {
+        "api_candidate": "executesWorkOrder",
+        "domain": "episteme://40_Manufacturing",
+        "from_iri": "https://wendao.ai/ontology/manufacturing#Machine",
+        "iri": "https://wendao.ai/ontology/manufacturing#executesWorkOrder",
+        "label": "executes work order",
+        "source_file": "40_Manufacturing/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/manufacturing#WorkOrder"
+      },
+      {
+        "api_candidate": "monitoredBy",
+        "domain": "episteme://40_Manufacturing",
+        "from_iri": "https://wendao.ai/ontology/manufacturing#Machine",
+        "iri": "https://wendao.ai/ontology/manufacturing#monitoredBy",
+        "label": "monitored by",
+        "source_file": "40_Manufacturing/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/manufacturing#Sensor"
+      },
+      {
+        "api_candidate": "enrollsIn",
+        "domain": "episteme://41_Education",
+        "from_iri": "https://wendao.ai/ontology/education#Learner",
+        "iri": "https://wendao.ai/ontology/education#enrollsIn",
+        "label": "enrolls in",
+        "source_file": "41_Education/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/education#Enrollment"
+      },
+      {
+        "api_candidate": "forCourse",
+        "domain": "episteme://41_Education",
+        "from_iri": "https://wendao.ai/ontology/education#Enrollment",
+        "iri": "https://wendao.ai/ontology/education#forCourse",
+        "label": "for course",
+        "source_file": "41_Education/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/education#Course"
+      },
+      {
+        "api_candidate": "offeredBy",
+        "domain": "episteme://41_Education",
+        "from_iri": "https://wendao.ai/ontology/education#Course",
+        "iri": "https://wendao.ai/ontology/education#offeredBy",
+        "label": "offered by",
+        "source_file": "41_Education/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/education#Department"
+      },
+      {
+        "api_candidate": "teaches",
+        "domain": "episteme://41_Education",
+        "from_iri": "https://wendao.ai/ontology/education#Instructor",
+        "iri": "https://wendao.ai/ontology/education#teaches",
+        "label": "teaches",
+        "source_file": "41_Education/ontology.rdf",
+        "to_iri": "https://wendao.ai/ontology/education#Course"
+      }
+    ]
+  },
+  "reference_nouns": [
+    "Action",
+    "LinkedObject",
+    "ObjectType",
+    "Ontology",
+    "OntologyInterface",
+    "OntologyObject",
+    "OntologyTransaction",
+    "Query"
+  ],
+  "rules": [
+    {
+      "domain": "episteme://10_Software_Engineering",
+      "kind": "read_only_sql_validation",
+      "path": "10_Software_Engineering/rules/01_architecture_dependency_dag.sql"
+    },
+    {
+      "domain": "episteme://10_Software_Engineering",
+      "kind": "read_only_sql_validation",
+      "path": "10_Software_Engineering/rules/02_implementation_must_link_decision.sql"
+    },
+    {
+      "domain": "episteme://20_Commercial_Finance",
+      "kind": "read_only_sql_validation",
+      "path": "20_Commercial_Finance/rules/01_transaction_must_post_to_account.sql"
+    },
+    {
+      "domain": "episteme://30_Healthcare",
+      "kind": "read_only_sql_validation",
+      "path": "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql"
+    },
+    {
+      "domain": "episteme://40_Manufacturing",
+      "kind": "read_only_sql_validation",
+      "path": "40_Manufacturing/rules/01_work_order_must_have_execution_context.sql"
+    },
+    {
+      "domain": "episteme://41_Education",
+      "kind": "read_only_sql_validation",
+      "path": "41_Education/rules/01_enrollment_must_link_learner_course.sql"
+    }
+  ],
+  "schema_version": 1,
+  "source_contract": {
+    "api_surface": "api_surface.toml",
+    "artifact_mode": "source_contract",
+    "manifest": "manifest.toml",
+    "mutation_allowed": false,
+    "runtime_compilation_owner": "xiuxian-wendao",
+    "sdk_generation_owner": "xiuxian-wendao"
+  }
+}

@@ -17,6 +17,28 @@ test-python-align:
       python -m unittest discover -s tests -p 'test_*.py'
     )
 
+ontology-registry:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    SELF_ROOT='{{ self_root }}'
+
+    (
+      cd "$SELF_ROOT"
+      python -m tools.wendao_ontology_registry --output ontology/registry.json
+    )
+
+ontology-registry-check:
+    #!/usr/bin/env bash
+    set -euo pipefail
+
+    SELF_ROOT='{{ self_root }}'
+
+    (
+      cd "$SELF_ROOT"
+      python -m tools.wendao_ontology_registry --output ontology/registry.json --check
+    )
+
 build-wendao:
     #!/usr/bin/env bash
     set -euo pipefail

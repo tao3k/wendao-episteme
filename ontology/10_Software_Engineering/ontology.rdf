@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:wendao="https://wendao.ai/ontology/core#"
+  xmlns:se="https://wendao.ai/ontology/software-engineering#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/software-engineering">
+    <rdfs:label>Wendao L1 Software Engineering Ontology</rdfs:label>
+    <rdfs:comment>First L1 domain ontology for software architecture, decision records, and implementation artifacts.</rdfs:comment>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/entity"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/relation"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/action"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/lifespan"/>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/software-engineering#SoftwareComponent">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Software Component</rdfs:label>
+    <rdfs:comment>A bounded software subsystem, package, crate, service, or module.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/software-engineering#DecisionRecord">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Evidence"/>
+    <rdfs:label>Decision Record</rdfs:label>
+    <rdfs:comment>A durable architectural or process decision record.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/software-engineering#ImplementationArtifact">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Implementation Artifact</rdfs:label>
+    <rdfs:comment>A physical implementation surface such as a source file, package, migration, or generated artifact.</rdfs:comment>
+  </owl:Class>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/software-engineering#implementsDecision">
+    <rdfs:label>implements decision</rdfs:label>
+    <rdfs:comment>Links an implementation artifact or component to the decision record it implements.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/software-engineering#DecisionRecord"/>
+    <rdfs:subPropertyOf rdf:resource="https://wendao.ai/ontology/core#basedOn"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/software-engineering#ownsArtifact">
+    <rdfs:label>owns artifact</rdfs:label>
+    <rdfs:comment>Links a software component to an implementation artifact inside its ownership boundary.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/software-engineering#SoftwareComponent"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/software-engineering#ImplementationArtifact"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

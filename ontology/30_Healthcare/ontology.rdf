@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:wendao="https://wendao.ai/ontology/core#"
+  xmlns:health="https://wendao.ai/ontology/healthcare#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/healthcare">
+    <rdfs:label>Wendao L1 Healthcare Ontology</rdfs:label>
+    <rdfs:comment>First L1 vertical ontology for care delivery, conditions, procedures, and providers.</rdfs:comment>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/entity"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/relation"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/action"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/lifespan"/>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/healthcare#Patient">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Patient</rdfs:label>
+    <rdfs:comment>A person receiving healthcare services.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/healthcare#CareProvider">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Actor"/>
+    <rdfs:label>Care Provider</rdfs:label>
+    <rdfs:comment>A clinician, facility, or care organization that provides healthcare services.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/healthcare#Encounter">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Action"/>
+    <rdfs:label>Encounter</rdfs:label>
+    <rdfs:comment>A healthcare interaction between a patient and a provider.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/healthcare#MedicalCondition">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Medical Condition</rdfs:label>
+    <rdfs:comment>A disease, disorder, diagnosis, or clinically relevant condition.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/healthcare#ClinicalProcedure">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#Action"/>
+    <rdfs:label>Clinical Procedure</rdfs:label>
+    <rdfs:comment>A diagnostic, therapeutic, surgical, or care procedure.</rdfs:comment>
+  </owl:Class>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/healthcare#hasEncounter">
+    <rdfs:label>has encounter</rdfs:label>
+    <rdfs:comment>Links a patient to a healthcare encounter.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/healthcare#Patient"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/healthcare#Encounter"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/healthcare#diagnosedWith">
+    <rdfs:label>diagnosed with</rdfs:label>
+    <rdfs:comment>Links a patient to a medical condition.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/healthcare#Patient"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/healthcare#MedicalCondition"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/healthcare#performedBy">
+    <rdfs:label>performed by</rdfs:label>
+    <rdfs:comment>Links a clinical procedure to the provider that performs it.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/healthcare#ClinicalProcedure"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/healthcare#CareProvider"/>
+  </owl:ObjectProperty>
+</rdf:RDF>

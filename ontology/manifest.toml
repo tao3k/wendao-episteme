@@ -1,0 +1,110 @@
+schema_version = 1
+name = "wendao-ontology"
+description = "Source-level ontology domain manifest for Wendao Episteme."
+
+[boundaries]
+owner = "wendao-episteme"
+artifact_mode = "source_contract"
+runtime_compilation_owner = "xiuxian-wendao"
+sql_execution_owner = "xiuxian-wendao"
+mutation_allowed = false
+
+[[domains]]
+id = "episteme://00_Core_Primitives"
+category = "00"
+layer = "L0"
+name = "Core Primitives"
+rdf_files = [
+  "00_Core_Primitives/00.01_entity.rdf",
+  "00_Core_Primitives/00.02_relation.rdf",
+  "00_Core_Primitives/00.03_action.rdf",
+  "00_Core_Primitives/00.04_lifespan.rdf",
+]
+rules = []
+
+[[domains]]
+id = "episteme://10_Software_Engineering"
+category = "10"
+layer = "L1"
+name = "Software Engineering"
+rdf_files = ["10_Software_Engineering/ontology.rdf"]
+rules = [
+  "10_Software_Engineering/rules/01_architecture_dependency_dag.sql",
+  "10_Software_Engineering/rules/02_implementation_must_link_decision.sql",
+]
+policies = [
+  "10_Software_Engineering/policies/architectural_decision_making.md",
+]
+
+[[domains]]
+id = "episteme://20_Commercial_Finance"
+category = "20"
+layer = "L1"
+name = "Commercial Finance"
+rdf_files = ["20_Commercial_Finance/ontology.rdf"]
+rules = [
+  "20_Commercial_Finance/rules/01_transaction_must_post_to_account.sql",
+]
+
+[[domains]]
+id = "episteme://30_Healthcare"
+category = "30"
+layer = "L1"
+name = "Healthcare"
+rdf_files = ["30_Healthcare/ontology.rdf"]
+rules = [
+  "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql",
+]
+
+[[domains]]
+id = "episteme://40_Manufacturing"
+category = "40"
+layer = "L1"
+name = "Manufacturing"
+rdf_files = ["40_Manufacturing/ontology.rdf"]
+rules = [
+  "40_Manufacturing/rules/01_work_order_must_have_execution_context.sql",
+]
+
+[[domains]]
+id = "episteme://41_Education"
+category = "41"
+layer = "L1"
+name = "Education"
+rdf_files = ["41_Education/ontology.rdf"]
+rules = [
+  "41_Education/rules/01_enrollment_must_link_learner_course.sql",
+]
+
+[[domains]]
+id = "episteme://50_Xiuxian_Internal"
+category = "50"
+layer = "L2"
+name = "Xiuxian Internal"
+rdf_files = ["50_Xiuxian_Internal/ontology.rdf"]
+rules = []
+
+[extension_contract]
+example = "examples/local_project/ontology.toml"
+extends_field = "ontology.metadata.extends"
+namespace_field = "ontology.metadata.namespace"
+allowed_sections = [
+  "ontology.metadata",
+  "entity",
+  "relation",
+]
+rule_mount = "mount_rules_for_extends_only"
+
+[api_surface]
+file = "api_surface.toml"
+compatibility = "semantic_api_compatibility"
+reference_nouns = [
+  "Ontology",
+  "ObjectType",
+  "OntologyObject",
+  "LinkedObject",
+  "Action",
+  "Query",
+  "OntologyInterface",
+  "OntologyTransaction",
+]

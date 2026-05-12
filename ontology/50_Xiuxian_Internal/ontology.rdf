@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:wendao="https://wendao.ai/ontology/core#"
+  xmlns:se="https://wendao.ai/ontology/software-engineering#"
+  xmlns:xiuxian="https://wendao.ai/ontology/xiuxian-internal#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/xiuxian-internal">
+    <rdfs:label>Wendao L2 Xiuxian Internal Ontology</rdfs:label>
+    <rdfs:comment>First L2 application ontology entrypoint for Xiuxian and Wendao internal semantic graph surfaces.</rdfs:comment>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/entity"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/relation"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/action"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/lifespan"/>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/software-engineering"/>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/xiuxian-internal#WendaoSemanticSurface">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/software-engineering#SoftwareComponent"/>
+    <rdfs:label>Wendao Semantic Surface</rdfs:label>
+    <rdfs:comment>An internal Wendao surface that exposes semantic graph, parser, retrieval, or validation behavior.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/xiuxian-internal#EpistemePolicyModule">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/software-engineering#ImplementationArtifact"/>
+    <rdfs:label>Episteme Policy Module</rdfs:label>
+    <rdfs:comment>A policy module under wendao-episteme that contributes ontology, validation, diagnostic, or repair-contract artifacts.</rdfs:comment>
+  </owl:Class>
+</rdf:RDF>
