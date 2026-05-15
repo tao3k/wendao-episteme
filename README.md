@@ -62,6 +62,47 @@ The distributed manifests record:
 This keeps the knowledge laws stable while allowing Wendao to choose the most
 appropriate execution substrate for a given environment.
 
+## Dataset-to-Ontology Mapping
+
+Structured datasets enter the ontology through source-level mapping contracts,
+not by treating raw rows as ontology truth. RDF/TOML/API artifacts define the
+accepted semantic surface, Org records the reviewable mapping intent and
+evidence, and SELECT-only mapping SQL records the deterministic projection
+shape that the Wendao runtime executes.
+
+The first deterministic slice is the Healthcare synthetic care-delivery
+mapping under
+[`ontology/30_Healthcare/mappings/healthcare_synthetic_care_delivery.toml`](ontology/30_Healthcare/mappings/healthcare_synthetic_care_delivery.toml).
+It maps de-identified fixture tables from
+[`ontology/30_Healthcare/datasets/fixtures/`](ontology/30_Healthcare/datasets/fixtures/)
+through SELECT-only SQL under
+[`ontology/30_Healthcare/mappings/sql/`](ontology/30_Healthcare/mappings/sql/).
+The Org ledger
+[`ontology/30_Healthcare/mappings/healthcare_dataset_mapping.org`](ontology/30_Healthcare/mappings/healthcare_dataset_mapping.org)
+records source columns, ontology targets, evidence, and rejected ambiguities.
+
+Use the dataset ontology validator for deterministic checks:
+
+```sh
+uv run python -m tools.wendao_dataset_ontology --check
+```
+
+The validator checks source files, known RDF/API terms, mapped required
+columns, Org ledger presence, and read-only mapping SQL. It does not execute
+DuckDB. Rust/Wendao owns SQL execution, DuckDB materialization, promotion
+gates, and the Flight-backed runtime handoff.
+
+To exercise the source-table handoff surface without adding a runtime route,
+emit raw source tables as Arrow IPC stream files:
+
+```sh
+uv run python -m tools.wendao_dataset_ontology --check --emit-raw-arrow-dir out/healthcare-raw-tables
+```
+
+The command writes one Arrow IPC stream per raw fixture table. These files are
+generated handoff artifacts; they should live in cache or build output
+directories unless a later fixture slice explicitly promotes them.
+
 The common Markdown frontmatter contract is parser-owned and applies to every
 Markdown document. It requires `title`, `kind`, `category`, `tags`,
 `description`, `author`, minute-precision `date`, and

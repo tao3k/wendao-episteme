@@ -1,0 +1,3 @@
+provider_id,provider_name,provider_kind,source_system
+PR001,North Clinic,clinic,synthetic_ehr
+PR002,River Hospital,hospital,synthetic_ehr

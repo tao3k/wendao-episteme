@@ -131,6 +131,30 @@ def build_policy_entries(manifest: dict[str, Any]) -> list[dict[str, str]]:
     return sorted(policies, key=lambda item: (item["domain"], item["path"]))
 
 
+def build_dataset_mapping_entries(manifest: dict[str, Any]) -> list[dict[str, Any]]:
+    mappings = []
+    for domain in manifest["domains"]:
+        for mapping in domain.get("dataset_mappings", []):
+            mapping_contract = load_toml(ontology_root() / mapping)
+            mappings.append(
+                {
+                    "domain": domain["id"],
+                    "kind": "duckdb_arrow_sql_dataset_mapping",
+                    "mapping_id": mapping_contract["mapping_id"],
+                    "path": mapping,
+                    "ledger_org": mapping_contract["ledger_org"],
+                    "validation_rules": sorted(mapping_contract["validation_rules"]),
+                    "raw_tables": sorted(
+                        table["name"] for table in mapping_contract["raw_tables"]
+                    ),
+                    "materialization": dict(
+                        sorted(mapping_contract["materialization"].items())
+                    ),
+                }
+            )
+    return sorted(mappings, key=lambda item: (item["domain"], item["mapping_id"]))
+
+
 def build_registry() -> dict[str, Any]:
     manifest = load_toml(ontology_root() / "manifest.toml")
     api_surface = load_toml(ontology_root() / manifest["api_surface"]["file"])
@@ -160,6 +184,7 @@ def build_registry() -> dict[str, Any]:
         },
         "rules": build_rule_entries(manifest),
         "policies": build_policy_entries(manifest),
+        "dataset_mappings": build_dataset_mapping_entries(manifest),
     }
 
 

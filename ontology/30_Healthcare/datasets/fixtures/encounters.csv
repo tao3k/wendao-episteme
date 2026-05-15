@@ -1,0 +1,3 @@
+encounter_id,patient_id,provider_id,encounter_label,encounter_date,source_system
+E001,P001,PR001,Annual wellness,2026-01-12,synthetic_ehr
+E002,P002,PR002,Follow-up cardiology,2026-01-13,synthetic_ehr

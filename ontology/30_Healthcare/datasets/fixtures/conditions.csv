@@ -1,0 +1,3 @@
+condition_id,patient_id,condition_name,recorded_date,source_system
+C001,P001,Hypertension,2026-01-12,synthetic_ehr
+C002,P002,Asthma,2026-01-13,synthetic_ehr

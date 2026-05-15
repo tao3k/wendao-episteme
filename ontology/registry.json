@@ -226,6 +226,32 @@
     ]
   },
   "compatibility": "semantic_api_compatibility",
+  "dataset_mappings": [
+    {
+      "domain": "episteme://30_Healthcare",
+      "kind": "duckdb_arrow_sql_dataset_mapping",
+      "ledger_org": "30_Healthcare/mappings/healthcare_dataset_mapping.org",
+      "mapping_id": "healthcare.synthetic_care_delivery.v1",
+      "materialization": {
+        "evidence": "30_Healthcare/mappings/sql/03_evidence.sql",
+        "link_observations": "30_Healthcare/mappings/sql/02_link_observations.sql",
+        "object_observations": "30_Healthcare/mappings/sql/01_object_observations.sql",
+        "semantic_objects": "30_Healthcare/mappings/sql/04_semantic_objects.sql",
+        "semantic_projection_state": "30_Healthcare/mappings/sql/06_semantic_projection_state.sql",
+        "semantic_relations": "30_Healthcare/mappings/sql/05_semantic_relations.sql"
+      },
+      "path": "30_Healthcare/mappings/healthcare_synthetic_care_delivery.toml",
+      "raw_tables": [
+        "raw_conditions",
+        "raw_encounters",
+        "raw_patients",
+        "raw_providers"
+      ],
+      "validation_rules": [
+        "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql"
+      ]
+    }
+  ],
   "domains": [
     {
       "category": "00",
@@ -270,6 +296,9 @@
     },
     {
       "category": "30",
+      "dataset_mappings": [
+        "30_Healthcare/mappings/healthcare_synthetic_care_delivery.toml"
+      ],
       "id": "episteme://30_Healthcare",
       "layer": "L1",
       "name": "Healthcare",

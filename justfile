@@ -14,7 +14,7 @@ test-python-align:
     echo "== python episteme align tests ==" >&2
     (
       cd "$SELF_ROOT"
-      python -m unittest discover -s tests -p 'test_*.py'
+      uv run python -m unittest discover -s tests -p 'test_*.py'
     )
 
 ontology-registry:
@@ -25,7 +25,7 @@ ontology-registry:
 
     (
       cd "$SELF_ROOT"
-      python -m tools.wendao_ontology_registry --output ontology/registry.json
+      uv run python -m tools.wendao_ontology_registry --output ontology/registry.json
     )
 
 ontology-registry-check:
@@ -36,7 +36,7 @@ ontology-registry-check:
 
     (
       cd "$SELF_ROOT"
-      python -m tools.wendao_ontology_registry --output ontology/registry.json --check
+      uv run python -m tools.wendao_ontology_registry --output ontology/registry.json --check
     )
 
 build-wendao:

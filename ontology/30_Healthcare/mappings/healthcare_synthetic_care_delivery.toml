@@ -1,0 +1,68 @@
+schema_version = 1
+mapping_id = "healthcare.synthetic_care_delivery.v1"
+domain = "episteme://30_Healthcare"
+ledger_org = "30_Healthcare/mappings/healthcare_dataset_mapping.org"
+description = "Synthetic de-identified care-delivery rows mapped into Healthcare ontology observations."
+validation_rules = [
+  "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql",
+]
+
+[materialization]
+object_observations = "30_Healthcare/mappings/sql/01_object_observations.sql"
+link_observations = "30_Healthcare/mappings/sql/02_link_observations.sql"
+evidence = "30_Healthcare/mappings/sql/03_evidence.sql"
+semantic_objects = "30_Healthcare/mappings/sql/04_semantic_objects.sql"
+semantic_relations = "30_Healthcare/mappings/sql/05_semantic_relations.sql"
+semantic_projection_state = "30_Healthcare/mappings/sql/06_semantic_projection_state.sql"
+
+[[raw_tables]]
+name = "raw_patients"
+path = "30_Healthcare/datasets/fixtures/patients.csv"
+required_columns = ["patient_id", "patient_name", "birth_year", "source_system"]
+mapped_columns = ["patient_id", "patient_name", "birth_year", "source_system"]
+
+[[raw_tables]]
+name = "raw_providers"
+path = "30_Healthcare/datasets/fixtures/providers.csv"
+required_columns = ["provider_id", "provider_name", "provider_kind", "source_system"]
+mapped_columns = ["provider_id", "provider_name", "provider_kind", "source_system"]
+
+[[raw_tables]]
+name = "raw_encounters"
+path = "30_Healthcare/datasets/fixtures/encounters.csv"
+required_columns = ["encounter_id", "patient_id", "provider_id", "encounter_label", "encounter_date", "source_system"]
+mapped_columns = ["encounter_id", "patient_id", "provider_id", "encounter_label", "encounter_date", "source_system"]
+
+[[raw_tables]]
+name = "raw_conditions"
+path = "30_Healthcare/datasets/fixtures/conditions.csv"
+required_columns = ["condition_id", "patient_id", "condition_name", "recorded_date", "source_system"]
+mapped_columns = ["condition_id", "patient_id", "condition_name", "recorded_date", "source_system"]
+
+[[required_classes]]
+api_name = "Patient"
+rdf_class = "https://wendao.ai/ontology/healthcare#Patient"
+
+[[required_classes]]
+api_name = "CareProvider"
+rdf_class = "https://wendao.ai/ontology/healthcare#CareProvider"
+
+[[required_classes]]
+api_name = "Encounter"
+rdf_class = "https://wendao.ai/ontology/healthcare#Encounter"
+
+[[required_classes]]
+api_name = "MedicalCondition"
+rdf_class = "https://wendao.ai/ontology/healthcare#MedicalCondition"
+
+[[required_properties]]
+name = "Patient.encounters"
+rdf_property = "https://wendao.ai/ontology/healthcare#hasEncounter"
+
+[[required_properties]]
+name = "Patient.conditions"
+rdf_property = "https://wendao.ai/ontology/healthcare#diagnosedWith"
+
+[[required_properties]]
+name = "CareProvider.performsEncounter"
+rdf_property = "https://wendao.ai/ontology/core#performs"

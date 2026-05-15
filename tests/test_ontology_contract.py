@@ -1,9 +1,17 @@
 import re
+import tempfile
 import tomllib
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from tools.wendao_dataset_ontology.__main__ import (
+    build_validation_report,
+    emit_raw_table_arrow_ipc,
+    load_mapping_contract,
+    read_raw_table_arrow_ipc_counts,
+    validate_contract_references,
+)
 from tools.wendao_ontology_registry.__main__ import build_registry, registry_text
 
 
@@ -94,7 +102,7 @@ class OntologyContractTests(unittest.TestCase):
         manifest = load_manifest()
 
         for domain in manifest["domains"]:
-            for key in ("rdf_files", "rules", "policies"):
+            for key in ("rdf_files", "rules", "policies", "dataset_mappings"):
                 for relative_path in domain.get(key, []):
                     path = ONTOLOGY_ROOT / relative_path
                     self.assertTrue(path.is_file(), f"missing {key} entry: {relative_path}")
@@ -271,6 +279,70 @@ class OntologyContractTests(unittest.TestCase):
         self.assertIn("OntologyObject", registry["reference_nouns"])
         self.assertGreaterEqual(len(registry["rdf_terms"]["classes"]), 1)
         self.assertGreaterEqual(len(registry["api"]["object_types"]), 1)
+        self.assertGreaterEqual(len(registry["dataset_mappings"]), 1)
+
+    def test_healthcare_dataset_mapping_contract_references_known_terms(self):
+        contract = load_mapping_contract()
+        errors = validate_contract_references(contract)
+
+        self.assertEqual(errors, [])
+        self.assertEqual(contract["domain"], "episteme://30_Healthcare")
+        self.assertEqual(contract["mapping_id"], "healthcare.synthetic_care_delivery.v1")
+
+    def test_healthcare_dataset_mapping_reports_source_contract_handoff(self):
+        report = build_validation_report()
+
+        self.assertTrue(report["passed"], report["errors"])
+        self.assertEqual(report["runtime_materialization_owner"], "xiuxian-wendao")
+        self.assertEqual(report["handoff_kind"], "arrow_flight_raw_tables")
+        self.assertEqual(
+            report["raw_table_counts"],
+            {
+                "raw_conditions": 2,
+                "raw_encounters": 2,
+                "raw_patients": 2,
+                "raw_providers": 2,
+            },
+        )
+        self.assertIn(
+            "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql",
+            report["validation_rules"],
+        )
+
+    def test_python_contract_tool_does_not_depend_on_duckdb(self):
+        pyproject = tomllib.loads((EPISTEME_ROOT / "pyproject.toml").read_text())
+        dependencies = pyproject["project"]["dependencies"]
+
+        self.assertFalse(
+            any(dependency.startswith("duckdb") for dependency in dependencies),
+            dependencies,
+        )
+
+    def test_healthcare_dataset_mapping_emits_arrow_ipc_raw_tables(self):
+        with tempfile.TemporaryDirectory() as output_dir:
+            output_path = Path(output_dir)
+            written_counts = emit_raw_table_arrow_ipc(output_path)
+            read_counts = read_raw_table_arrow_ipc_counts(output_path)
+
+            self.assertEqual(
+                sorted(path.name for path in output_path.iterdir()),
+                [
+                    "raw_conditions.arrow",
+                    "raw_encounters.arrow",
+                    "raw_patients.arrow",
+                    "raw_providers.arrow",
+                ],
+            )
+            self.assertEqual(written_counts, read_counts)
+            self.assertEqual(
+                read_counts,
+                {
+                    "raw_conditions": 2,
+                    "raw_encounters": 2,
+                    "raw_patients": 2,
+                    "raw_providers": 2,
+                },
+            )
 
 
 if __name__ == "__main__":

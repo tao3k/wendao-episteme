@@ -41,6 +41,10 @@ ontology RFC and keeps category meaning explicit before runtime integration.
 - `20_Commercial_Finance/rules/`: read-only SQL validation queries for commercial finance extensions.
 - `30_Healthcare/ontology.rdf`: L1 healthcare ontology.
 - `30_Healthcare/rules/`: read-only SQL validation queries for healthcare extensions.
+- `30_Healthcare/datasets/fixtures/`: synthetic de-identified raw healthcare tables for mapping validation.
+- `30_Healthcare/mappings/healthcare_synthetic_care_delivery.toml`: source-level dataset-to-ontology mapping contract.
+- `30_Healthcare/mappings/healthcare_dataset_mapping.org`: Org review ledger for the synthetic healthcare mapping.
+- `30_Healthcare/mappings/sql/`: SELECT-only projection queries for object, link, evidence, and read-model rows.
 - `40_Manufacturing/ontology.rdf`: L1 manufacturing ontology.
 - `40_Manufacturing/rules/`: read-only SQL validation queries for manufacturing extensions.
 - `41_Education/ontology.rdf`: L1 education ontology.
@@ -70,8 +74,21 @@ properties, API surface declarations, validation rules, and policy references.
 It is used as an importer and SDK design handoff artifact, not as runtime
 storage.
 
+## Dataset Mapping Contract
+
+Dataset mappings are source-level contracts that turn raw structured tables
+into ontology observations. They do not replace RDF. A mapping contract records
+the source fixture tables, Org review ledger, SELECT-only SQL, validation
+rules, and read-model projection queries needed by the Wendao runtime.
+
+The first mapping targets the Healthcare domain. It proves the boundary:
+synthetic raw rows are checked against the Healthcare RDF/API surface, mapped
+columns, SQL projection contracts, and Org ledger. Runtime DuckDB execution and
+compiled read-model materialization belong to Wendao/Rust.
+
 ## Boundary
 
 This directory defines ontology source artifacts only. It does not own parser
 implementations, DuckDB DDL, Rust type layout, SQL execution, BPMN orchestration,
-or generated SDK code.
+or generated SDK code. Dataset mapping SQL is SELECT-only source contract
+projection logic, not runtime DDL.

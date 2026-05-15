@@ -55,6 +55,9 @@ rdf_files = ["30_Healthcare/ontology.rdf"]
 rules = [
   "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql",
 ]
+dataset_mappings = [
+  "30_Healthcare/mappings/healthcare_synthetic_care_delivery.toml",
+]
 
 [[domains]]
 id = "episteme://40_Manufacturing"

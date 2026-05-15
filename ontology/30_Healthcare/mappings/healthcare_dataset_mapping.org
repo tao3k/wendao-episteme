@@ -1,0 +1,60 @@
+#+TITLE: Healthcare Synthetic Care Delivery Dataset Mapping
+#+PROPERTY: WENDAO_ONTOLOGY_MAPPING_ID healthcare.synthetic_care_delivery.v1
+
+* Healthcare synthetic care delivery mapping
+:PROPERTIES:
+:ONTOLOGY_KIND: dataset_mapping
+:DOMAIN: episteme://30_Healthcare
+:MAPPING_ID: healthcare.synthetic_care_delivery.v1
+:LIFECYCLE: accepted_source_contract
+:END:
+
+This source contract maps de-identified synthetic healthcare rows into
+Healthcare ontology observations. The raw tables are not ontology truth. RDF
+classes and object properties remain the semantic authority, and DuckDB SQL
+materializes reviewable object, link, and evidence observations.
+
+** Raw table coverage
+
+| source_table | required_columns | ontology_role |
+| raw_patients | patient_id, patient_name, birth_year, source_system | Patient object observations |
+| raw_providers | provider_id, provider_name, provider_kind, source_system | CareProvider object observations |
+| raw_encounters | encounter_id, patient_id, provider_id, encounter_label, encounter_date, source_system | Encounter object observations and patient/provider links |
+| raw_conditions | condition_id, patient_id, condition_name, recorded_date, source_system | MedicalCondition object observations and diagnosis links |
+
+** Object mappings
+
+| source_table | source_key | ontology_object_type | rdf_class | display_name |
+| raw_patients | patient_id | Patient | https://wendao.ai/ontology/healthcare#Patient | patient_name |
+| raw_providers | provider_id | CareProvider | https://wendao.ai/ontology/healthcare#CareProvider | provider_name |
+| raw_encounters | encounter_id | Encounter | https://wendao.ai/ontology/healthcare#Encounter | encounter_label |
+| raw_conditions | condition_id | MedicalCondition | https://wendao.ai/ontology/healthcare#MedicalCondition | condition_name |
+
+** Link mappings
+
+| source_table | source_key | target_key | predicate | purpose |
+| raw_encounters | patient_id | encounter_id | https://wendao.ai/ontology/healthcare#hasEncounter | Patient.encounters |
+| raw_encounters | provider_id | encounter_id | https://wendao.ai/ontology/core#performs | Provider accountability for encounter validation |
+| raw_conditions | patient_id | condition_id | https://wendao.ai/ontology/healthcare#diagnosedWith | Patient.conditions |
+
+** Mapping evidence
+
+| evidence_id | source_table | source_key | review_state | decision |
+| evidence:raw_patients:P001 | raw_patients | P001 | accepted | Patient object mapping uses patient_id as stable source key |
+| evidence:raw_encounters:E001 | raw_encounters | E001 | accepted | Encounter links must include patient and provider context |
+| evidence:raw_conditions:C001 | raw_conditions | C001 | accepted | Condition rows instantiate MedicalCondition observations |
+
+** Rejected ambiguities
+
+| ambiguity | decision |
+| provider_kind_as_class | Rejected for this slice; provider_kind remains source evidence, not an RDF subclass. |
+| birth_year_as_identity | Rejected for identity; patient_id remains the primary source key. |
+| encounter_date_as_temporal_ontology | Deferred until lifespan/validity mapping is introduced. |
+
+** SQL mapping artifacts
+
+#+BEGIN_SRC sql
+SELECT * FROM ontology_object_observation;
+SELECT * FROM ontology_link_observation;
+SELECT * FROM ontology_evidence;
+#+END_SRC
