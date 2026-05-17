@@ -1,0 +1,13 @@
+{
+  "acceptance_state": "accepted_for_source_contract_review",
+  "claim_count": 1,
+  "errors": [],
+  "evidence_segment_count": 1,
+  "known_predicate_count": 1,
+  "ontology_source_write_performed": false,
+  "passed": true,
+  "proposal_id": "audio-proposal-001",
+  "raw_transcript_text_included": false,
+  "rdf_materialization_performed": false,
+  "schema_version": "wendao.audio_claim_acceptance_report.v1"
+}

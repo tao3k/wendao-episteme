@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-acceptance-report.schema.json",
+  "title": "Wendao Audio Claim Acceptance Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "acceptance_state",
+    "passed",
+    "errors",
+    "claim_count",
+    "evidence_segment_count",
+    "known_predicate_count",
+    "rdf_materialization_performed",
+    "ontology_source_write_performed",
+    "raw_transcript_text_included"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_acceptance_report.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]+$"
+    },
+    "acceptance_state": {
+      "enum": [
+        "accepted_for_source_contract_review",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "claim_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "evidence_segment_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "known_predicate_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rdf_materialization_performed": {
+      "const": false
+    },
+    "ontology_source_write_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    }
+  }
+}

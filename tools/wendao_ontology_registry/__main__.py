@@ -155,6 +155,33 @@ def build_dataset_mapping_entries(manifest: dict[str, Any]) -> list[dict[str, An
     return sorted(mappings, key=lambda item: (item["domain"], item["mapping_id"]))
 
 
+def build_audio_claim_acceptance_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_acceptance"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "owner": contract["owner"],
+        "runtime_proposal_owner": contract["runtime_proposal_owner"],
+        "acceptance_state": contract["acceptance_state"],
+        "rdf_materialization_allowed": contract["rdf_materialization_allowed"],
+        "ontology_source_write_allowed": contract["ontology_source_write_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
+def build_audio_claim_rdf_preview_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_preview"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "owner": contract["owner"],
+        "acceptance_contract": contract["acceptance_contract"],
+        "rdf_source_write_allowed": contract["rdf_source_write_allowed"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
 def build_registry() -> dict[str, Any]:
     manifest = load_toml(ontology_root() / "manifest.toml")
     api_surface = load_toml(ontology_root() / manifest["api_surface"]["file"])
@@ -185,6 +212,8 @@ def build_registry() -> dict[str, Any]:
         "rules": build_rule_entries(manifest),
         "policies": build_policy_entries(manifest),
         "dataset_mappings": build_dataset_mapping_entries(manifest),
+        "audio_claim_acceptance": build_audio_claim_acceptance_entry(manifest),
+        "audio_claim_rdf_preview": build_audio_claim_rdf_preview_entry(manifest),
     }
 
 

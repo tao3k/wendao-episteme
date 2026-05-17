@@ -29,7 +29,11 @@ ontology RFC and keeps category meaning explicit before runtime integration.
 - `manifest.toml`: source-level domain manifest, rule mount map, and extension contract declaration.
 - `api_surface.toml`: source-level object, link, action, query, and interface contract for SDK-facing ontology APIs.
 - `registry.json`: deterministic compiled ontology registry snapshot for downstream importer and SDK design.
+- `audio_claim_acceptance.schema.json`: source-contract report schema for reviewed audio claim proposal acceptance.
+- `audio_claim_rdf_preview.schema.json`: preview-only schema for RDF patch review artifacts derived from accepted audio claim proposals.
 - `examples/local_project/ontology.toml`: example project-local ontology extension using `extends`.
+- `examples/audio_claim_promotion_proposal/`: synthetic reviewed audio claim proposal fixture and acceptance report for acceptance-gate validation.
+- `examples/audio_claim_promotion_proposal/rdf_patch_preview.json`: deterministic preview-only RDF patch artifact for reviewer inspection.
 - `00_Core_Primitives/00.01_entity.rdf`: entity identity and immutable trace primitives.
 - `00_Core_Primitives/00.02_relation.rdf`: topology and composition primitives.
 - `00_Core_Primitives/00.03_action.rdf`: actor, action, and evidence provenance primitives.
@@ -86,9 +90,27 @@ synthetic raw rows are checked against the Healthcare RDF/API surface, mapped
 columns, SQL projection contracts, and Org ledger. Runtime DuckDB execution and
 compiled read-model materialization belong to Wendao/Rust.
 
+## Audio Claim Acceptance Contract
+
+Reviewed audio claim proposals are accepted for source-contract review before
+they can become ontology facts. The acceptance gate validates Rust-produced
+`claims.tsv` and `receipt.json` proposal artifacts, checks that ontology
+predicates are known RDF object properties, and emits an acceptance report with
+RDF materialization and ontology source writes explicitly disabled. The gate
+does not include raw transcript text; it carries claim ids, evidence segment
+ids, ontology triple intent, reviewer ids, confidence, and evidence hashes.
+
+## Audio Claim RDF Patch Preview
+
+Accepted audio claim proposals can be compiled into a deterministic RDF patch
+preview JSON artifact. The preview renders candidate RDF/XML statements for
+review, but it does not mutate ontology RDF files, promote ontology truth, or
+include raw transcript text. It exists to make the next human review step
+auditable before any source ontology update is proposed.
+
 ## Boundary
 
 This directory defines ontology source artifacts only. It does not own parser
 implementations, DuckDB DDL, Rust type layout, SQL execution, BPMN orchestration,
-or generated SDK code. Dataset mapping SQL is SELECT-only source contract
-projection logic, not runtime DDL.
+RDF source mutation from reviewed proposals, or generated SDK code. Dataset
+mapping SQL is SELECT-only source contract projection logic, not runtime DDL.

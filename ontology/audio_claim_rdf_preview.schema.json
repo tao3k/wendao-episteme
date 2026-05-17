@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-rdf-patch-preview.schema.json",
+  "title": "Wendao Audio Claim RDF Patch Preview",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "preview_state",
+    "passed",
+    "errors",
+    "patch_count",
+    "rdf_source_write_performed",
+    "ontology_truth_promotion_performed",
+    "raw_transcript_text_included",
+    "patches"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_rdf_patch_preview.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]*$"
+    },
+    "preview_state": {
+      "enum": [
+        "preview_ready",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "patch_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rdf_source_write_performed": {
+      "const": false
+    },
+    "ontology_truth_promotion_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    },
+    "patches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id",
+          "evidence_segment_id",
+          "ontology_subject",
+          "ontology_predicate",
+          "ontology_object",
+          "object_kind",
+          "reviewer_id",
+          "reviewed_at",
+          "confidence",
+          "rdf_xml_preview"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string"
+          },
+          "evidence_segment_id": {
+            "type": "string"
+          },
+          "ontology_subject": {
+            "type": "string"
+          },
+          "ontology_predicate": {
+            "type": "string"
+          },
+          "ontology_object": {
+            "type": "string"
+          },
+          "object_kind": {
+            "enum": [
+              "entity",
+              "literal",
+              "quantity"
+            ]
+          },
+          "reviewer_id": {
+            "type": "string"
+          },
+          "reviewed_at": {
+            "type": "string"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "rdf_xml_preview": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

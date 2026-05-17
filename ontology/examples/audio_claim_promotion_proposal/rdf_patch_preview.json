@@ -1,0 +1,25 @@
+{
+  "errors": [],
+  "ontology_truth_promotion_performed": false,
+  "passed": true,
+  "patch_count": 1,
+  "patches": [
+    {
+      "claim_id": "audio-reviewed-claim-001",
+      "confidence": 0.94,
+      "evidence_segment_id": "audio-org-segment-001",
+      "object_kind": "entity",
+      "ontology_object": "episteme://synthetic/audio-evidence-segment-001",
+      "ontology_predicate": "https://wendao.ai/ontology/core#basedOn",
+      "ontology_subject": "episteme://synthetic/audio-claim-subject-001",
+      "rdf_xml_preview": "<rdf:Statement xmlns:core=\"https://wendao.ai/ontology/core#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" rdf:about=\"episteme://audio-claim-preview/audio-reviewed-claim-001\"><rdf:subject rdf:resource=\"episteme://synthetic/audio-claim-subject-001\" /><rdf:predicate rdf:resource=\"https://wendao.ai/ontology/core#basedOn\" /><rdf:object rdf:resource=\"episteme://synthetic/audio-evidence-segment-001\" /><core:basedOn rdf:resource=\"audio-org-segment-001\" /><core:reviewedBy>review-gate-synthetic</core:reviewedBy><core:confidence>0.94</core:confidence></rdf:Statement>",
+      "reviewed_at": "2026-05-16",
+      "reviewer_id": "review-gate-synthetic"
+    }
+  ],
+  "preview_state": "preview_ready",
+  "proposal_id": "audio-proposal-001",
+  "raw_transcript_text_included": false,
+  "rdf_source_write_performed": false,
+  "schema_version": "wendao.audio_claim_rdf_patch_preview.v1"
+}

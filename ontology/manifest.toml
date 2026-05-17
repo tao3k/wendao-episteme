@@ -98,6 +98,25 @@ allowed_sections = [
 ]
 rule_mount = "mount_rules_for_extends_only"
 
+[audio_claim_acceptance]
+schema = "audio_claim_acceptance.schema.json"
+example = "examples/audio_claim_promotion_proposal"
+owner = "wendao-episteme"
+runtime_proposal_owner = "xiuxian-wendao"
+acceptance_state = "accepted_for_source_contract_review"
+rdf_materialization_allowed = false
+ontology_source_write_allowed = false
+raw_transcript_text_allowed = false
+
+[audio_claim_rdf_preview]
+schema = "audio_claim_rdf_preview.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_patch_preview.json"
+owner = "wendao-episteme"
+acceptance_contract = "audio_claim_acceptance"
+rdf_source_write_allowed = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
 [api_surface]
 file = "api_surface.toml"
 compatibility = "semantic_api_compatibility"

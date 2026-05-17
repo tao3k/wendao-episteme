@@ -1,0 +1,2 @@
+claim_id	evidence_segment_id	ontology_subject	ontology_predicate	ontology_object	object_kind	reviewer_id	reviewed_at	evidence_quote_sha256	review_note_sha256	confidence	status
+audio-reviewed-claim-001	audio-org-segment-001	episteme://synthetic/audio-claim-subject-001	https://wendao.ai/ontology/core#basedOn	episteme://synthetic/audio-evidence-segment-001	entity	review-gate-synthetic	2026-05-16	sha256:evidence-quote-001	sha256:review-note-001	0.94	promotion-candidate

@@ -225,6 +225,25 @@
       }
     ]
   },
+  "audio_claim_acceptance": {
+    "acceptance_state": "accepted_for_source_contract_review",
+    "example": "examples/audio_claim_promotion_proposal",
+    "ontology_source_write_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "rdf_materialization_allowed": false,
+    "runtime_proposal_owner": "xiuxian-wendao",
+    "schema": "audio_claim_acceptance.schema.json"
+  },
+  "audio_claim_rdf_preview": {
+    "acceptance_contract": "audio_claim_acceptance",
+    "example": "examples/audio_claim_promotion_proposal/rdf_patch_preview.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "rdf_source_write_allowed": false,
+    "schema": "audio_claim_rdf_preview.schema.json"
+  },
   "compatibility": "semantic_api_compatibility",
   "dataset_mappings": [
     {

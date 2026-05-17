@@ -54,6 +54,13 @@ complete LLM-facing contract.
   RDF terms or declared validation rules. They also verify that the deterministic
   ontology registry snapshot matches the current source contracts. They do not
   execute SQL.
+- The audio claim acceptance tests validate the source-contract gate for
+  reviewed audio claim proposal artifacts. The gate accepts only synthetic
+  proposal fixtures with known RDF predicates, disabled RDF/source mutation
+  flags, and no raw transcript text.
+- The audio claim RDF patch preview tests validate that accepted proposal
+  artifacts can produce a deterministic preview JSON without writing ontology
+  RDF files, promoting ontology truth, or carrying raw transcript text.
 
 Leading frontmatter is the required document-level metadata carrier in these
 fixtures. The common frontmatter contract applies to every Markdown fixture:

@@ -1,0 +1,12 @@
+{
+  "schema_version": "xiuxian_wendao.episteme_audio_claim_promotion_proposal.v1",
+  "proposal_id": "audio-proposal-001",
+  "proposal_dir": "ontology/examples/audio_claim_promotion_proposal",
+  "claims_path": "ontology/examples/audio_claim_promotion_proposal/claims.tsv",
+  "receipt_path": "ontology/examples/audio_claim_promotion_proposal/receipt.json",
+  "claim_count": 1,
+  "evidence_segment_count": 1,
+  "rdf_materialization_performed": false,
+  "ontology_source_write_performed": false,
+  "raw_transcript_promotion_allowed": false
+}

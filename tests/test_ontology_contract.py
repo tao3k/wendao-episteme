@@ -1,10 +1,14 @@
+import json
 import re
+import shutil
 import tempfile
 import tomllib
 import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from tools.wendao_audio_claim_acceptance.__main__ import build_acceptance_report
+from tools.wendao_audio_claim_rdf_preview.__main__ import build_rdf_patch_preview
 from tools.wendao_dataset_ontology.__main__ import (
     build_validation_report,
     emit_raw_table_arrow_ipc,
@@ -173,6 +177,43 @@ class OntologyContractTests(unittest.TestCase):
         self.assertIn("Query", manifest["api_surface"]["reference_nouns"])
         self.assertIn("OntologyInterface", manifest["api_surface"]["reference_nouns"])
 
+    def test_audio_claim_acceptance_contract_is_declared(self):
+        manifest = load_manifest()
+        contract = manifest["audio_claim_acceptance"]
+
+        self.assertEqual(contract["owner"], "wendao-episteme")
+        self.assertEqual(contract["runtime_proposal_owner"], "xiuxian-wendao")
+        self.assertEqual(contract["acceptance_state"], "accepted_for_source_contract_review")
+        self.assertFalse(contract["rdf_materialization_allowed"])
+        self.assertFalse(contract["ontology_source_write_allowed"])
+        self.assertFalse(contract["raw_transcript_text_allowed"])
+        self.assertTrue((ONTOLOGY_ROOT / contract["schema"]).is_file())
+        self.assertTrue((ONTOLOGY_ROOT / contract["example"] / "claims.tsv").is_file())
+        self.assertTrue((ONTOLOGY_ROOT / contract["example"] / "receipt.json").is_file())
+        self.assertTrue((ONTOLOGY_ROOT / contract["example"] / "acceptance_report.json").is_file())
+
+        schema = json.loads((ONTOLOGY_ROOT / contract["schema"]).read_text())
+        self.assertEqual(schema["properties"]["rdf_materialization_performed"]["const"], False)
+        self.assertEqual(schema["properties"]["ontology_source_write_performed"]["const"], False)
+        self.assertEqual(schema["properties"]["raw_transcript_text_included"]["const"], False)
+
+    def test_audio_claim_rdf_preview_contract_is_declared(self):
+        manifest = load_manifest()
+        contract = manifest["audio_claim_rdf_preview"]
+
+        self.assertEqual(contract["owner"], "wendao-episteme")
+        self.assertEqual(contract["acceptance_contract"], "audio_claim_acceptance")
+        self.assertFalse(contract["rdf_source_write_allowed"])
+        self.assertFalse(contract["ontology_truth_promotion_allowed"])
+        self.assertFalse(contract["raw_transcript_text_allowed"])
+        self.assertTrue((ONTOLOGY_ROOT / contract["schema"]).is_file())
+        self.assertTrue((ONTOLOGY_ROOT / contract["example"]).is_file())
+
+        schema = json.loads((ONTOLOGY_ROOT / contract["schema"]).read_text())
+        self.assertEqual(schema["properties"]["rdf_source_write_performed"]["const"], False)
+        self.assertEqual(schema["properties"]["ontology_truth_promotion_performed"]["const"], False)
+        self.assertEqual(schema["properties"]["raw_transcript_text_included"]["const"], False)
+
     def test_api_surface_references_known_rdf_terms_and_rules(self):
         manifest = load_manifest()
         api_surface = load_api_surface(manifest)
@@ -280,6 +321,123 @@ class OntologyContractTests(unittest.TestCase):
         self.assertGreaterEqual(len(registry["rdf_terms"]["classes"]), 1)
         self.assertGreaterEqual(len(registry["api"]["object_types"]), 1)
         self.assertGreaterEqual(len(registry["dataset_mappings"]), 1)
+        self.assertEqual(
+            registry["audio_claim_acceptance"],
+            {
+                "schema": "audio_claim_acceptance.schema.json",
+                "example": "examples/audio_claim_promotion_proposal",
+                "owner": "wendao-episteme",
+                "runtime_proposal_owner": "xiuxian-wendao",
+                "acceptance_state": "accepted_for_source_contract_review",
+                "rdf_materialization_allowed": False,
+                "ontology_source_write_allowed": False,
+                "raw_transcript_text_allowed": False,
+            },
+        )
+        self.assertEqual(
+            registry["audio_claim_rdf_preview"],
+            {
+                "schema": "audio_claim_rdf_preview.schema.json",
+                "example": "examples/audio_claim_promotion_proposal/rdf_patch_preview.json",
+                "owner": "wendao-episteme",
+                "acceptance_contract": "audio_claim_acceptance",
+                "rdf_source_write_allowed": False,
+                "ontology_truth_promotion_allowed": False,
+                "raw_transcript_text_allowed": False,
+            },
+        )
+
+    def test_audio_claim_acceptance_fixture_passes_without_rdf_or_raw_text(self):
+        manifest = load_manifest()
+        proposal_dir = ONTOLOGY_ROOT / manifest["audio_claim_acceptance"]["example"]
+        report = build_acceptance_report(proposal_dir)
+
+        self.assertTrue(report["passed"], report["errors"])
+        self.assertEqual(report["acceptance_state"], "accepted_for_source_contract_review")
+        self.assertEqual(report["claim_count"], 1)
+        self.assertEqual(report["evidence_segment_count"], 1)
+        self.assertEqual(report["known_predicate_count"], 1)
+        self.assertFalse(report["rdf_materialization_performed"])
+        self.assertFalse(report["ontology_source_write_performed"])
+        self.assertFalse(report["raw_transcript_text_included"])
+        self.assertNotIn("raw transcript content marker", "\n".join(report["errors"]))
+        expected = json.loads((proposal_dir / "acceptance_report.json").read_text())
+        self.assertEqual(report, expected)
+
+    def test_audio_claim_acceptance_rejects_unknown_predicate(self):
+        manifest = load_manifest()
+        source_dir = ONTOLOGY_ROOT / manifest["audio_claim_acceptance"]["example"]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            proposal_dir = Path(temp_dir) / "proposal"
+            shutil.copytree(source_dir, proposal_dir)
+            claims_path = proposal_dir / "claims.tsv"
+            claims_path.write_text(
+                claims_path.read_text().replace(
+                    "https://wendao.ai/ontology/core#basedOn",
+                    "https://wendao.ai/ontology/unknown#unsupported",
+                )
+            )
+
+            report = build_acceptance_report(proposal_dir)
+
+        self.assertFalse(report["passed"])
+        self.assertEqual(report["acceptance_state"], "rejected")
+        self.assertIn(
+            "ontology_predicate is not a known RDF object property",
+            "\n".join(report["errors"]),
+        )
+
+    def test_audio_claim_rdf_preview_fixture_is_current_without_mutation(self):
+        manifest = load_manifest()
+        acceptance_contract = manifest["audio_claim_acceptance"]
+        preview_contract = manifest["audio_claim_rdf_preview"]
+        proposal_dir = ONTOLOGY_ROOT / acceptance_contract["example"]
+
+        report = build_rdf_patch_preview(proposal_dir)
+
+        self.assertTrue(report["passed"], report["errors"])
+        self.assertEqual(report["preview_state"], "preview_ready")
+        self.assertEqual(report["patch_count"], 1)
+        self.assertFalse(report["rdf_source_write_performed"])
+        self.assertFalse(report["ontology_truth_promotion_performed"])
+        self.assertFalse(report["raw_transcript_text_included"])
+        self.assertEqual(len(report["patches"]), report["patch_count"])
+        patch_payload = json.dumps(report["patches"])
+        self.assertNotIn("raw_transcript", patch_payload)
+        self.assertNotIn("transcript_text", patch_payload)
+        ET.fromstring(report["patches"][0]["rdf_xml_preview"])
+
+        expected = json.loads((ONTOLOGY_ROOT / preview_contract["example"]).read_text())
+        self.assertEqual(report, expected)
+        self.assertEqual(Path(preview_contract["example"]).suffix, ".json")
+
+    def test_audio_claim_rdf_preview_rejects_failed_acceptance(self):
+        manifest = load_manifest()
+        source_dir = ONTOLOGY_ROOT / manifest["audio_claim_acceptance"]["example"]
+        with tempfile.TemporaryDirectory() as temp_dir:
+            proposal_dir = Path(temp_dir) / "proposal"
+            shutil.copytree(source_dir, proposal_dir)
+            claims_path = proposal_dir / "claims.tsv"
+            claims_path.write_text(
+                claims_path.read_text().replace(
+                    "https://wendao.ai/ontology/core#basedOn",
+                    "https://wendao.ai/ontology/unknown#unsupported",
+                )
+            )
+
+            report = build_rdf_patch_preview(proposal_dir)
+
+        self.assertFalse(report["passed"])
+        self.assertEqual(report["preview_state"], "rejected")
+        self.assertEqual(report["patch_count"], 0)
+        self.assertEqual(report["patches"], [])
+        self.assertFalse(report["rdf_source_write_performed"])
+        self.assertFalse(report["ontology_truth_promotion_performed"])
+        self.assertFalse(report["raw_transcript_text_included"])
+        self.assertIn(
+            "ontology_predicate is not a known RDF object property",
+            "\n".join(report["errors"]),
+        )
 
     def test_healthcare_dataset_mapping_contract_references_known_terms(self):
         contract = load_mapping_contract()
