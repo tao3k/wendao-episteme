@@ -117,6 +117,74 @@ rdf_source_write_allowed = false
 ontology_truth_promotion_allowed = false
 raw_transcript_text_allowed = false
 
+[audio_claim_rdf_source_promotion]
+schema = "audio_claim_rdf_source_promotion.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_source_promotion_proposal.json"
+review_decision = "examples/audio_claim_promotion_proposal/source_review_decision.json"
+owner = "wendao-episteme"
+preview_contract = "audio_claim_rdf_preview"
+rdf_source_write_allowed = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
+[audio_claim_rdf_staged_apply]
+schema = "audio_claim_rdf_staged_apply.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_staged_apply/report.json"
+staged_output = "examples/audio_claim_promotion_proposal/rdf_staged_apply"
+owner = "wendao-episteme"
+source_promotion_contract = "audio_claim_rdf_source_promotion"
+canonical_source_write_allowed = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
+[audio_claim_rdf_source_edit_preflight]
+schema = "audio_claim_rdf_source_edit_preflight.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_source_edit_preflight/report.json"
+diff_output = "examples/audio_claim_promotion_proposal/rdf_source_edit_preflight"
+owner = "wendao-episteme"
+staged_apply_contract = "audio_claim_rdf_staged_apply"
+canonical_source_write_allowed = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
+[audio_claim_rdf_source_edit_gate]
+schema = "audio_claim_rdf_source_edit_gate.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_source_edit_gate/report.json"
+source_edit_decision = "examples/audio_claim_promotion_proposal/source_edit_decision.json"
+owner = "wendao-episteme"
+source_edit_preflight_contract = "audio_claim_rdf_source_edit_preflight"
+canonical_source_write_allowed = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
+[audio_claim_rdf_source_apply]
+schema = "audio_claim_rdf_source_apply.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_source_apply/report.json"
+owner = "wendao-episteme"
+source_edit_gate_contract = "audio_claim_rdf_source_edit_gate"
+canonical_source_write_allowed = true
+default_canonical_source_write = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
+[audio_claim_rdf_source_apply_verification]
+schema = "audio_claim_rdf_source_apply_verification.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_source_apply_verification/report.json"
+owner = "wendao-episteme"
+source_apply_contract = "audio_claim_rdf_source_apply"
+canonical_source_write_allowed = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
+[audio_claim_rdf_pipeline_receipt]
+schema = "audio_claim_rdf_pipeline_receipt.schema.json"
+example = "examples/audio_claim_promotion_proposal/rdf_pipeline_receipt.json"
+owner = "wendao-episteme"
+source_apply_verification_contract = "audio_claim_rdf_source_apply_verification"
+canonical_source_write_allowed = false
+ontology_truth_promotion_allowed = false
+raw_transcript_text_allowed = false
+
 [api_surface]
 file = "api_surface.toml"
 compatibility = "semantic_api_compatibility"

@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-rdf-pipeline-receipt.schema.json",
+  "title": "Wendao Audio Claim RDF Pipeline Receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "pipeline_state",
+    "passed",
+    "errors",
+    "report_count",
+    "source_write_mode",
+    "canonical_source_write_performed",
+    "canonical_source_write_observed",
+    "ontology_truth_promotion_performed",
+    "raw_transcript_text_included",
+    "claim_count",
+    "patch_count",
+    "target_file_count",
+    "verified_file_count",
+    "registry_class_count",
+    "registry_object_property_count",
+    "reports"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_rdf_pipeline_receipt.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]*$"
+    },
+    "pipeline_state": {
+      "enum": [
+        "source_contract_pipeline_ready",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "report_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_write_mode": {
+      "enum": [
+        "dry_run",
+        "write_source"
+      ]
+    },
+    "canonical_source_write_performed": {
+      "type": "boolean"
+    },
+    "canonical_source_write_observed": {
+      "type": "boolean"
+    },
+    "ontology_truth_promotion_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    },
+    "claim_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "patch_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "target_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "verified_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "registry_class_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "registry_object_property_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "reports": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "contract",
+          "path",
+          "schema_version",
+          "state",
+          "passed",
+          "sha256"
+        ],
+        "properties": {
+          "contract": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "schema_version": {
+            "type": "string"
+          },
+          "state": {
+            "type": "string"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

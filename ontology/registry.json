@@ -235,6 +235,15 @@
     "runtime_proposal_owner": "xiuxian-wendao",
     "schema": "audio_claim_acceptance.schema.json"
   },
+  "audio_claim_rdf_pipeline_receipt": {
+    "canonical_source_write_allowed": false,
+    "example": "examples/audio_claim_promotion_proposal/rdf_pipeline_receipt.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "schema": "audio_claim_rdf_pipeline_receipt.schema.json",
+    "source_apply_verification_contract": "audio_claim_rdf_source_apply_verification"
+  },
   "audio_claim_rdf_preview": {
     "acceptance_contract": "audio_claim_acceptance",
     "example": "examples/audio_claim_promotion_proposal/rdf_patch_preview.json",
@@ -243,6 +252,65 @@
     "raw_transcript_text_allowed": false,
     "rdf_source_write_allowed": false,
     "schema": "audio_claim_rdf_preview.schema.json"
+  },
+  "audio_claim_rdf_source_apply": {
+    "canonical_source_write_allowed": true,
+    "default_canonical_source_write": false,
+    "example": "examples/audio_claim_promotion_proposal/rdf_source_apply/report.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "schema": "audio_claim_rdf_source_apply.schema.json",
+    "source_edit_gate_contract": "audio_claim_rdf_source_edit_gate"
+  },
+  "audio_claim_rdf_source_apply_verification": {
+    "canonical_source_write_allowed": false,
+    "example": "examples/audio_claim_promotion_proposal/rdf_source_apply_verification/report.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "schema": "audio_claim_rdf_source_apply_verification.schema.json",
+    "source_apply_contract": "audio_claim_rdf_source_apply"
+  },
+  "audio_claim_rdf_source_edit_gate": {
+    "canonical_source_write_allowed": false,
+    "example": "examples/audio_claim_promotion_proposal/rdf_source_edit_gate/report.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "schema": "audio_claim_rdf_source_edit_gate.schema.json",
+    "source_edit_decision": "examples/audio_claim_promotion_proposal/source_edit_decision.json",
+    "source_edit_preflight_contract": "audio_claim_rdf_source_edit_preflight"
+  },
+  "audio_claim_rdf_source_edit_preflight": {
+    "canonical_source_write_allowed": false,
+    "diff_output": "examples/audio_claim_promotion_proposal/rdf_source_edit_preflight",
+    "example": "examples/audio_claim_promotion_proposal/rdf_source_edit_preflight/report.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "schema": "audio_claim_rdf_source_edit_preflight.schema.json",
+    "staged_apply_contract": "audio_claim_rdf_staged_apply"
+  },
+  "audio_claim_rdf_source_promotion": {
+    "example": "examples/audio_claim_promotion_proposal/rdf_source_promotion_proposal.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "preview_contract": "audio_claim_rdf_preview",
+    "raw_transcript_text_allowed": false,
+    "rdf_source_write_allowed": false,
+    "review_decision": "examples/audio_claim_promotion_proposal/source_review_decision.json",
+    "schema": "audio_claim_rdf_source_promotion.schema.json"
+  },
+  "audio_claim_rdf_staged_apply": {
+    "canonical_source_write_allowed": false,
+    "example": "examples/audio_claim_promotion_proposal/rdf_staged_apply/report.json",
+    "ontology_truth_promotion_allowed": false,
+    "owner": "wendao-episteme",
+    "raw_transcript_text_allowed": false,
+    "schema": "audio_claim_rdf_staged_apply.schema.json",
+    "source_promotion_contract": "audio_claim_rdf_source_promotion",
+    "staged_output": "examples/audio_claim_promotion_proposal/rdf_staged_apply"
   },
   "compatibility": "semantic_api_compatibility",
   "dataset_mappings": [

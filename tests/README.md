@@ -61,6 +61,29 @@ complete LLM-facing contract.
 - The audio claim RDF patch preview tests validate that accepted proposal
   artifacts can produce a deterministic preview JSON without writing ontology
   RDF files, promoting ontology truth, or carrying raw transcript text.
+- The audio claim RDF source promotion proposal tests validate that approved
+  preview artifacts can produce deterministic target-file patch proposals with
+  RDF source precondition hashes, while rejected review decisions and failed
+  previews remain blocked.
+- The audio claim RDF staged apply tests validate that approved source-patch
+  proposals materialize only into staged candidate files, keep canonical RDF
+  source files unchanged, and reject precondition hash mismatches.
+- The audio claim RDF source edit preflight tests validate that staged
+  candidate files produce deterministic source-edit diffs, keep canonical RDF
+  source files unchanged, and reject staged hash mismatches.
+- The audio claim RDF source edit gate tests validate that reviewer-approved
+  diff hashes become ready-for-manual-source-edit reports, rejected decisions
+  fail, and canonical RDF source files remain unchanged.
+- The audio claim RDF source apply tests validate that source-edit gate reports
+  become deterministic dry-run reports by default, while explicit source writes
+  are tested against temporary ontology roots and reject stale source hashes.
+- The audio claim RDF source apply verification tests validate dry-run and
+  write-source reports against current RDF files, staged RDF files, XML parse
+  checks, and registry-style RDF term collection without mutating canonical
+  source files.
+- The audio claim RDF pipeline receipt tests validate the full read-only gate
+  chain from acceptance through source-apply verification, including report
+  digests, shared proposal id, and failed-report rejection.
 
 Leading frontmatter is the required document-level metadata carrier in these
 fixtures. The common frontmatter contract applies to every Markdown fixture:

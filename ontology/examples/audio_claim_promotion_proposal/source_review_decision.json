@@ -1,0 +1,14 @@
+{
+  "approved_claim_ids": [
+    "audio-reviewed-claim-001"
+  ],
+  "ontology_truth_promotion_allowed": false,
+  "proposal_id": "audio-proposal-001",
+  "raw_transcript_text_allowed": false,
+  "rdf_source_write_allowed": false,
+  "review_decision_id": "audio-source-review-001",
+  "review_state": "approved_for_source_patch_proposal",
+  "reviewed_at": "2026-05-16",
+  "reviewer_id": "source-review-synthetic",
+  "schema_version": "wendao.audio_claim_source_review_decision.v1"
+}

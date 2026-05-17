@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-rdf-source-edit-preflight.schema.json",
+  "title": "Wendao Audio Claim RDF Source Edit Preflight Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "source_edit_preflight_state",
+    "passed",
+    "errors",
+    "staged_apply_report",
+    "diff_output_dir",
+    "diff_file_count",
+    "canonical_source_write_performed",
+    "ontology_truth_promotion_performed",
+    "raw_transcript_text_included",
+    "diff_files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_rdf_source_edit_preflight_report.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]*$"
+    },
+    "source_edit_preflight_state": {
+      "enum": [
+        "diff_ready",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "staged_apply_report": {
+      "type": "string"
+    },
+    "diff_output_dir": {
+      "type": "string"
+    },
+    "diff_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "canonical_source_write_performed": {
+      "const": false
+    },
+    "ontology_truth_promotion_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    },
+    "diff_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_rdf_file",
+          "staged_rdf_file",
+          "diff_file",
+          "source_sha256",
+          "staged_sha256",
+          "diff_sha256",
+          "patch_count"
+        ],
+        "properties": {
+          "target_rdf_file": {
+            "type": "string"
+          },
+          "staged_rdf_file": {
+            "type": "string"
+          },
+          "diff_file": {
+            "type": "string"
+          },
+          "source_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "staged_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "diff_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "patch_count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    }
+  }
+}

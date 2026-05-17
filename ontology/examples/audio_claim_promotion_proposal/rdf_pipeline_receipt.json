@@ -1,0 +1,85 @@
+{
+  "canonical_source_write_observed": false,
+  "canonical_source_write_performed": false,
+  "claim_count": 1,
+  "errors": [],
+  "ontology_truth_promotion_performed": false,
+  "passed": true,
+  "patch_count": 1,
+  "pipeline_state": "source_contract_pipeline_ready",
+  "proposal_id": "audio-proposal-001",
+  "raw_transcript_text_included": false,
+  "registry_class_count": 30,
+  "registry_object_property_count": 23,
+  "report_count": 8,
+  "reports": [
+    {
+      "contract": "audio_claim_acceptance",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/acceptance_report.json",
+      "schema_version": "wendao.audio_claim_acceptance_report.v1",
+      "sha256": "sha256:e3f9688a54477ccd34a6123377b5307207d288fa2f0d9b786dafdc4884ee5167",
+      "state": "accepted_for_source_contract_review"
+    },
+    {
+      "contract": "audio_claim_rdf_preview",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/rdf_patch_preview.json",
+      "schema_version": "wendao.audio_claim_rdf_patch_preview.v1",
+      "sha256": "sha256:b16d80422579401c05da9365dfcd6442b88b73bb5a6982b1a426c2bafacc6195",
+      "state": "preview_ready"
+    },
+    {
+      "contract": "audio_claim_rdf_source_promotion",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/rdf_source_promotion_proposal.json",
+      "schema_version": "wendao.audio_claim_rdf_source_promotion_proposal.v1",
+      "sha256": "sha256:637ac2ab6baa8cbdbb94d1fb96bc1727ee8579ebb7b79f9cbfe92b1c927a5115",
+      "state": "ready_for_source_patch"
+    },
+    {
+      "contract": "audio_claim_rdf_staged_apply",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/rdf_staged_apply/report.json",
+      "schema_version": "wendao.audio_claim_rdf_staged_apply_report.v1",
+      "sha256": "sha256:9ba1467f1be3f2f6231cb35887c23e170746cd1cf928037d5d1a8ee471b46c13",
+      "state": "staged"
+    },
+    {
+      "contract": "audio_claim_rdf_source_edit_preflight",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/rdf_source_edit_preflight/report.json",
+      "schema_version": "wendao.audio_claim_rdf_source_edit_preflight_report.v1",
+      "sha256": "sha256:675ee1c0e8719882c523f9b69816254a6ca0088c3044c41deba7a9e4e964ad61",
+      "state": "diff_ready"
+    },
+    {
+      "contract": "audio_claim_rdf_source_edit_gate",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/rdf_source_edit_gate/report.json",
+      "schema_version": "wendao.audio_claim_rdf_source_edit_gate_report.v1",
+      "sha256": "sha256:ead4d7d653d5713291a36f6511a724c6c58f5abbe85f71056a2b8f12b91bf71c",
+      "state": "ready_for_manual_source_edit"
+    },
+    {
+      "contract": "audio_claim_rdf_source_apply",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/rdf_source_apply/report.json",
+      "schema_version": "wendao.audio_claim_rdf_source_apply_report.v1",
+      "sha256": "sha256:90d8ef81085d7b88fd7fff27bcb8fe796957a0a5529bada37c8dab039d7f1133",
+      "state": "ready_for_source_apply"
+    },
+    {
+      "contract": "audio_claim_rdf_source_apply_verification",
+      "passed": true,
+      "path": "examples/audio_claim_promotion_proposal/rdf_source_apply_verification/report.json",
+      "schema_version": "wendao.audio_claim_rdf_source_apply_verification_report.v1",
+      "sha256": "sha256:7daf14da209d44c2d84e4719bc9f56df8880e55631d3222028bf0b282e608d5b",
+      "state": "dry_run_verified"
+    }
+  ],
+  "schema_version": "wendao.audio_claim_rdf_pipeline_receipt.v1",
+  "source_write_mode": "dry_run",
+  "target_file_count": 1,
+  "verified_file_count": 1
+}

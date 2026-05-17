@@ -1,0 +1,129 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-rdf-source-promotion-proposal.schema.json",
+  "title": "Wendao Audio Claim RDF Source Promotion Proposal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "source_promotion_state",
+    "passed",
+    "errors",
+    "review_decision_id",
+    "review_state",
+    "reviewer_id",
+    "reviewed_at",
+    "patch_count",
+    "rdf_source_write_performed",
+    "ontology_truth_promotion_performed",
+    "raw_transcript_text_included",
+    "target_files",
+    "patches"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_rdf_source_promotion_proposal.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]*$"
+    },
+    "source_promotion_state": {
+      "enum": [
+        "ready_for_source_patch",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "review_decision_id": {
+      "type": "string"
+    },
+    "review_state": {
+      "type": "string"
+    },
+    "reviewer_id": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string"
+    },
+    "patch_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "rdf_source_write_performed": {
+      "const": false
+    },
+    "ontology_truth_promotion_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    },
+    "target_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "precondition_sha256"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "precondition_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
+    },
+    "patches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id",
+          "evidence_segment_id",
+          "target_rdf_file",
+          "target_file_precondition_sha256",
+          "insert_before",
+          "rdf_xml_preview"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string"
+          },
+          "evidence_segment_id": {
+            "type": "string"
+          },
+          "target_rdf_file": {
+            "type": "string"
+          },
+          "target_file_precondition_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "insert_before": {
+            "const": "</rdf:RDF>"
+          },
+          "rdf_xml_preview": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

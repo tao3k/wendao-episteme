@@ -1,0 +1,22 @@
+{
+  "canonical_source_write_performed": false,
+  "errors": [],
+  "ontology_truth_promotion_performed": false,
+  "passed": true,
+  "proposal_id": "audio-proposal-001",
+  "raw_transcript_text_included": false,
+  "schema_version": "wendao.audio_claim_rdf_staged_apply_report.v1",
+  "source_promotion_proposal": "examples/audio_claim_promotion_proposal/rdf_source_promotion_proposal.json",
+  "staged_apply_state": "staged",
+  "staged_file_count": 1,
+  "staged_files": [
+    {
+      "patch_count": 1,
+      "source_precondition_sha256": "sha256:ac35e417deee16ac5cec2d895fced9a1cd8b8ac9dd2ce948ee6afff790ff3a52",
+      "staged_rdf_file": "examples/audio_claim_promotion_proposal/rdf_staged_apply/00_Core_Primitives/00.03_action.rdf",
+      "staged_sha256": "sha256:6db88e20ea7e863bb7e4a14ec21d2a0a28a8e260552751e7e6a55e30f275d97d",
+      "target_rdf_file": "00_Core_Primitives/00.03_action.rdf"
+    }
+  ],
+  "staged_output_dir": "examples/audio_claim_promotion_proposal/rdf_staged_apply"
+}

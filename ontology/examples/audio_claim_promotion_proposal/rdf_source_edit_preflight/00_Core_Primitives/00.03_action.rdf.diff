@@ -1,0 +1,9 @@
+--- 00_Core_Primitives/00.03_action.rdf
++++ examples/audio_claim_promotion_proposal/rdf_staged_apply/00_Core_Primitives/00.03_action.rdf
+@@ -56,4 +56,6 @@
+     <rdfs:comment>Links an action or assertion to physical evidence.</rdfs:comment>
+     <rdfs:range rdf:resource="https://wendao.ai/ontology/core#Evidence"/>
+   </owl:ObjectProperty>
++  <!-- staged audio claim patch: audio-reviewed-claim-001 -->
++  <rdf:Statement xmlns:core="https://wendao.ai/ontology/core#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="episteme://audio-claim-preview/audio-reviewed-claim-001"><rdf:subject rdf:resource="episteme://synthetic/audio-claim-subject-001" /><rdf:predicate rdf:resource="https://wendao.ai/ontology/core#basedOn" /><rdf:object rdf:resource="episteme://synthetic/audio-evidence-segment-001" /><core:basedOn rdf:resource="audio-org-segment-001" /><core:reviewedBy>review-gate-synthetic</core:reviewedBy><core:confidence>0.94</core:confidence></rdf:Statement>
+ </rdf:RDF>

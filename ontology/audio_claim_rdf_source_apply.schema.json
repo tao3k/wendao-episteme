@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-rdf-source-apply.schema.json",
+  "title": "Wendao Audio Claim RDF Source Apply Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "source_apply_state",
+    "passed",
+    "errors",
+    "source_edit_gate_report",
+    "source_write_mode",
+    "canonical_source_write_performed",
+    "ontology_truth_promotion_performed",
+    "raw_transcript_text_included",
+    "applied_file_count",
+    "applied_files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_rdf_source_apply_report.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]*$"
+    },
+    "source_apply_state": {
+      "enum": [
+        "ready_for_source_apply",
+        "applied",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_edit_gate_report": {
+      "type": "string"
+    },
+    "source_write_mode": {
+      "enum": [
+        "dry_run",
+        "write_source"
+      ]
+    },
+    "canonical_source_write_performed": {
+      "type": "boolean"
+    },
+    "ontology_truth_promotion_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    },
+    "applied_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "applied_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_rdf_file",
+          "staged_rdf_file",
+          "diff_file",
+          "previous_source_sha256",
+          "applied_source_sha256",
+          "diff_sha256",
+          "patch_count",
+          "source_write_performed"
+        ],
+        "properties": {
+          "target_rdf_file": {
+            "type": "string"
+          },
+          "staged_rdf_file": {
+            "type": "string"
+          },
+          "diff_file": {
+            "type": "string"
+          },
+          "previous_source_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "applied_source_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "diff_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "patch_count": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "source_write_performed": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

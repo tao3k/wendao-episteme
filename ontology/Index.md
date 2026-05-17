@@ -31,9 +31,25 @@ ontology RFC and keeps category meaning explicit before runtime integration.
 - `registry.json`: deterministic compiled ontology registry snapshot for downstream importer and SDK design.
 - `audio_claim_acceptance.schema.json`: source-contract report schema for reviewed audio claim proposal acceptance.
 - `audio_claim_rdf_preview.schema.json`: preview-only schema for RDF patch review artifacts derived from accepted audio claim proposals.
+- `audio_claim_rdf_source_promotion.schema.json`: source-patch proposal schema for approved audio claim RDF previews.
+- `audio_claim_rdf_staged_apply.schema.json`: staged apply report schema for patched RDF candidate files.
+- `audio_claim_rdf_source_edit_preflight.schema.json`: source-edit diff preflight schema for reviewer patch inspection.
+- `audio_claim_rdf_source_edit_gate.schema.json`: source-edit decision gate schema for manual RDF source edit readiness.
+- `audio_claim_rdf_source_apply.schema.json`: source-apply report schema for dry-run or explicit canonical RDF source writes.
+- `audio_claim_rdf_source_apply_verification.schema.json`: read-only source-apply verification schema.
+- `audio_claim_rdf_pipeline_receipt.schema.json`: full audio claim RDF source-contract pipeline receipt schema.
 - `examples/local_project/ontology.toml`: example project-local ontology extension using `extends`.
 - `examples/audio_claim_promotion_proposal/`: synthetic reviewed audio claim proposal fixture and acceptance report for acceptance-gate validation.
 - `examples/audio_claim_promotion_proposal/rdf_patch_preview.json`: deterministic preview-only RDF patch artifact for reviewer inspection.
+- `examples/audio_claim_promotion_proposal/source_review_decision.json`: synthetic source reviewer decision fixture for patch proposal validation.
+- `examples/audio_claim_promotion_proposal/rdf_source_promotion_proposal.json`: deterministic source-patch proposal artifact with target file preconditions.
+- `examples/audio_claim_promotion_proposal/rdf_staged_apply/`: deterministic staged apply output with patched RDF candidate files.
+- `examples/audio_claim_promotion_proposal/rdf_source_edit_preflight/`: deterministic source-edit diff artifacts and preflight report.
+- `examples/audio_claim_promotion_proposal/source_edit_decision.json`: synthetic source-edit reviewer decision fixture.
+- `examples/audio_claim_promotion_proposal/rdf_source_edit_gate/report.json`: deterministic manual source-edit readiness report.
+- `examples/audio_claim_promotion_proposal/rdf_source_apply/report.json`: deterministic dry-run source-apply report.
+- `examples/audio_claim_promotion_proposal/rdf_source_apply_verification/report.json`: deterministic dry-run source-apply verification report.
+- `examples/audio_claim_promotion_proposal/rdf_pipeline_receipt.json`: deterministic full source-contract pipeline receipt.
 - `00_Core_Primitives/00.01_entity.rdf`: entity identity and immutable trace primitives.
 - `00_Core_Primitives/00.02_relation.rdf`: topology and composition primitives.
 - `00_Core_Primitives/00.03_action.rdf`: actor, action, and evidence provenance primitives.
@@ -108,9 +124,65 @@ review, but it does not mutate ontology RDF files, promote ontology truth, or
 include raw transcript text. It exists to make the next human review step
 auditable before any source ontology update is proposed.
 
+## Audio Claim RDF Source Promotion Proposal
+
+Approved audio claim RDF previews can be compiled into deterministic source
+promotion proposal JSON. The proposal records the target RDF file, its
+precondition hash, insertion anchor, and RDF/XML patch snippet. It remains a
+proposal only: the compiler does not write RDF source files, promote ontology
+truth, or include raw transcript text.
+
+## Audio Claim RDF Staged Apply
+
+Approved source promotion proposals can be materialized into a staged output
+tree. The staged apply compiler checks target RDF source precondition hashes
+and writes patched candidate files under the proposal fixture directory. It
+does not overwrite canonical ontology RDF files, promote ontology truth, or
+include raw transcript text.
+
+## Audio Claim RDF Source Edit Preflight
+
+Staged RDF candidate files can be compiled into source-edit preflight
+artifacts. The preflight compiler validates canonical source hashes, staged
+candidate hashes, and emits unified diffs for reviewer inspection. It does not
+overwrite canonical ontology RDF files, promote ontology truth, or include raw
+transcript text.
+
+## Audio Claim RDF Source Edit Gate
+
+Source-edit preflight diffs can be bound to an explicit reviewer decision. The
+gate compiler revalidates current source hashes and diff hashes, then emits a
+ready-for-manual-source-edit report. It still does not overwrite canonical
+ontology RDF files, promote ontology truth, or include raw transcript text.
+
+## Audio Claim RDF Source Apply
+
+Source-edit gate reports can be compiled into source-apply reports. The source
+apply command defaults to dry-run, revalidates the gate report, preflight
+report, source hashes, staged RDF hashes, and diff hashes, and writes canonical
+RDF source only when explicitly invoked with source write mode. Runtime
+ontology truth promotion and raw transcript text remain out of scope.
+
+## Audio Claim RDF Source Apply Verification
+
+Source-apply reports can be compiled into read-only verification reports. The
+verification compiler checks dry-run and write-source modes against current RDF
+source files, staged RDF files, diff artifacts, XML parsing, and registry-style
+RDF term collection. It does not write canonical RDF source files or promote
+runtime ontology truth.
+
+## Audio Claim RDF Pipeline Receipt
+
+The pipeline receipt compiler reads every audio claim source-contract report
+from acceptance through source-apply verification and emits a single
+deterministic receipt. It records report paths, digests, states, summary counts,
+and write/verification mode. It is read-only and does not write canonical RDF
+source files or promote runtime ontology truth.
+
 ## Boundary
 
 This directory defines ontology source artifacts only. It does not own parser
 implementations, DuckDB DDL, Rust type layout, SQL execution, BPMN orchestration,
-RDF source mutation from reviewed proposals, or generated SDK code. Dataset
-mapping SQL is SELECT-only source contract projection logic, not runtime DDL.
+runtime semantic promotion from reviewed proposals, or generated SDK code.
+Dataset mapping SQL is SELECT-only source contract projection logic, not
+runtime DDL.

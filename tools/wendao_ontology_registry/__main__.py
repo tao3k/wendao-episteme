@@ -182,6 +182,102 @@ def build_audio_claim_rdf_preview_entry(manifest: dict[str, Any]) -> dict[str, A
     }
 
 
+def build_audio_claim_rdf_source_promotion_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_source_promotion"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "review_decision": contract["review_decision"],
+        "owner": contract["owner"],
+        "preview_contract": contract["preview_contract"],
+        "rdf_source_write_allowed": contract["rdf_source_write_allowed"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
+def build_audio_claim_rdf_staged_apply_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_staged_apply"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "staged_output": contract["staged_output"],
+        "owner": contract["owner"],
+        "source_promotion_contract": contract["source_promotion_contract"],
+        "canonical_source_write_allowed": contract["canonical_source_write_allowed"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
+def build_audio_claim_rdf_source_edit_preflight_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_source_edit_preflight"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "diff_output": contract["diff_output"],
+        "owner": contract["owner"],
+        "staged_apply_contract": contract["staged_apply_contract"],
+        "canonical_source_write_allowed": contract["canonical_source_write_allowed"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
+def build_audio_claim_rdf_source_edit_gate_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_source_edit_gate"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "source_edit_decision": contract["source_edit_decision"],
+        "owner": contract["owner"],
+        "source_edit_preflight_contract": contract["source_edit_preflight_contract"],
+        "canonical_source_write_allowed": contract["canonical_source_write_allowed"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
+def build_audio_claim_rdf_source_apply_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_source_apply"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "owner": contract["owner"],
+        "source_edit_gate_contract": contract["source_edit_gate_contract"],
+        "canonical_source_write_allowed": contract["canonical_source_write_allowed"],
+        "default_canonical_source_write": contract["default_canonical_source_write"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
+def build_audio_claim_rdf_source_apply_verification_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_source_apply_verification"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "owner": contract["owner"],
+        "source_apply_contract": contract["source_apply_contract"],
+        "canonical_source_write_allowed": contract["canonical_source_write_allowed"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
+def build_audio_claim_rdf_pipeline_receipt_entry(manifest: dict[str, Any]) -> dict[str, Any]:
+    contract = manifest["audio_claim_rdf_pipeline_receipt"]
+    return {
+        "schema": contract["schema"],
+        "example": contract["example"],
+        "owner": contract["owner"],
+        "source_apply_verification_contract": contract["source_apply_verification_contract"],
+        "canonical_source_write_allowed": contract["canonical_source_write_allowed"],
+        "ontology_truth_promotion_allowed": contract["ontology_truth_promotion_allowed"],
+        "raw_transcript_text_allowed": contract["raw_transcript_text_allowed"],
+    }
+
+
 def build_registry() -> dict[str, Any]:
     manifest = load_toml(ontology_root() / "manifest.toml")
     api_surface = load_toml(ontology_root() / manifest["api_surface"]["file"])
@@ -214,6 +310,13 @@ def build_registry() -> dict[str, Any]:
         "dataset_mappings": build_dataset_mapping_entries(manifest),
         "audio_claim_acceptance": build_audio_claim_acceptance_entry(manifest),
         "audio_claim_rdf_preview": build_audio_claim_rdf_preview_entry(manifest),
+        "audio_claim_rdf_source_promotion": build_audio_claim_rdf_source_promotion_entry(manifest),
+        "audio_claim_rdf_staged_apply": build_audio_claim_rdf_staged_apply_entry(manifest),
+        "audio_claim_rdf_source_edit_preflight": build_audio_claim_rdf_source_edit_preflight_entry(manifest),
+        "audio_claim_rdf_source_edit_gate": build_audio_claim_rdf_source_edit_gate_entry(manifest),
+        "audio_claim_rdf_source_apply": build_audio_claim_rdf_source_apply_entry(manifest),
+        "audio_claim_rdf_source_apply_verification": build_audio_claim_rdf_source_apply_verification_entry(manifest),
+        "audio_claim_rdf_pipeline_receipt": build_audio_claim_rdf_pipeline_receipt_entry(manifest),
     }
 
 

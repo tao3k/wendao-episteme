@@ -1,0 +1,18 @@
+{
+  "approved_diff_files": [
+    {
+      "diff_file": "examples/audio_claim_promotion_proposal/rdf_source_edit_preflight/00_Core_Primitives/00.03_action.rdf.diff",
+      "diff_sha256": "sha256:da698f364fa261f7b10a77fdebb58387ba4037dacf6c6e13fe50d21057a907ec",
+      "target_rdf_file": "00_Core_Primitives/00.03_action.rdf"
+    }
+  ],
+  "canonical_source_write_allowed": false,
+  "ontology_truth_promotion_allowed": false,
+  "proposal_id": "audio-proposal-001",
+  "raw_transcript_text_allowed": false,
+  "review_state": "approved_for_manual_source_edit",
+  "reviewed_at": "2026-05-16",
+  "reviewer_id": "source-edit-review-synthetic",
+  "schema_version": "wendao.audio_claim_source_edit_decision.v1",
+  "source_edit_decision_id": "audio-source-edit-decision-001"
+}

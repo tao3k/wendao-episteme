@@ -1,0 +1,133 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-rdf-source-apply-verification.schema.json",
+  "title": "Wendao Audio Claim RDF Source Apply Verification Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "verification_state",
+    "passed",
+    "errors",
+    "source_apply_report",
+    "source_write_mode",
+    "canonical_source_write_observed",
+    "ontology_truth_promotion_performed",
+    "raw_transcript_text_included",
+    "verified_file_count",
+    "registry_class_count",
+    "registry_object_property_count",
+    "verified_files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_rdf_source_apply_verification_report.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]*$"
+    },
+    "verification_state": {
+      "enum": [
+        "dry_run_verified",
+        "applied_source_verified",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_apply_report": {
+      "type": "string"
+    },
+    "source_write_mode": {
+      "enum": [
+        "dry_run",
+        "write_source"
+      ]
+    },
+    "canonical_source_write_observed": {
+      "type": "boolean"
+    },
+    "ontology_truth_promotion_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    },
+    "verified_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "registry_class_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "registry_object_property_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "verified_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_rdf_file",
+          "staged_rdf_file",
+          "diff_file",
+          "expected_source_sha256",
+          "observed_source_sha256",
+          "staged_sha256",
+          "diff_sha256",
+          "source_write_observed",
+          "xml_parse_verified",
+          "registry_read_verified"
+        ],
+        "properties": {
+          "target_rdf_file": {
+            "type": "string"
+          },
+          "staged_rdf_file": {
+            "type": "string"
+          },
+          "diff_file": {
+            "type": "string"
+          },
+          "expected_source_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "observed_source_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "staged_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "diff_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "source_write_observed": {
+            "type": "boolean"
+          },
+          "xml_parse_verified": {
+            "const": true
+          },
+          "registry_read_verified": {
+            "const": true
+          }
+        }
+      }
+    }
+  }
+}

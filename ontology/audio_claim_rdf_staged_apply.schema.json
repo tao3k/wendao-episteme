@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/ontology/contracts/audio-claim-rdf-staged-apply-report.schema.json",
+  "title": "Wendao Audio Claim RDF Staged Apply Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "proposal_id",
+    "staged_apply_state",
+    "passed",
+    "errors",
+    "source_promotion_proposal",
+    "staged_output_dir",
+    "staged_file_count",
+    "canonical_source_write_performed",
+    "ontology_truth_promotion_performed",
+    "raw_transcript_text_included",
+    "staged_files"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "wendao.audio_claim_rdf_staged_apply_report.v1"
+    },
+    "proposal_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._:-]*$"
+    },
+    "staged_apply_state": {
+      "enum": [
+        "staged",
+        "rejected"
+      ]
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_promotion_proposal": {
+      "type": "string"
+    },
+    "staged_output_dir": {
+      "type": "string"
+    },
+    "staged_file_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "canonical_source_write_performed": {
+      "const": false
+    },
+    "ontology_truth_promotion_performed": {
+      "const": false
+    },
+    "raw_transcript_text_included": {
+      "const": false
+    },
+    "staged_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "target_rdf_file",
+          "staged_rdf_file",
+          "source_precondition_sha256",
+          "staged_sha256",
+          "patch_count"
+        ],
+        "properties": {
+          "target_rdf_file": {
+            "type": "string"
+          },
+          "staged_rdf_file": {
+            "type": "string"
+          },
+          "source_precondition_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "staged_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "patch_count": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "errors": [],
+  "ontology_truth_promotion_performed": false,
+  "passed": true,
+  "patch_count": 1,
+  "patches": [
+    {
+      "claim_id": "audio-reviewed-claim-001",
+      "evidence_segment_id": "audio-org-segment-001",
+      "insert_before": "</rdf:RDF>",
+      "rdf_xml_preview": "<rdf:Statement xmlns:core=\"https://wendao.ai/ontology/core#\" xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\" rdf:about=\"episteme://audio-claim-preview/audio-reviewed-claim-001\"><rdf:subject rdf:resource=\"episteme://synthetic/audio-claim-subject-001\" /><rdf:predicate rdf:resource=\"https://wendao.ai/ontology/core#basedOn\" /><rdf:object rdf:resource=\"episteme://synthetic/audio-evidence-segment-001\" /><core:basedOn rdf:resource=\"audio-org-segment-001\" /><core:reviewedBy>review-gate-synthetic</core:reviewedBy><core:confidence>0.94</core:confidence></rdf:Statement>",
+      "target_file_precondition_sha256": "sha256:ac35e417deee16ac5cec2d895fced9a1cd8b8ac9dd2ce948ee6afff790ff3a52",
+      "target_rdf_file": "00_Core_Primitives/00.03_action.rdf"
+    }
+  ],
+  "proposal_id": "audio-proposal-001",
+  "raw_transcript_text_included": false,
+  "rdf_source_write_performed": false,
+  "review_decision_id": "audio-source-review-001",
+  "review_state": "approved_for_source_patch_proposal",
+  "reviewed_at": "2026-05-16",
+  "reviewer_id": "source-review-synthetic",
+  "schema_version": "wendao.audio_claim_rdf_source_promotion_proposal.v1",
+  "source_promotion_state": "ready_for_source_patch",
+  "target_files": [
+    {
+      "path": "00_Core_Primitives/00.03_action.rdf",
+      "precondition_sha256": "sha256:ac35e417deee16ac5cec2d895fced9a1cd8b8ac9dd2ce948ee6afff790ff3a52"
+    }
+  ]
+}

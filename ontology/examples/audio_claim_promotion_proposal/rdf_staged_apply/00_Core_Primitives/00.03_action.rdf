@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:owl="http://www.w3.org/2002/07/owl#"
+  xmlns:wendao="https://wendao.ai/ontology/core#">
+
+  <owl:Ontology rdf:about="https://wendao.ai/ontology/core/action">
+    <rdfs:label>Wendao L0 Action and Provenance Primitives</rdfs:label>
+    <rdfs:comment>Defines accountable state mutation primitives for human, system, and agent actions.</rdfs:comment>
+    <owl:imports rdf:resource="https://wendao.ai/ontology/core/entity"/>
+    <owl:versionInfo>0.1.0</owl:versionInfo>
+  </owl:Ontology>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/core#Actor">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Actor</rdfs:label>
+    <rdfs:comment>A human, system process, or sub-agent that can initiate an action.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/core#Action">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Action</rdfs:label>
+    <rdfs:comment>An accountable event representing an intended or completed state mutation.</rdfs:comment>
+  </owl:Class>
+
+  <owl:Class rdf:about="https://wendao.ai/ontology/core#Evidence">
+    <rdfs:subClassOf rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+    <rdfs:label>Evidence</rdfs:label>
+    <rdfs:comment>Physical grounding that justifies an action or semantic assertion.</rdfs:comment>
+  </owl:Class>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/core#performs">
+    <rdfs:label>performs</rdfs:label>
+    <rdfs:comment>Links an actor to the action it initiates.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#Actor"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/core#Action"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/core#modifies">
+    <rdfs:label>modifies</rdfs:label>
+    <rdfs:comment>Links an action to an entity it mutates.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#Action"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/core#creates">
+    <rdfs:label>creates</rdfs:label>
+    <rdfs:comment>Links an action to an entity it creates.</rdfs:comment>
+    <rdfs:domain rdf:resource="https://wendao.ai/ontology/core#Action"/>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/core#BaseEntity"/>
+  </owl:ObjectProperty>
+
+  <owl:ObjectProperty rdf:about="https://wendao.ai/ontology/core#basedOn">
+    <rdfs:label>based on</rdfs:label>
+    <rdfs:comment>Links an action or assertion to physical evidence.</rdfs:comment>
+    <rdfs:range rdf:resource="https://wendao.ai/ontology/core#Evidence"/>
+  </owl:ObjectProperty>
+  <!-- staged audio claim patch: audio-reviewed-claim-001 -->
+  <rdf:Statement xmlns:core="https://wendao.ai/ontology/core#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" rdf:about="episteme://audio-claim-preview/audio-reviewed-claim-001"><rdf:subject rdf:resource="episteme://synthetic/audio-claim-subject-001" /><rdf:predicate rdf:resource="https://wendao.ai/ontology/core#basedOn" /><rdf:object rdf:resource="episteme://synthetic/audio-evidence-segment-001" /><core:basedOn rdf:resource="audio-org-segment-001" /><core:reviewedBy>review-gate-synthetic</core:reviewedBy><core:confidence>0.94</core:confidence></rdf:Statement>
+</rdf:RDF>
