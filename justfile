@@ -10,6 +10,16 @@ test-python-align:
     set -euo pipefail
 
     SELF_ROOT='{{ self_root }}'
+    SUPERPROJECT_ROOT="$(git -C "$SELF_ROOT" rev-parse --show-superproject-working-tree 2>/dev/null || true)"
+
+    if [[ -n "$SUPERPROJECT_ROOT" && -d "$SUPERPROJECT_ROOT/packages/python/wendao-core-lib/src" ]]; then
+      export PYTHONPATH="$SUPERPROJECT_ROOT/packages/python/wendao-core-lib/src${PYTHONPATH:+:$PYTHONPATH}"
+    fi
+
+    if ! (cd "$SELF_ROOT" && uv run python -c 'import wendao_core_lib.episteme_contracts' >/dev/null 2>&1); then
+      echo "error: install wendao-core-lib or run from a superproject checkout that contains packages/python/wendao-core-lib" >&2
+      exit 1
+    fi
 
     echo "== python episteme align tests ==" >&2
     (
@@ -22,10 +32,20 @@ ontology-registry:
     set -euo pipefail
 
     SELF_ROOT='{{ self_root }}'
+    SUPERPROJECT_ROOT="$(git -C "$SELF_ROOT" rev-parse --show-superproject-working-tree 2>/dev/null || true)"
+
+    if [[ -n "$SUPERPROJECT_ROOT" && -d "$SUPERPROJECT_ROOT/packages/python/wendao-core-lib/src" ]]; then
+      export PYTHONPATH="$SUPERPROJECT_ROOT/packages/python/wendao-core-lib/src${PYTHONPATH:+:$PYTHONPATH}"
+    fi
+
+    if ! (cd "$SELF_ROOT" && uv run python -c 'import wendao_core_lib.episteme_contracts' >/dev/null 2>&1); then
+      echo "error: install wendao-core-lib or run from a superproject checkout that contains packages/python/wendao-core-lib" >&2
+      exit 1
+    fi
 
     (
       cd "$SELF_ROOT"
-      uv run python -m tools.wendao_ontology_registry --output ontology/registry.json
+      uv run python -m wendao_core_lib.episteme_contracts.wendao_ontology_registry --output ontology/registry.json
     )
 
 ontology-registry-check:
@@ -33,10 +53,20 @@ ontology-registry-check:
     set -euo pipefail
 
     SELF_ROOT='{{ self_root }}'
+    SUPERPROJECT_ROOT="$(git -C "$SELF_ROOT" rev-parse --show-superproject-working-tree 2>/dev/null || true)"
+
+    if [[ -n "$SUPERPROJECT_ROOT" && -d "$SUPERPROJECT_ROOT/packages/python/wendao-core-lib/src" ]]; then
+      export PYTHONPATH="$SUPERPROJECT_ROOT/packages/python/wendao-core-lib/src${PYTHONPATH:+:$PYTHONPATH}"
+    fi
+
+    if ! (cd "$SELF_ROOT" && uv run python -c 'import wendao_core_lib.episteme_contracts' >/dev/null 2>&1); then
+      echo "error: install wendao-core-lib or run from a superproject checkout that contains packages/python/wendao-core-lib" >&2
+      exit 1
+    fi
 
     (
       cd "$SELF_ROOT"
-      uv run python -m tools.wendao_ontology_registry --output ontology/registry.json --check
+      uv run python -m wendao_core_lib.episteme_contracts.wendao_ontology_registry --output ontology/registry.json --check
     )
 
 build-wendao:

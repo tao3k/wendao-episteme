@@ -83,8 +83,17 @@ records source columns, ontology targets, evidence, and rejected ambiguities.
 
 Use the dataset ontology validator for deterministic checks:
 
+From a source checkout, the Just recipes use an installed `wendao-core-lib`
+package when available and opportunistically expose the parent package path
+when this repository is checked out as part of the Wendao superproject. Direct
+module commands assume `wendao-core-lib` is installed or on `PYTHONPATH`.
+
+These Python commands are deterministic compatibility helpers only. Rust owns
+production Episteme source-contract selection, validation, scheduling,
+materialization, cache identity, and promotion gates.
+
 ```sh
-uv run python -m tools.wendao_dataset_ontology --check
+uv run python -m wendao_core_lib.episteme_contracts.wendao_dataset_ontology --check
 ```
 
 The validator checks source files, known RDF/API terms, mapped required
@@ -96,7 +105,7 @@ To exercise the source-table handoff surface without adding a runtime route,
 emit raw source tables as Arrow IPC stream files:
 
 ```sh
-uv run python -m tools.wendao_dataset_ontology --check --emit-raw-arrow-dir out/healthcare-raw-tables
+uv run python -m wendao_core_lib.episteme_contracts.wendao_dataset_ontology --check --emit-raw-arrow-dir out/healthcare-raw-tables
 ```
 
 The command writes one Arrow IPC stream per raw fixture table. These files are
@@ -299,12 +308,13 @@ Execution defaults live in `sources/manifest.toml`. Individual
 `sources/*/sources.toml` files declare only source metadata; they must not
 redeclare `[execution]` blocks.
 
-The repository-local `tools/wendao_episteme_align` runner prepares
+The `wendao_core_lib.episteme_contracts.wendao_episteme_align` runner prepares
 Codex-assisted alignment reports from those source registries. It fetches
 practice sources, normalizes Markdown, chunks source text, and writes a Codex
 evidence-extraction prompt packet under `$PRJ_CACHE_HOME/episteme/alignment/`.
-It is report preparation only: it does not call an external model API, execute
-policy, mutate `policies/`, or replace `wendao audit` / `wendao lint`.
+It is maintained by the parent `wendao-core-lib` package and remains report
+preparation only: it does not call an external model API, execute policy,
+mutate `policies/`, or replace `wendao audit` / `wendao lint`.
 
 The prototype executor uses Node `bpmn-engine`; that is not the Wendao runtime
 contract. The intended execution target is `qianji-bpmn-engine` with a host

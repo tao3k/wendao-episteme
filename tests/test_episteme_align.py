@@ -1,6 +1,6 @@
 import unittest
 
-from tools.wendao_episteme_align.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_episteme_align.__main__ import (
     SourceEntry,
     chunk_text,
     entrypoint_urls,

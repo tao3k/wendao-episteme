@@ -8,37 +8,44 @@ import unittest
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from tools.wendao_audio_claim_acceptance.__main__ import build_acceptance_report
-from tools.wendao_audio_claim_rdf_preview.__main__ import build_rdf_patch_preview
-from tools.wendao_audio_claim_rdf_source_promotion.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_acceptance.__main__ import (
+    build_acceptance_report,
+)
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_preview.__main__ import (
+    build_rdf_patch_preview,
+)
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_source_promotion.__main__ import (
     build_source_promotion_proposal,
 )
-from tools.wendao_audio_claim_rdf_staged_apply.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_staged_apply.__main__ import (
     build_staged_apply_report,
 )
-from tools.wendao_audio_claim_rdf_source_edit_preflight.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_source_edit_preflight.__main__ import (
     build_source_edit_preflight_report,
 )
-from tools.wendao_audio_claim_rdf_source_edit_gate.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_source_edit_gate.__main__ import (
     build_source_edit_gate_report,
 )
-from tools.wendao_audio_claim_rdf_source_apply.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_source_apply.__main__ import (
     build_source_apply_report,
 )
-from tools.wendao_audio_claim_rdf_source_apply_verification.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_source_apply_verification.__main__ import (
     build_source_apply_verification_report,
 )
-from tools.wendao_audio_claim_rdf_pipeline_receipt.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_audio_claim_rdf_pipeline_receipt.__main__ import (
     build_pipeline_receipt,
 )
-from tools.wendao_dataset_ontology.__main__ import (
+from wendao_core_lib.episteme_contracts.wendao_dataset_ontology.__main__ import (
     build_validation_report,
     emit_raw_table_arrow_ipc,
     load_mapping_contract,
     read_raw_table_arrow_ipc_counts,
     validate_contract_references,
 )
-from tools.wendao_ontology_registry.__main__ import build_registry, registry_text
+from wendao_core_lib.episteme_contracts.wendao_ontology_registry.__main__ import (
+    build_registry,
+    registry_text,
+)
 
 
 EPISTEME_ROOT = Path(__file__).resolve().parents[1]

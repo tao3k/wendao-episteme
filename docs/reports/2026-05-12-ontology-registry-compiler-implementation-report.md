@@ -14,8 +14,8 @@ SQL execution, or generated SDK code.
 
 ## Implemented Artifacts
 
-- `tools/wendao_ontology_registry/`: Python module and command entrypoint for
-  compiling the registry snapshot.
+- `wendao_core_lib.episteme_contracts.wendao_ontology_registry`: Python module
+  and command entrypoint for compiling the registry snapshot.
 - `ontology/registry.json`: deterministic compiled registry snapshot.
 - `justfile`: adds `ontology-registry` and `ontology-registry-check` commands.
 - `tests/test_ontology_contract.py`: verifies that the committed snapshot is
@@ -58,10 +58,10 @@ just ontology-registry-check
 Completed checks:
 
 - `python -m unittest discover -s tests -p 'test_*.py'`
-- `python -m tools.wendao_ontology_registry --output ontology/registry.json --check`
+- `python -m wendao_core_lib.episteme_contracts.wendao_ontology_registry --output ontology/registry.json --check`
 - `xmllint --noout` over all ontology RDF files
-- `git -C wendao-episteme diff --check -- ontology docs/reports tests justfile tools`
-- canonical hidden workspace path scan over ontology, report, test, and tool
+- `git -C wendao-episteme diff --check -- ontology docs/reports tests justfile`
+- canonical hidden workspace path scan over ontology, report, and test
   documentation surfaces
 
 Results:

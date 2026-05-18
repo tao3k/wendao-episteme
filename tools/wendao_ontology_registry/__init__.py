@@ -1,1 +1,0 @@
-"""Wendao ontology registry compiler."""
