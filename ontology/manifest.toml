@@ -198,3 +198,12 @@ reference_nouns = [
   "OntologyInterface",
   "OntologyTransaction",
 ]
+
+[object_model_contract]
+schema = "object_model.schema.json"
+surface = "api_surface.toml"
+owner = "wendao-episteme"
+compatibility = "foundry_style_object_model_v1"
+rdf_source_authority = true
+runtime_mutation_allowed = false
+private_extension_allowed = true

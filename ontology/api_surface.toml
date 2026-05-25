@@ -1,150 +1,452 @@
 schema_version = 1
 ontology = "wendao"
 compatibility = "semantic_api_compatibility"
+object_model_compatibility = "foundry_style_object_model_v1"
 
 [boundaries]
 artifact_mode = "source_contract"
 mutation_allowed = false
 runtime_compilation_owner = "xiuxian-wendao"
 sdk_generation_owner = "xiuxian-wendao"
+rdf_source_authority = true
+object_model_source_authority = true
+runtime_object_mutation_allowed = false
 
 [[object_types]]
 domain = "episteme://30_Healthcare"
 api_name = "Patient"
+display_name = "Patient"
+plural_display_name = "Patients"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/healthcare#Patient"
 primary_key = ["patientId"]
 display_name_property = "patientName"
+title_property = "patientName"
 interfaces = ["Party"]
+visibility = "public"
 
 [[object_types]]
 domain = "episteme://30_Healthcare"
 api_name = "CareProvider"
+display_name = "Care Provider"
+plural_display_name = "Care Providers"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/healthcare#CareProvider"
 primary_key = ["providerId"]
 display_name_property = "providerName"
+title_property = "providerName"
 interfaces = ["Party"]
+visibility = "public"
 
 [[object_types]]
 domain = "episteme://30_Healthcare"
 api_name = "Encounter"
+display_name = "Encounter"
+plural_display_name = "Encounters"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/healthcare#Encounter"
 primary_key = ["encounterId"]
 display_name_property = "encounterLabel"
+title_property = "encounterLabel"
 interfaces = ["Event", "AccountableAction"]
+visibility = "public"
 
 [[object_types]]
 domain = "episteme://30_Healthcare"
 api_name = "MedicalCondition"
+display_name = "Medical Condition"
+plural_display_name = "Medical Conditions"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/healthcare#MedicalCondition"
 primary_key = ["conditionId"]
 display_name_property = "conditionName"
+title_property = "conditionName"
 interfaces = []
+visibility = "public"
 
 [[object_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "Customer"
+display_name = "Customer"
+plural_display_name = "Customers"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/commercial-finance#Customer"
 primary_key = ["customerId"]
 display_name_property = "customerName"
+title_property = "customerName"
 interfaces = ["Party"]
+visibility = "public"
 
 [[object_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "FinancialAccount"
+display_name = "Financial Account"
+plural_display_name = "Financial Accounts"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/commercial-finance#FinancialAccount"
 primary_key = ["accountId"]
 display_name_property = "accountLabel"
+title_property = "accountLabel"
 interfaces = ["Asset"]
+visibility = "public"
 
 [[object_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "Transaction"
+display_name = "Transaction"
+plural_display_name = "Transactions"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/commercial-finance#Transaction"
 primary_key = ["transactionId"]
 display_name_property = "transactionLabel"
+title_property = "transactionLabel"
 interfaces = ["Event", "AccountableAction"]
+visibility = "public"
 
 [[object_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "Collateral"
+display_name = "Collateral"
+plural_display_name = "Collateral"
+status = "active"
 rdf_class = "https://wendao.ai/ontology/commercial-finance#Collateral"
 primary_key = ["collateralId"]
 display_name_property = "collateralLabel"
+title_property = "collateralLabel"
 interfaces = ["Asset"]
+visibility = "public"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "Patient"
+api_name = "patientId"
+display_name = "Patient ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "Patient"
+api_name = "patientName"
+display_name = "Patient Name"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "CareProvider"
+api_name = "providerId"
+display_name = "Provider ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "CareProvider"
+api_name = "providerName"
+display_name = "Provider Name"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "Encounter"
+api_name = "encounterId"
+display_name = "Encounter ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "Encounter"
+api_name = "encounterLabel"
+display_name = "Encounter Label"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "MedicalCondition"
+api_name = "conditionId"
+display_name = "Condition ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://30_Healthcare"
+object_type = "MedicalCondition"
+api_name = "conditionName"
+display_name = "Condition Name"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "Customer"
+api_name = "customerId"
+display_name = "Customer ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "Customer"
+api_name = "customerName"
+display_name = "Customer Name"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "FinancialAccount"
+api_name = "accountId"
+display_name = "Account ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "FinancialAccount"
+api_name = "accountLabel"
+display_name = "Account Label"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "Transaction"
+api_name = "transactionId"
+display_name = "Transaction ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "Transaction"
+api_name = "transactionLabel"
+display_name = "Transaction Label"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "Collateral"
+api_name = "collateralId"
+display_name = "Collateral ID"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "exact"
+
+[[property_types]]
+domain = "episteme://20_Commercial_Finance"
+object_type = "Collateral"
+api_name = "collateralLabel"
+display_name = "Collateral Label"
+value_type = "string"
+required = true
+indexed = true
+search_policy = "full_text"
 
 [[link_types]]
 domain = "episteme://30_Healthcare"
 api_name = "Patient.encounters"
+display_name = "Patient Encounters"
+status = "active"
 rdf_property = "https://wendao.ai/ontology/healthcare#hasEncounter"
 from_object_type = "Patient"
 to_object_type = "Encounter"
 cardinality = "one_to_many"
+from_api_name = "encounters"
+to_api_name = "patient"
+inverse_api_name = "Encounter.patient"
+foreign_key_property = "patientId"
 
 [[link_types]]
 domain = "episteme://30_Healthcare"
 api_name = "Patient.conditions"
+display_name = "Patient Conditions"
+status = "active"
 rdf_property = "https://wendao.ai/ontology/healthcare#diagnosedWith"
 from_object_type = "Patient"
 to_object_type = "MedicalCondition"
 cardinality = "one_to_many"
+from_api_name = "conditions"
+to_api_name = "patient"
+inverse_api_name = "MedicalCondition.patients"
+foreign_key_property = "patientId"
 
 [[link_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "Customer.accounts"
+display_name = "Customer Accounts"
+status = "active"
 rdf_property = "https://wendao.ai/ontology/commercial-finance#ownsAccount"
 from_object_type = "Customer"
 to_object_type = "FinancialAccount"
 cardinality = "one_to_many"
+from_api_name = "accounts"
+to_api_name = "customer"
+inverse_api_name = "FinancialAccount.customer"
+foreign_key_property = "customerId"
 
 [[link_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "FinancialAccount.transactions"
+display_name = "Financial Account Transactions"
+status = "active"
 rdf_property = "https://wendao.ai/ontology/commercial-finance#postsTransaction"
 from_object_type = "FinancialAccount"
 to_object_type = "Transaction"
 cardinality = "one_to_many"
+from_api_name = "transactions"
+to_api_name = "account"
+inverse_api_name = "Transaction.account"
+foreign_key_property = "accountId"
 
 [[action_types]]
 domain = "episteme://30_Healthcare"
 api_name = "recordEncounter"
+display_name = "Record Encounter"
+status = "active"
 affected_object_types = ["Encounter", "Patient", "CareProvider"]
 requires_evidence = true
 validation_rules = [
   "30_Healthcare/rules/01_encounter_must_link_patient_provider.sql",
 ]
+parameters = ["encounterId", "patientId", "providerId", "encounterLabel"]
+operations = [
+  "create_object:Encounter",
+  "create_link:Patient.encounters",
+]
+tool_description = "Record a healthcare encounter candidate after evidence review."
 
 [[action_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "postTransaction"
+display_name = "Post Transaction"
+status = "active"
 affected_object_types = ["Transaction", "FinancialAccount"]
 requires_evidence = true
 validation_rules = [
   "20_Commercial_Finance/rules/01_transaction_must_post_to_account.sql",
 ]
+parameters = ["transactionId", "accountId", "transactionLabel"]
+operations = [
+  "create_object:Transaction",
+  "create_link:FinancialAccount.transactions",
+]
+tool_description = "Post a transaction candidate after evidence review."
 
 [[query_types]]
 domain = "episteme://30_Healthcare"
 api_name = "encountersForPatient"
 parameters = ["patientId"]
 returns = "Encounter"
+returns_kind = "object_set"
+object_set_recipe = "PatientEncounters"
 
 [[query_types]]
 domain = "episteme://30_Healthcare"
 api_name = "conditionsForPatient"
 parameters = ["patientId"]
 returns = "MedicalCondition"
+returns_kind = "object_set"
+object_set_recipe = "PatientConditions"
 
 [[query_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "accountsForCustomer"
 parameters = ["customerId"]
 returns = "FinancialAccount"
+returns_kind = "object_set"
+object_set_recipe = "CustomerAccounts"
 
 [[query_types]]
 domain = "episteme://20_Commercial_Finance"
 api_name = "transactionsForAccount"
 parameters = ["accountId"]
 returns = "Transaction"
+returns_kind = "object_set"
+object_set_recipe = "FinancialAccountTransactions"
+
+[[object_set_recipes]]
+domain = "episteme://30_Healthcare"
+api_name = "PatientBase"
+kind = "base"
+object_type = "Patient"
+allowed_methods = ["filter", "aggregate", "load"]
+
+[[object_set_recipes]]
+domain = "episteme://30_Healthcare"
+api_name = "PatientEncounters"
+kind = "link"
+base_object_type = "Patient"
+link_type = "Patient.encounters"
+target_object_type = "Encounter"
+allowed_methods = ["filter", "aggregate", "load"]
+
+[[object_set_recipes]]
+domain = "episteme://30_Healthcare"
+api_name = "PatientConditions"
+kind = "link"
+base_object_type = "Patient"
+link_type = "Patient.conditions"
+target_object_type = "MedicalCondition"
+allowed_methods = ["filter", "aggregate", "load"]
+
+[[object_set_recipes]]
+domain = "episteme://20_Commercial_Finance"
+api_name = "CustomerBase"
+kind = "base"
+object_type = "Customer"
+allowed_methods = ["filter", "aggregate", "load"]
+
+[[object_set_recipes]]
+domain = "episteme://20_Commercial_Finance"
+api_name = "CustomerAccounts"
+kind = "link"
+base_object_type = "Customer"
+link_type = "Customer.accounts"
+target_object_type = "FinancialAccount"
+allowed_methods = ["filter", "aggregate", "load"]
+
+[[object_set_recipes]]
+domain = "episteme://20_Commercial_Finance"
+api_name = "FinancialAccountTransactions"
+kind = "link"
+base_object_type = "FinancialAccount"
+link_type = "FinancialAccount.transactions"
+target_object_type = "Transaction"
+allowed_methods = ["filter", "aggregate", "load"]
 
 [[interface_types]]
 api_name = "Party"

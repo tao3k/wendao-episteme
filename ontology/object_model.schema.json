@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://wendao.ai/schema/episteme/object-model-v1.schema.json",
+  "title": "Wendao Episteme Object Model Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "ontology",
+    "compatibility",
+    "object_model_compatibility",
+    "boundaries",
+    "object_types",
+    "property_types",
+    "link_types",
+    "action_types",
+    "query_types",
+    "interface_types",
+    "object_set_recipes"
+  ],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "ontology": { "type": "string", "minLength": 1 },
+    "compatibility": { "const": "semantic_api_compatibility" },
+    "object_model_compatibility": { "const": "foundry_style_object_model_v1" },
+    "boundaries": { "$ref": "#/$defs/boundaries" },
+    "object_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/object_type" }
+    },
+    "property_types": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/property_type" }
+    },
+    "link_types": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/link_type" }
+    },
+    "action_types": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/action_type" }
+    },
+    "query_types": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/query_type" }
+    },
+    "interface_types": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/interface_type" }
+    },
+    "object_set_recipes": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/object_set_recipe" }
+    }
+  },
+  "$defs": {
+    "api_name": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_.]*$"
+    },
+    "pascal_api_name": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Za-z0-9]*$"
+    },
+    "camel_api_name": {
+      "type": "string",
+      "pattern": "^[a-z][A-Za-z0-9]*$"
+    },
+    "domain_id": {
+      "type": "string",
+      "pattern": "^episteme://"
+    },
+    "iri": {
+      "type": "string",
+      "format": "uri"
+    },
+    "boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_mode",
+        "mutation_allowed",
+        "runtime_compilation_owner",
+        "sdk_generation_owner",
+        "rdf_source_authority",
+        "object_model_source_authority",
+        "runtime_object_mutation_allowed"
+      ],
+      "properties": {
+        "artifact_mode": { "const": "source_contract" },
+        "mutation_allowed": { "const": false },
+        "runtime_compilation_owner": { "const": "xiuxian-wendao" },
+        "sdk_generation_owner": { "const": "xiuxian-wendao" },
+        "rdf_source_authority": { "const": true },
+        "object_model_source_authority": { "const": true },
+        "runtime_object_mutation_allowed": { "const": false }
+      }
+    },
+    "object_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "api_name",
+        "display_name",
+        "plural_display_name",
+        "status",
+        "rdf_class",
+        "primary_key",
+        "display_name_property",
+        "title_property",
+        "interfaces",
+        "visibility"
+      ],
+      "properties": {
+        "domain": { "$ref": "#/$defs/domain_id" },
+        "api_name": { "$ref": "#/$defs/pascal_api_name" },
+        "display_name": { "type": "string", "minLength": 1 },
+        "plural_display_name": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["active", "preview", "deprecated"] },
+        "rdf_class": { "$ref": "#/$defs/iri" },
+        "primary_key": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/camel_api_name" }
+        },
+        "display_name_property": { "$ref": "#/$defs/camel_api_name" },
+        "title_property": { "$ref": "#/$defs/camel_api_name" },
+        "interfaces": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/pascal_api_name" }
+        },
+        "visibility": { "enum": ["public", "private", "hidden"] }
+      }
+    },
+    "property_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "object_type",
+        "api_name",
+        "display_name",
+        "value_type",
+        "required",
+        "indexed",
+        "search_policy"
+      ],
+      "properties": {
+        "domain": { "$ref": "#/$defs/domain_id" },
+        "object_type": { "$ref": "#/$defs/pascal_api_name" },
+        "api_name": { "$ref": "#/$defs/camel_api_name" },
+        "display_name": { "type": "string", "minLength": 1 },
+        "value_type": {
+          "enum": ["string", "integer", "double", "boolean", "date", "timestamp", "attachment", "object_reference"]
+        },
+        "required": { "type": "boolean" },
+        "indexed": { "type": "boolean" },
+        "search_policy": { "enum": ["none", "exact", "full_text", "range", "vector"] }
+      }
+    },
+    "link_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "api_name",
+        "display_name",
+        "status",
+        "rdf_property",
+        "from_object_type",
+        "to_object_type",
+        "cardinality",
+        "from_api_name",
+        "to_api_name",
+        "inverse_api_name",
+        "foreign_key_property"
+      ],
+      "properties": {
+        "domain": { "$ref": "#/$defs/domain_id" },
+        "api_name": { "$ref": "#/$defs/api_name" },
+        "display_name": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["active", "preview", "deprecated"] },
+        "rdf_property": { "$ref": "#/$defs/iri" },
+        "from_object_type": { "$ref": "#/$defs/pascal_api_name" },
+        "to_object_type": { "$ref": "#/$defs/pascal_api_name" },
+        "cardinality": {
+          "enum": ["one_to_one", "one_to_many", "many_to_one", "many_to_many"]
+        },
+        "from_api_name": { "$ref": "#/$defs/camel_api_name" },
+        "to_api_name": { "$ref": "#/$defs/camel_api_name" },
+        "inverse_api_name": { "$ref": "#/$defs/api_name" },
+        "foreign_key_property": { "$ref": "#/$defs/camel_api_name" }
+      }
+    },
+    "action_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "api_name",
+        "display_name",
+        "status",
+        "affected_object_types",
+        "requires_evidence",
+        "validation_rules",
+        "parameters",
+        "operations",
+        "tool_description"
+      ],
+      "properties": {
+        "domain": { "$ref": "#/$defs/domain_id" },
+        "api_name": { "$ref": "#/$defs/camel_api_name" },
+        "display_name": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["active", "preview", "deprecated"] },
+        "affected_object_types": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/pascal_api_name" }
+        },
+        "requires_evidence": { "type": "boolean" },
+        "validation_rules": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/camel_api_name" }
+        },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^(create_object|update_object|create_link|delete_link):[A-Za-z][A-Za-z0-9_.]*$"
+          }
+        },
+        "tool_description": { "type": "string", "minLength": 1 }
+      }
+    },
+    "query_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain",
+        "api_name",
+        "parameters",
+        "returns",
+        "returns_kind",
+        "object_set_recipe"
+      ],
+      "properties": {
+        "domain": { "$ref": "#/$defs/domain_id" },
+        "api_name": { "$ref": "#/$defs/camel_api_name" },
+        "parameters": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/camel_api_name" }
+        },
+        "returns": { "$ref": "#/$defs/pascal_api_name" },
+        "returns_kind": { "enum": ["object", "object_set", "aggregation", "attachment"] },
+        "object_set_recipe": { "$ref": "#/$defs/pascal_api_name" }
+      }
+    },
+    "interface_type": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["api_name", "implemented_by"],
+      "properties": {
+        "api_name": { "$ref": "#/$defs/pascal_api_name" },
+        "implemented_by": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/pascal_api_name" }
+        }
+      }
+    },
+    "object_set_recipe": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["domain", "api_name", "kind", "allowed_methods"],
+      "properties": {
+        "domain": { "$ref": "#/$defs/domain_id" },
+        "api_name": { "$ref": "#/$defs/pascal_api_name" },
+        "kind": { "enum": ["base", "filter", "link", "union", "intersect", "nearest_neighbors"] },
+        "object_type": { "$ref": "#/$defs/pascal_api_name" },
+        "base_object_type": { "$ref": "#/$defs/pascal_api_name" },
+        "link_type": { "$ref": "#/$defs/api_name" },
+        "target_object_type": { "$ref": "#/$defs/pascal_api_name" },
+        "allowed_methods": {
+          "type": "array",
+          "items": { "enum": ["filter", "aggregate", "load", "link", "nearest_neighbors"] }
+        }
+      }
+    }
+  }
+}

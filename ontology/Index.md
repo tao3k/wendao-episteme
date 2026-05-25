@@ -28,6 +28,7 @@ ontology RFC and keeps category meaning explicit before runtime integration.
 
 - `manifest.toml`: source-level domain manifest, rule mount map, and extension contract declaration.
 - `api_surface.toml`: source-level object, link, action, query, and interface contract for SDK-facing ontology APIs.
+- `object_model.schema.json`: modular schema for the first operational ontology layer: object types, property types, link types, action types, query types, interface types, and object set recipes.
 - `registry.json`: deterministic compiled ontology registry snapshot for downstream importer and SDK design.
 - `audio_claim_acceptance.schema.json`: source-contract report schema for reviewed audio claim proposal acceptance.
 - `audio_claim_rdf_preview.schema.json`: preview-only schema for RDF patch review artifacts derived from accepted audio claim proposals.
@@ -86,13 +87,29 @@ properties to link types, domain SQL files to action validation rules, and
 cross-domain abstractions to interface types. The first vertical API coverage
 targets healthcare and commercial finance.
 
+## Object Model Contract
+
+The object model contract is the first operational layer above RDF source
+truth. It follows a Foundry-style shape without depending on Palantir runtime
+code: object types own primary keys, title properties, display metadata, and
+property types; link types expose directional API names and inverse names;
+actions declare parameters, operations, validation rules, and tool
+descriptions; queries return objects or object sets; object set recipes reserve
+search, filter, aggregation, and link traversal semantics for downstream
+runtime compilation.
+
+Private episteme repositories should target this object model first. RDF
+source files remain the semantic authority, Org remains the evidence and
+promotion ledger, and runtime mutation stays disabled until explicit source
+review approves a source edit.
+
 ## Registry Snapshot
 
 The `registry.json` file is a deterministic compiled snapshot of the source
 ontology contracts. It combines manifest metadata, RDF classes and object
-properties, API surface declarations, validation rules, and policy references.
-It is used as an importer and SDK design handoff artifact, not as runtime
-storage.
+properties, object model declarations, validation rules, and policy
+references. It is used as an importer and SDK design handoff artifact, not as
+runtime storage.
 
 ## Dataset Mapping Contract
 

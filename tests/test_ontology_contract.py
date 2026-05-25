@@ -130,6 +130,20 @@ def assert_unique_api_names(test_case: unittest.TestCase, entries: list[dict], l
     )
 
 
+def assert_unique_entry_keys(
+    test_case: unittest.TestCase,
+    entries: list[dict],
+    keys: tuple[str, ...],
+    label: str,
+):
+    entry_keys = [tuple(entry[key] for key in keys) for entry in entries]
+    test_case.assertEqual(
+        len(entry_keys),
+        len(set(entry_keys)),
+        f"duplicate {label} values for {keys}",
+    )
+
+
 class OntologyContractTests(unittest.TestCase):
     def test_manifest_declared_files_exist(self):
         manifest = load_manifest()
@@ -205,6 +219,28 @@ class OntologyContractTests(unittest.TestCase):
         self.assertIn("Action", manifest["api_surface"]["reference_nouns"])
         self.assertIn("Query", manifest["api_surface"]["reference_nouns"])
         self.assertIn("OntologyInterface", manifest["api_surface"]["reference_nouns"])
+
+    def test_object_model_contract_is_declared(self):
+        manifest = load_manifest()
+        contract = manifest["object_model_contract"]
+        schema_path = ONTOLOGY_ROOT / contract["schema"]
+        api_surface_path = ONTOLOGY_ROOT / contract["surface"]
+
+        self.assertTrue(schema_path.is_file())
+        self.assertTrue(api_surface_path.is_file())
+        self.assertEqual(contract["owner"], "wendao-episteme")
+        self.assertEqual(contract["compatibility"], "foundry_style_object_model_v1")
+        self.assertTrue(contract["rdf_source_authority"])
+        self.assertFalse(contract["runtime_mutation_allowed"])
+        self.assertTrue(contract["private_extension_allowed"])
+
+        schema = json.loads(schema_path.read_text())
+        self.assertEqual(schema["$defs"]["boundaries"]["properties"]["mutation_allowed"]["const"], False)
+        self.assertIn("object_type", schema["$defs"])
+        self.assertIn("property_type", schema["$defs"])
+        self.assertIn("link_type", schema["$defs"])
+        self.assertIn("action_type", schema["$defs"])
+        self.assertIn("object_set_recipe", schema["$defs"])
 
     def test_audio_claim_acceptance_contract_is_declared(self):
         manifest = load_manifest()
@@ -388,6 +424,13 @@ class OntologyContractTests(unittest.TestCase):
         assert_unique_api_names(self, api_surface["action_types"], "action type")
         assert_unique_api_names(self, api_surface["query_types"], "query type")
         assert_unique_api_names(self, api_surface["interface_types"], "interface type")
+        assert_unique_api_names(self, api_surface["object_set_recipes"], "object set recipe")
+        assert_unique_entry_keys(
+            self,
+            api_surface["property_types"],
+            ("object_type", "api_name"),
+            "property type",
+        )
 
         for object_type in api_surface["object_types"]:
             with self.subTest(object_type=object_type["api_name"]):
@@ -395,6 +438,52 @@ class OntologyContractTests(unittest.TestCase):
                 self.assertIn(object_type["rdf_class"], terms["classes"])
                 self.assertGreaterEqual(len(object_type["primary_key"]), 1)
                 self.assertRegex(object_type["api_name"], r"^[A-Z][A-Za-z0-9]*$")
+                self.assertIn(object_type["status"], {"active", "preview", "deprecated"})
+                self.assertEqual(object_type["display_name_property"], object_type["title_property"])
+                self.assertIn(object_type["visibility"], {"public", "private", "hidden"})
+
+        property_types_by_object = {
+            object_type: {
+                property_type["api_name"]: property_type
+                for property_type in api_surface["property_types"]
+                if property_type["object_type"] == object_type
+            }
+            for object_type in object_types
+        }
+
+        for object_type in api_surface["object_types"]:
+            with self.subTest(object_type_properties=object_type["api_name"]):
+                properties = property_types_by_object[object_type["api_name"]]
+                for primary_key in object_type["primary_key"]:
+                    self.assertIn(primary_key, properties)
+                    self.assertTrue(properties[primary_key]["required"])
+                    self.assertTrue(properties[primary_key]["indexed"])
+                    self.assertEqual(properties[primary_key]["search_policy"], "exact")
+                self.assertIn(object_type["title_property"], properties)
+
+        for property_type in api_surface["property_types"]:
+            with self.subTest(property_type=f"{property_type['object_type']}.{property_type['api_name']}"):
+                self.assertIn(property_type["domain"], known_domains)
+                self.assertIn(property_type["object_type"], object_types)
+                self.assertIn(
+                    property_type["value_type"],
+                    {
+                        "string",
+                        "integer",
+                        "double",
+                        "boolean",
+                        "date",
+                        "timestamp",
+                        "attachment",
+                        "object_reference",
+                    },
+                )
+                self.assertIn(
+                    property_type["search_policy"],
+                    {"none", "exact", "full_text", "range", "vector"},
+                )
+                self.assertIs(type(property_type["required"]), bool)
+                self.assertIs(type(property_type["indexed"]), bool)
 
         for link_type in api_surface["link_types"]:
             with self.subTest(link_type=link_type["api_name"]):
@@ -412,24 +501,58 @@ class OntologyContractTests(unittest.TestCase):
                 to_class = object_types[link_type["to_object_type"]]["rdf_class"]
                 self.assertEqual(rdf_property["from"], from_class)
                 self.assertEqual(rdf_property["to"], to_class)
+                self.assertIn(link_type["status"], {"active", "preview", "deprecated"})
+                self.assertRegex(link_type["from_api_name"], r"^[a-z][A-Za-z0-9]*$")
+                self.assertRegex(link_type["to_api_name"], r"^[a-z][A-Za-z0-9]*$")
+                self.assertRegex(link_type["inverse_api_name"], r"^[A-Z][A-Za-z0-9]*\.[a-z][A-Za-z0-9]*$")
+                self.assertIn(
+                    link_type["foreign_key_property"],
+                    property_types_by_object[link_type["from_object_type"]],
+                )
 
         for action_type in api_surface["action_types"]:
             with self.subTest(action_type=action_type["api_name"]):
                 self.assertIn(action_type["domain"], known_domains)
                 self.assertRegex(action_type["api_name"], r"^[a-z][A-Za-z0-9]*$")
+                self.assertIn(action_type["status"], {"active", "preview", "deprecated"})
                 self.assertGreaterEqual(len(action_type["affected_object_types"]), 1)
                 for affected_object_type in action_type["affected_object_types"]:
                     self.assertIn(affected_object_type, object_types)
                 for rule in action_type["validation_rules"]:
                     self.assertIn(rule, known_rules)
                 self.assertIs(type(action_type["requires_evidence"]), bool)
+                self.assertGreaterEqual(len(action_type["parameters"]), 1)
+                self.assertGreaterEqual(len(action_type["operations"]), 1)
+                self.assertTrue(action_type["tool_description"].strip())
+                for operation in action_type["operations"]:
+                    operation_kind, target = operation.split(":", 1)
+                    self.assertIn(
+                        operation_kind,
+                        {"create_object", "update_object", "create_link", "delete_link"},
+                    )
+                    if operation_kind in {"create_object", "update_object"}:
+                        self.assertIn(target, object_types)
+                    if operation_kind in {"create_link", "delete_link"}:
+                        self.assertIn(
+                            target,
+                            {link_type["api_name"] for link_type in api_surface["link_types"]},
+                        )
 
+        object_set_recipes = {
+            recipe["api_name"]: recipe
+            for recipe in api_surface["object_set_recipes"]
+        }
         for query_type in api_surface["query_types"]:
             with self.subTest(query_type=query_type["api_name"]):
                 self.assertIn(query_type["domain"], known_domains)
                 self.assertRegex(query_type["api_name"], r"^[a-z][A-Za-z0-9]*$")
                 self.assertGreaterEqual(len(query_type["parameters"]), 1)
                 self.assertIn(query_type["returns"], object_types)
+                self.assertIn(
+                    query_type["returns_kind"],
+                    {"object", "object_set", "aggregation", "attachment"},
+                )
+                self.assertIn(query_type["object_set_recipe"], object_set_recipes)
 
         for interface_type in api_surface["interface_types"]:
             with self.subTest(interface_type=interface_type["api_name"]):
@@ -437,6 +560,24 @@ class OntologyContractTests(unittest.TestCase):
                 self.assertGreaterEqual(len(interface_type["implemented_by"]), 1)
                 for object_type in interface_type["implemented_by"]:
                     self.assertIn(object_type, object_types)
+
+        for recipe in api_surface["object_set_recipes"]:
+            with self.subTest(object_set_recipe=recipe["api_name"]):
+                self.assertIn(recipe["domain"], known_domains)
+                self.assertIn(
+                    recipe["kind"],
+                    {"base", "filter", "link", "union", "intersect", "nearest_neighbors"},
+                )
+                self.assertGreaterEqual(len(recipe["allowed_methods"]), 1)
+                if recipe["kind"] == "base":
+                    self.assertIn(recipe["object_type"], object_types)
+                if recipe["kind"] == "link":
+                    self.assertIn(recipe["base_object_type"], object_types)
+                    self.assertIn(recipe["target_object_type"], object_types)
+                    self.assertIn(
+                        recipe["link_type"],
+                        {link_type["api_name"] for link_type in api_surface["link_types"]},
+                    )
 
     def test_api_surface_covers_healthcare_and_finance_verticals(self):
         api_surface = load_api_surface()
@@ -471,9 +612,28 @@ class OntologyContractTests(unittest.TestCase):
         self.assertEqual(registry_path.read_text(), registry_text(registry))
         self.assertEqual(registry["schema_version"], 1)
         self.assertEqual(registry["ontology"], "wendao")
+        self.assertEqual(registry["object_model_compatibility"], "foundry_style_object_model_v1")
+        self.assertEqual(
+            registry["object_model_contract"],
+            {
+                "schema": "object_model.schema.json",
+                "surface": "api_surface.toml",
+                "owner": "wendao-episteme",
+                "compatibility": "foundry_style_object_model_v1",
+                "rdf_source_authority": True,
+                "runtime_mutation_allowed": False,
+                "private_extension_allowed": True,
+            },
+        )
+        self.assertEqual(registry["source_contract"]["object_model_schema"], "object_model.schema.json")
+        self.assertTrue(registry["source_contract"]["rdf_source_authority"])
+        self.assertTrue(registry["source_contract"]["object_model_source_authority"])
+        self.assertFalse(registry["source_contract"]["runtime_object_mutation_allowed"])
         self.assertIn("OntologyObject", registry["reference_nouns"])
         self.assertGreaterEqual(len(registry["rdf_terms"]["classes"]), 1)
         self.assertGreaterEqual(len(registry["api"]["object_types"]), 1)
+        self.assertGreaterEqual(len(registry["api"]["property_types"]), 1)
+        self.assertGreaterEqual(len(registry["api"]["object_set_recipes"]), 1)
         self.assertGreaterEqual(len(registry["dataset_mappings"]), 1)
         self.assertEqual(
             registry["audio_claim_acceptance"],
