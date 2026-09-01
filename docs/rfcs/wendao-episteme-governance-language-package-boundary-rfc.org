@@ -1,0 +1,1174 @@
+#+TITLE: Wendao Episteme Governance Language and Package Boundary RFC
+#+AUTHOR: tao3k
+#+DATE: [2026-07-24 Thu 16:44]
+#+FILETAGS: :wendao-episteme:governance-language:gerbil:poo:package-boundary:rfc:
+#+PROPERTY: SDD_KIND rfc
+#+PROPERTY: STATUS draft-for-discussion
+
+* Status and decision discipline
+
+This RFC is a greenfield architecture proposal.
+
+Its status is /draft for discussion/. It does not authorize implementation.
+No Gerbil package skeleton, build integration, public API, or runtime projection
+is approved merely because it appears as an option or example in this document.
+
+The RFC separates three kinds of statements:
+
+- /Agreed invariant/: accepted during architecture discussion and treated as
+  the current decision baseline.
+- /Proposed direction/: recommended, but still requires explicit review.
+- /Open question/: intentionally unresolved and must not be decided implicitly
+  by implementation.
+
+The first implementation slice may begin only after the RFC identifies a
+bounded experiment and that experiment is explicitly approved.
+
+** Org-only canonical form
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+Org is the only canonical format for durable architecture, governance, RFC,
+decision, and specification records.
+
+This RFC MUST exist only as an Org source. It MUST NOT have a Markdown sibling
+or treat a Markdown projection as an equivalent authority.
+
+Non-Org material may be considered discussion input, but its claims have no
+durable architectural authority until they are explicitly reviewed and
+recorded in an Org decision.
+
+* Problem statement
+
+=wendao-episteme= requires a Gerbil-hosted all-industry governance language.
+Gerbil's module system, hygienic macros, staged metaprogramming, custom
+preludes, and native compilation are the execution foundation of that
+governance semantics; they are not optional adapter technologies.
+
+POO supplies the public object model and functional composition model through
+which the governance language is extended.
+
+The repository currently contains epistemic, ontology, policy, source, and
+evidence material in multiple formats. The existence of those artifacts does
+not assign them authority in the new architecture.
+
+Org is the only durable authority for architecture, RFCs, decisions,
+governance specifications, and review evidence. RDF/OWL, SHACL, SQL, schemas,
+and other domain artifacts may retain authority over their own domain semantics
+when an Org decision explicitly assigns that ownership. They do not acquire
+architecture or governance authority.
+
+Existing Python validators and TOML manifests do not define a compatibility
+baseline, an input contract, or a required implementation path for the new
+governance language. Their future role remains undecided.
+
+The target architecture must not demote authoritative domain sources into a
+static industry pack schema, a generic configuration repository, or a
+collection of files that another system interprets ad hoc.
+
+The missing architectural layer is an all-industry governance system that can
+determine:
+
+- which industry, standard, jurisdiction, function, integration, runtime, and
+  enterprise modules participate in a composition;
+- which capabilities they provide, require, bind, refine, or conflict with;
+- which effects and authorities are admissible;
+- which flow fragments and evidence obligations are activated;
+- which semantic sources remain authoritative for each facet;
+- which projections and qualification gates may be produced;
+- and why a resulting composition is valid.
+
+The architecture therefore needs a precise boundary between:
+
+1. the generic POO core;
+2. the =wendao-episteme= governance language;
+3. governed all-industry content;
+4. authoritative semantic sources;
+5. and external execution or projection runtimes.
+
+* Contributor repository role
+
+=wendao-episteme= SHALL exist as an open contributor repository for reusable
+vertical-domain assets built on =poo-flow-core=.
+
+Its contributors may include downstream enterprises, individual users,
+vertical-domain specialists, and open-source maintainers.  They may jointly
+maintain, including but not limited to:
+
+- domain modules;
+- Profiles and reusable profile families;
+- Workflows;
+- Knowledge, knowledge sources, claims, evidence, citations, and provenance;
+- Policy, authorization, security, privacy, compliance, and audit projections;
+- ownership, maintainership, review, approval, publication, responsibility, and
+  accountability evidence;
+- domain governance projections and qualification evidence.
+
+The repository is not itself one vertical-industry application.  It is the
+shared collaboration and qualification surface from which many independent
+industry or personal AI compositions can be assembled.
+
+These are open semantic facets, not a closed asset-kind enumeration.  One
+contributed object may carry several facets simultaneously, and a
+vertical-domain owner may introduce new facet identities without changing the
+=poo-flow-core= engine.
+
+=poo-flow-core= remains the engine and parent contract boundary.
+=wendao-episteme= SHALL consume its POO-native module, Profile, capability,
+workflow, fixed-point, observability, recovery, and receipt capabilities.  It
+SHALL NOT fork or reproduce a second core engine, module system, Profile
+abstraction, or composition language.
+
+Contribution to this repository does not grant an artifact automatic runtime
+authority.  Each contributed domain asset retains an explicit owner and must
+carry the identity, dependency/capability, provenance, policy, test, and
+qualification evidence required by its class before downstream composition.
+
+The public composition principle is:
+
+#+begin_src scheme
+(use-composition industry-or-personal-system
+  (compose profiles
+    base-profile
+    selected-domain-profile
+    local-governance-profile))
+#+end_src
+
+The names of concrete contributed objects remain contributor- and
+owner-defined.  This example authorizes no new public binding.
+
+#+begin_src mermaid
+flowchart LR
+    E["Enterprise contributors"]
+    I["Individual users"]
+    O["Open-source and domain contributors"]
+    W["wendao-episteme contributor repository"]
+    Q{"Domain qualification complete?"}
+    D["Open semantic facets:<br/>Modules, Profiles, Workflows, Knowledge,<br/>Policy, Auth, Security, Evidence, Responsibility"]
+    C["Downstream use-composition"]
+    P["poo-flow-core engine"]
+    R["Runtime evidence and receipts"]
+
+    E -->|"contribute and maintain"| W
+    I -->|"contribute and maintain"| W
+    O -->|"contribute and review"| W
+    W -->|"candidate with owner evidence"| Q
+    Q -->|"qualified"| D
+    Q -->|"incomplete or conflicting"| W
+    D -->|"select freely by identity"| C
+    C -->|"POO-native composition"| P
+    P -->|"execute, observe, recover"| R
+#+end_src
+
+* Goals
+
+** Agreed authority allocation goal
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+Maintain four distinct authority classes instead of treating every
+persisted artifact as an undifferentiated authoritative source:
+
+1. Org holds constitutional and governance-decision authority.
+2. Gerbil governance programs hold executable governance authority
+   within scopes granted by Org decisions.
+3. Domain artifacts hold only the domain-semantic authority explicitly
+   granted to them by Org decisions.
+4. Delivery and tooling artifacts hold no semantic or governance
+   authority by default.
+
+** Agreed goals
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The architecture MUST:
+
+1. establish =wendao-episteme= as an autonomous package identity;
+2. define it permanently as an /all-industry governance language/, not as a
+   generic language toolkit;
+3. keep its public extension surfaces POO-native;
+4. preserve functional composition as the primary behavior-selection model;
+5. preserve RDF/OWL, TOML, Org, SQL, schemas, and other domain artifacts as
+   authoritative sources where they already own the semantics;
+6. use Gerbil staging and hygiene to make governance composition deterministic
+   and explainable;
+7. keep runtime execution outside the governance language;
+8. keep build, test, qualification, and release ownership inside the
+   =wendao-episteme= repository;
+9. depend on POO Flow only through an explicitly published core boundary;
+10. make the initial architecture falsifiable through a bounded experiment.
+
+** Proposed goals
+:PROPERTIES:
+:DECISION_STATE: proposed-direction
+:END:
+
+Subject to later review, the governance system SHOULD eventually support:
+
+- module identity and source provenance;
+- capability linking;
+- policy and effect refinement;
+- constrained flow-fragment composition;
+- trusted governance metaprogramming;
+- distribution composition;
+- qualification;
+- deterministic projection selection;
+- and expansion/composition receipts.
+
+These capabilities are directional goals, not approved initial APIs.
+
+* Non-goals
+
+This RFC does NOT:
+
+- define a universal replacement format for RDF, OWL, SHACL, SQL, BPMN, DMN,
+  schemas, or any other domain-semantic or runtime artifact;
+- require domain-semantic artifacts to be rewritten as Org;
+- grant any non-Org artifact durable architecture, RFC, decision, governance
+  specification, or review-evidence authority;
+- define =wendao-episteme= as an execution engine;
+- assign Marlin, Qianji, WASM, BPMN, DMN, or React Flow runtime ownership to
+  this package;
+- authorize a parent-owned integration or distribution test suite;
+- make the =poo-flow= repository build, test, or publish
+  =wendao-episteme=;
+- define a static Pack Schema as the primary authoring surface;
+- define a raw alist DSL, record DSL, patch language, or ungoverned callback
+  interface as the public extension surface;
+- expose a generic =/lang= or =/language= namespace;
+- use =:wendao/episteme= as a package or language identity;
+- preserve the architectural status of existing Python validators or TOML
+  manifests;
+- wrap, emulate, or maintain compatibility with the existing Python/TOML
+  implementation as a condition of the new architecture;
+- promise backward compatibility before a first stable public contract exists;
+- define migration or deprecation machinery for this greenfield architecture;
+- or approve a concrete source-tree layout or implementation plan.
+
+The future role of existing Python validators and TOML manifests is an open
+architecture question. This RFC assigns them no inherited authority.
+
+* Identity and ownership boundaries
+
+** Repository identity
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The canonical repository identity is:
+
+#+begin_src text
+github.com/tao3k/wendao-episteme
+#+end_src
+
+The repository owns its governance language, governed content, tests,
+qualification, and releases.
+
+** Package identity
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The package identity is:
+
+#+begin_src text
+wendao-episteme
+#+end_src
+
+It MUST NOT be shortened to =wendao= and MUST NOT be represented as an
+=episteme= subpackage of a =wendao= package.
+
+The intended Gerbil package declaration, if the RFC later approves a Gerbil
+implementation, is therefore conceptually:
+
+#+begin_src scheme
+(package: wendao-episteme)
+#+end_src
+
+This form is descriptive in the current draft; it does not yet authorize adding
+=gerbil.pkg=.
+
+** Git submodule identity
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+When checked out under:
+
+#+begin_src text
+poo-flow/packages/wendao-episteme
+#+end_src
+
+the gitlink records workspace location and a pinned source identity only.
+
+The gitlink MUST NOT be interpreted as:
+
+- a Gerbil dependency edge;
+- parent build ownership;
+- parent test ownership;
+- parent release ownership;
+- or parent distribution ownership.
+
+** Parent ownership
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The parent node owns and maintains =poo-flow-core=.
+
+It does not own the =wendao-episteme= governance language or its lifecycle.
+The parent repository MUST NOT acquire a build or test dependency on the child
+merely because it contains the gitlink.
+
+** Downstream dependency direction
+:PROPERTIES:
+:DECISION_STATE: proposed-direction
+:END:
+
+The intended software dependency direction is:
+
+#+begin_src text
+wendao-episteme
+    |
+    | depends on a published POO-native core contract
+    v
+poo-flow-core
+#+end_src
+
+No reverse software dependency is permitted.
+
+Whether =poo-flow-core= is a logical public surface inside the current
+=poo-flow= package or a physically independent Gerbil package remains an open
+question.
+
+* Permanent governance-language identity
+
+The only public custom language entry point is:
+
+#+begin_src scheme
+#lang :wendao-episteme/governance
+#+end_src
+
+This identity is permanent.  =governance/meta=,
+=governance/distribution=, and future scoped authority components are
+importable modules or capability layers inside this governance
+language.  They must not introduce parallel public =#lang= identities
+or distinct public governance preludes.
+
+The internal modules may provide different phase-specific capabilities,
+but that distinction does not create additional languages.  All
+governance bindings retain the semantic identity
+=wendao-episteme/governance=.  A standalone source program selects that
+identity through the standard =#lang= entry point; a downstream module
+system may instead embed the same identity through the initial module
+integration contract defined below.
+
+** Product identity
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+=wendao-episteme= is an:
+
+#+begin_quote
+all-industry governance language and governed module commons
+#+end_quote
+
+It is not a general-purpose programming language, a generic DSL framework, or
+an industry-specific language.
+
+The word /governance/ is permanent public semantics. It is not a temporary
+implementation label.
+
+Governance includes more than policy. It covers:
+
+- module identity and provenance;
+- capability requirements and bindings;
+- effect and authority boundaries;
+- industry, standard, jurisdiction, function, integration, runtime, and
+  enterprise overlays;
+- flow-fragment activation and composition;
+- evidence obligations;
+- qualification;
+- projection admission;
+- and receipts explaining the resulting composition.
+
+** Public custom-language namespace
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+Every public custom Gerbil language provided by this package MUST live below:
+
+#+begin_src text
+:wendao-episteme/governance
+#+end_src
+
+The primary governance entry is therefore expected to be:
+
+#+begin_src scheme
+#lang :wendao-episteme/governance
+#+end_src
+
+The =#lang= token is Gerbil's language-selection mechanism. The selected public
+identity is explicitly =wendao-episteme/governance=; no generic =lang= or
+=language= segment is introduced.
+
+** Governance authority tiers
+:PROPERTIES:
+:DECISION_STATE: proposed-direction
+:END:
+
+If separate Gerbil preludes are required to enforce different authority
+levels, they SHOULD remain children of the governance namespace:
+
+#+begin_src scheme
+#lang :wendao-episteme/governance
+#lang :wendao-episteme/governance/meta
+#lang :wendao-episteme/governance/distribution
+#+end_src
+
+Their proposed responsibilities are:
+
+- =governance=: ordinary governed module declarations;
+- =governance/meta=: trusted construction of governance macros, module
+  transformers, compile-time checks, and projection mechanisms;
+- =governance/distribution=: governed selection, binding, overlay, and
+  qualification of a resulting distribution.
+
+It remains an open question whether =meta= and =distribution= require distinct
+=#lang= preludes or can be expressed as explicitly imported authority modules
+under one governance prelude.
+
+** Governed content namespaces
+:PROPERTIES:
+:DECISION_STATE: proposed-direction
+:END:
+
+Governed content SHOULD be organized by semantic role rather than by language
+implementation:
+
+#+begin_src text
+:wendao-episteme/industry/...
+:wendao-episteme/standard/...
+:wendao-episteme/jurisdiction/...
+:wendao-episteme/function/...
+:wendao-episteme/integration/...
+:wendao-episteme/runtime/...
+:wendao-episteme/enterprise/...
+#+end_src
+
+These paths identify governed content. They are not separate language
+identities.
+
+The exact vocabulary and stability of these axes remain open for review.
+
+* Minimal =poo-flow-core= contract boundary
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The child depends on four generic contract families from the physical
+=poo-flow-core= package:
+
+1. *Pure composition contracts* for POO-native values, functional
+   composition, and phase-correct recursive module bundles that remain
+   bundles after composition.
+2. *Capability contracts* for requests, grants, denials, and bounded
+   scopes without defining domain-specific capability vocabulary.
+3. *Explicit execution-lifecycle contracts* for named qualification,
+   execution, and external-runtime handoff boundaries.
+4. *Receipt-envelope contracts* that distinguish attempted effects and
+   outcomes without owning child-specific receipt payload semantics.
+
+=poo-flow-core= owns the generic laws and envelopes of these four
+families.  It does not own the governance language, governance domain
+objects, ontology and policy semantics, domain capability vocabulary,
+or =wendao-episteme= receipt payloads.
+
+Within the pure-composition family, fixed-point evaluation has three
+first-class POO-native subcontracts: semantic evaluation, diagnostic
+observation, and bounded recovery control.  The receipt-envelope family
+owns the durable projection of their evidence; it does not replace
+their live evaluator and debugger protocols.
+
+=wendao-episteme= owns the concrete governance module bundle and all
+domain-semantic projections built on these generic contracts.  Exact
+module paths, exported identifiers, function signatures, and receipt
+fields remain API-shape questions; they cannot change this ownership
+split.
+
+* Initial downstream module-system integration
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+Downstream embedding is an initial public integration surface, not a
+later compatibility facade.  The first package boundary must expose one
+stable POO-native governance module bundle that downstream Gerbil
+languages, preludes, or module systems can compose recursively.
+
+The bundle is a recursively composable pure POO object.  It declares:
+
+- the =wendao-episteme/governance= semantic identity;
+- phase-separated, approved syntax and runtime exports;
+- published package dependencies;
+- capability requirements; and
+- the contract identities required for qualification and receipts.
+
+** Recursive POO object closure
+
+A module, a submodule, and the result of composing modules all have the
+same POO module-object contract.  A module slot may contain another POO
+module object, whose slots may contain further module objects without a
+special submodule data language.
+
+Module contributions are pure object extensions over =self= and
+=super=.  The module system normalizes those contributions and computes
+the stable fixed point of the final object graph:
+
+#+begin_src scheme
+(fix
+ (lambda (self)
+   (compose base
+            (extension-a self)
+            (extension-b self))))
+#+end_src
+
+=self= refers to the final composed object and therefore supports
+forward and recursive references.  =super= refers to the previous
+prototype layer and supports bounded override and incremental
+extension.  Repeated application of a stable module graph is
+idempotent, and composition of module objects produces another module
+object that downstream systems may compose again.
+
+The public integration surface must not introduce a parallel alist,
+record, option-declaration, patch, or raw compute-hook DSL.  Recursive
+module composition remains POO-native.
+
+** Convergence and cycle discipline
+
+Cyclic module dependencies are not rejected merely because they are
+cyclic.  Productive recursive references that converge to a stable,
+idempotent POO object graph are valid module composition.
+
+A non-productive self-reference, oscillating extension, or other
+non-convergent cycle must fail deterministically.  Its diagnostic must
+identify the participating module objects and slot-dependency path
+rather than reporting an unstructured recursion failure.
+
+The fixed point covers only pure module objects, capability requests,
+and governance-plan values.  It must never evaluate an external
+governance effect.  Capability grants, explicit execution, and
+execution receipts remain outside the fixed-point computation.
+
+** Embedding invariants
+
+Importing or composing the bundle performs no global registration and
+no governance effect.  Downstream integration must be explicit and
+must preserve the same phase, capability, execution, and receipt
+invariants as standalone language use.
+
+The standard =#lang :wendao-episteme/governance= entry point is a thin
+standalone adapter over this same bundle.  It must not implement a
+second copy of language semantics.  A downstream language may expose
+its own =#lang= while embedding the bundle; doing so does not create a
+second =wendao-episteme= governance-language identity.
+
+The downstream integration surface exposes only approved syntax
+projections.  It does not expose raw =governance/meta= macro machinery
+or grant access to =governance/distribution= effects.  Generic module
+bundle and composition contracts belong to =poo-flow-core=, including
+normalization, fixed-point convergence, idempotence, and structured
+cycle diagnostics.  The concrete governance bundle, its recursive
+domain submodules, and its export policy belong to
+=wendao-episteme=.
+
+* POO fixed-point observability and recoverable debugging
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+Fixed-point observability and recovery are initial architecture
+capabilities, not optional logging added after the module system is
+implemented.  All three planes below must be expressed through
+POO-native objects and functional composition.
+
+** Semantic evaluator plane
+
+The evaluator must represent module objects, slot dependencies,
+evaluation state, memoized results, fixed-point iterations, and
+convergence budgets explicitly.  It must detect problems before the
+host runtime reaches stack or heap exhaustion.
+
+The evaluator must distinguish at least:
+
+- a productive lazy or forward reference that may participate in a
+  valid fixed point;
+- a strict re-entry into a slot that is already being evaluated;
+- a graph that revisits a prior digest without becoming stable;
+- a graph whose slot evaluations, iterations, or growth exceed a
+  deterministic budget; and
+- a slot or dependency path whose repeated evaluation produces a
+  performance hotspot.
+
+Wall-clock time may act as an operational watchdog, but it must not be
+the sole semantic convergence criterion.  Deterministic evaluation
+counts and graph identities own reproducible qualification.
+
+** Diagnostic evidence plane
+
+The existing POO Flow observability and fixed-point receipt mechanisms
+are the base contract.  The child projects governance-specific context
+onto structured events and compile diagnostics; it does not replace
+them with ad hoc log strings.
+
+The evidence stream must make slot entry and exit, memoization hits,
+dependency edges, iteration identities, graph digests, cycle or
+oscillation recognition, budget consumption, continuation capture and
+resume, and selected recovery actions observable.
+
+A fixed-point diagnostic records the root module identity,
+participating object and slot path, relevant dependency component,
+iteration and budget state, hot-slot counts, graph identity history,
+and the final convergence or failure classification.  A compile receipt
+durably projects this evidence.  It never claims that an external
+governance effect ran.
+
+** Recoverable control plane
+
+The live debugger may use Gerbil/Gambit exception handlers,
+continuable exceptions, and first-class continuations at explicit safe
+points in the pure fixed-point evaluator.  Raw =call/cc= is internal
+control machinery, not a public extension interface.
+
+Recoverable conditions and restart choices must themselves be
+POO-native objects.  The initial research surface includes bounded
+operations equivalent to inspecting the object graph, stepping one
+iteration, increasing a deterministic budget, aborting the fixed-point
+computation, or supplying a temporary debugging value.
+
+Supplying or modifying a value during recovery taints the result.  A
+tainted graph may be inspected interactively but must not produce a
+publishable successful compile receipt.
+
+Continuation recovery is forbidden after crossing a capability-checked
+execution gateway.  No continuation may replay, skip, or duplicate an
+external governance effect.  Durable receipts store continuation and
+trace identities, not live continuation objects.
+
+Development and interactive modes may offer bounded restarts.
+Qualification, build, and release modes fail closed on a
+non-convergent graph, exhausted semantic budget, invalid restart, or
+tainted result.
+
+Exception and restart handlers require re-entry protection.  A failure
+inside a recovery handler must escape to an outer catcher and produce a
+structured handler-failure diagnostic instead of recursively invoking
+the same handler.
+
+** Ownership boundary
+
+=poo-flow-core= owns the generic evaluator-state, observation-event,
+fixed-point diagnostic, budget, condition, restart, taint, and
+continuation-safe-point contracts.
+
+=wendao-episteme= owns governance-specific object and slot context,
+domain diagnostic projections, approved interactive recovery policy,
+and the presentation of those diagnostics through its governance
+language and downstream module bundle.
+
+** Required initial validation scenarios
+
+The design is not qualified without tests for:
+
+1. first-reentry detection of a direct strict self-cycle;
+2. convergence of a productive mutually recursive module graph;
+3. a non-productive mutual cycle with a complete object and slot path;
+4. repeated graph-digest oscillation;
+5. deterministic budget exhaustion during slow convergence;
+6. preservation of trace identity across a bounded restart;
+7. rejection of a tainted debug-substitution result at publication;
+8. recovery-handler failure without recursive handler invocation; and
+9. proof that continuation recovery cannot repeat an external effect.
+
+** Runtime basis
+
+This direction builds on Gerbil exception objects and continuation
+stack traces, Gerbil continuation-aware debugging, and the Gambit
+exception and continuation runtime:
+
+- [[https://cons.io/reference/std/errors.html][Gerbil Exceptions and Errors]]
+- [[https://cons.io/reference/dev/debug.html][Gerbil Debugging]]
+- [[https://www.gambitscheme.org/latest/gambit.pdf][Gambit Reference Manual]]
+
+The exact continuation capture strategy, evaluator representation,
+digest algorithm, deterministic budget units, restart protocol, and
+memory-retention limits require prototypes and measurements.  Those are
+research questions inside the agreed three-plane architecture, not a
+reason to weaken the architecture.
+
+* Semantic authority boundaries
+
+This four-layer allocation is the controlling authority model for this
+RFC:
+
+1. *Constitutional and governance-decision authority.*  Org is the sole
+   durable authority for architecture, RFCs, governance specifications,
+   delegations, reviews, and changes to those decisions.
+2. *Executable governance authority.*  Gerbil programs written for
+   =#lang :wendao-episteme/governance= express and execute governance
+   rules.  They are not ordinary implementation code.  Their authority
+   is limited to scopes granted through Org decisions, and they cannot
+   expand their own namespace, capabilities, or governance boundary.
+3. *Domain-semantic authority.*  RDF/OWL, SHACL, SQL, schemas, and other
+   domain formats may own ontology, constraint, mapping, or data-shape
+   semantics only within a scope explicitly delegated by an Org
+   decision.  A format or an existing file does not acquire authority
+   merely by existing.
+4. *Delivery and tooling role.*  TOML manifests and Python validators
+   have no inherited semantic or governance authority.  A future Org
+   decision may assign them a bounded role such as generated output,
+   adapter, or validation tool.  Until then they define no input
+   contract, compatibility baseline, or migration obligation.
+
+The authority flow is:
+
+#+begin_example
+Org decision
+  -> bounded authority grant
+  -> Gerbil governance program or delegated domain artifact
+  -> build and runtime receipts
+#+end_example
+
+Any broader wording elsewhere in this draft that groups Org, Gerbil,
+domain artifacts, TOML, or Python together as undifferentiated
+"authoritative sources" is superseded by this scoped allocation.
+
+** Governance is not universal serialization
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The governance language decides when and how semantic facets participate in a
+composition. It does not require every semantic source to be rewritten in
+Gerbil.
+
+Examples:
+
+- RDF/OWL can remain ontology authority;
+- SHACL or schemas can remain structural constraint authority;
+- TOML can remain a distributed manifest or external interchange authority;
+- Org can remain reviewable intent and evidence authority;
+- SQL can remain deterministic mapping-projection authority;
+- BPMN/DMN can remain runtime projection artifacts where appropriate.
+
+** POO ownership
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+Public extension and module APIs MUST be POO-native.
+
+Governance modules are therefore expected to become POO objects or POO-native
+module values before composition. Raw alists, records, and ad hoc callbacks
+cannot become the ordinary public extension interface.
+
+The precise POO object contract is not defined in this draft.
+
+** Functional composition
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+Behavior selection and module composition MUST be expressed as pure values and
+functional combinators first. Side effects belong behind explicit build,
+qualification, projection, or external runtime boundaries.
+
+** Runtime ownership
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The governance language may produce or admit runtime projections, but it does
+not execute durable workflows, agent loops, external effects, or vendor
+operations.
+
+Heavy execution remains owned by the appropriate runtime.
+
+* Phase boundaries and effect discipline
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+The governance language has four distinct stages.  Crossing a stage
+boundary must be explicit; importing a module must never be treated as
+authorization to execute governance effects.
+
+** Language selection
+
+For standalone source programs,
+=#lang :wendao-episteme/governance= selects the governance language and
+its base prelude.  A downstream module system selects the same semantic
+identity by explicitly composing the governance module bundle.
+Selection through either route performs no governance action and
+grants no runtime capability.
+
+** Hygienic expansion
+
+=governance/meta= owns phase-correct hygienic expansion, local static
+validation, declaration normalization, and bounded code generation.
+Macros expand into ordinary POO-native object construction and
+functional composition.  Raw macro machinery is not the public
+extension interface.
+
+Expansion must be deterministic and hermetic with respect to declared
+build inputs.  It must not consult the network, wall-clock time,
+ambient environment variables, mutable global registries, or
+undeclared filesystem inputs.
+
+** Governance-plan construction
+
+Evaluation of an expanded governance module constructs governance
+objects, plans, and capability requests as pure values.  Importing or
+initializing a module must not execute a workflow, mutate an external
+system, distribute an artifact, or otherwise produce an external
+governance effect.
+
+At this stage the POO module system normalizes all pure object
+contributions and computes their stable fixed point before projecting a
+governance plan.  Recursive slot resolution and convergence diagnostics
+belong to plan construction; external effects do not.
+
+The ordinary public surface at this stage is POO-native and
+functional-first.  It must not expose raw effect lambdas or implicit
+execution hooks as the normal composition path.
+
+** Explicit qualification and execution
+
+Qualification, execution, and distribution effects are permitted only
+through explicit named gateways backed by the published
+=poo-flow-core= kernel contract.  Every attempted effect must pass an
+explicit capability check and produce a success or failure receipt.
+
+=governance/distribution= may provide POO-native distribution plan
+constructors and explicit execution adapters.  Importing the module
+does not distribute anything and grants no distribution capability.
+
+The =poo-flow-core= boundary supplies generic composition, capability,
+execution, and receipt contracts.  It does not import or interpret
+=wendao-episteme= domain semantics.
+
+** Receipt separation
+
+A compile receipt records the identity of declared source inputs,
+dependencies, expansion output, normalized module contributions, and
+static validation results.  It also records either the identity of the
+converged stable POO object graph or the structured diagnostic for a
+failed fixed-point computation.  It does not prove that a governance
+action ran or succeeded.
+
+An execution receipt records an explicitly attempted governance
+effect, its granted capabilities, and its success or failure result.
+A compile receipt must never be accepted as an execution receipt.
+
+* Alternatives considered
+
+** Separate submodule configuration DSL
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+A distinct alist, record, option-declaration, patch, or compute-hook DSL
+for submodules is rejected.  Modules and recursively nested submodules
+are ordinary pure POO module objects governed by the same composition
+contract.
+
+** DAG-only module composition
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+Restricting the initial module system to an acyclic dependency graph is
+rejected.  POO =self=/=super= composition and fixed-point normalization
+own productive recursion and cyclic references.  The required boundary
+is deterministic convergence or structured failure, not the absence of
+cycles.
+
+** Multiple public governance preludes
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+Providing separate public entry points such as
+=#lang :wendao-episteme/governance/meta= or
+=#lang :wendao-episteme/governance/distribution= is rejected.  It would
+turn bounded authority modules into apparently independent languages
+and weaken the permanent all-industry governance-language identity.
+
+** Static Episteme Pack Schema as the primary model
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+This approach would make TOML, JSON, RDF, BPMN, or another static manifest the
+primary composition model. Gerbil would become a converter or configuration
+reader rather than the governance and metaprogramming control plane.
+
+Contracts and manifests may still exist as sources or generated artifacts.
+They do not own the public authoring model.
+
+** Generic =language= or =lang= namespace
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+Examples:
+
+#+begin_src text
+:wendao-episteme/language
+:wendao-episteme/lang
+#+end_src
+
+These names describe an implementation category without stating the permanent
+public purpose. They also invite unrelated languages to accumulate below an
+ambiguous namespace.
+
+The public identity is governance, so the namespace must say governance.
+
+** Umbrella =wendao= package
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+Examples:
+
+#+begin_src text
+:wendao/episteme
+(package: wendao)
+#+end_src
+
+These forms erase the autonomous =wendao-episteme= package identity and imply
+ownership by a different umbrella package.
+
+** =module= as the primary =#lang= identity
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+#+begin_src scheme
+#lang :wendao-episteme/module
+#+end_src
+
+=module= describes the governed artifact form but does not state what the
+language governs or why it exists. Modules remain important, but governance is
+the permanent language identity.
+
+** Parent-owned integration or distribution package
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+The git parent does not own child build, test, release, or distribution
+semantics. Adding parent integration targets would create a reverse ownership
+edge that the agreed architecture forbids.
+
+** Permanent adapter wrapper in =poo-flow=
+:PROPERTIES:
+:DECISION_STATE: rejected
+:END:
+
+A parent-owned wrapper that reads =wendao-episteme= manifests and exposes them
+as a POO package would leave =wendao-episteme= as passive content and move its
+governance authority into the wrong repository.
+
+** Separate ecosystem superproject
+:PROPERTIES:
+:DECISION_STATE: deferred
+:END:
+
+A separate superproject could pin both =poo-flow-core= and autonomous downstream
+packages without placing downstream gitlinks in the core repository.
+
+This may provide stricter owner separation later. It is not required to decide
+the governance-language identity and is not approved or rejected here.
+
+* Repository, package, and dependency ownership
+:PROPERTIES:
+:DECISION_STATE: agreed-invariant
+:END:
+
+** Workspace pin
+
+The =packages/wendao-episteme= submodule gitlink is only a workspace
+placement and revision pin.  It records which =wendao-episteme=
+revision this POO Flow workspace selects.  It does not transfer package
+ownership to the parent repository, create a joint release, or make the
+child repository part of the parent build graph.
+
+** Package ownership
+
+=wendao-episteme= owns its Gerbil package, the
+=:wendao-episteme/...= namespace, the governance language, its tests,
+and its release process.
+
+The POO Flow repository owns and publishes =poo-flow-core=.
+=poo-flow-core= is a real, independently installable and publishable
+Gerbil package, not merely a logical facade or an informal module
+grouping.
+
+** Dependency direction
+
+The only permitted package dependency direction across this boundary is:
+
+#+begin_example
+wendao-episteme -> poo-flow-core
+#+end_example
+
+=poo-flow-core= must not depend on =wendao-episteme=.  The parent
+repository does not run, own, or gate on =wendao-episteme= integration
+or distribution tests.  Those tests and their release receipts belong
+to the child repository.
+
+Updating the submodule revision does not imply coordinated publication
+of the two packages.  It changes only the workspace-selected
+=wendao-episteme= revision.
+
+* Open questions
+
+** Controlling open-question set
+:PROPERTIES:
+:DECISION_STATE: proposed
+:END:
+
+Only these interface and bounded research details remain open:
+
+1. The exact module paths, exported identifiers, function signatures,
+   diagnostic projections, and receipt fields by which the physical
+   =poo-flow-core= package exposes the agreed composition, recursive
+   fixed-point, capability, execution, and receipt contracts.
+2. The concrete governance root-bundle export, approved syntax/runtime
+   projections, and internal import/phase wiring for
+   =governance/meta= and =governance/distribution= under the single
+   governance-language identity.
+3. The exact evaluator representation, observation-event and diagnostic
+   schemas, deterministic budget units, continuation safe points,
+   restart API, taint projection, and memory-retention limits within
+   the agreed three-plane fixed-point architecture.
+4. Any future bounded delivery or tooling role assigned to existing
+   TOML manifests or Python validators.
+
+Receipt schema projection details belong to the first item; they do not
+reopen the settled separation between compile receipts and execution
+receipts.
+
+** Resolved and superseded questions
+:PROPERTIES:
+:DECISION_STATE: superseded
+:END:
+
+The four-stage phase model, the prohibition on import-time governance
+effects, capability-checked explicit execution, and compile/execution
+receipt separation are no longer open questions.  Any earlier open
+item asking what ordinary governance modules may do at compile time is
+resolved and superseded by =Phase boundaries and effect discipline=.
+
+The physical package identity and one-way dependency direction of
+=poo-flow-core= are also settled.  Only the smallest exact set of
+composition, capability, execution, and receipt contracts that
+=poo-flow-core= must export to =wendao-episteme= remains open.
+
+Whether =meta= and =distribution= require distinct public =#lang=
+preludes is no longer an open question: they do not.  Any pre-existing
+open item phrased as a choice between distinct =#lang= preludes and one
+shared prelude is resolved and superseded by this decision.  The
+remaining open interfaces concern only their module APIs, phase
+boundaries, and capability grants under the single public governance
+language.
+
+The four authority classes, the one-way package dependency, and the
+physical =poo-flow-core= Gerbil package are agreed invariants rather
+than open questions.  The future delivery or tooling role of existing
+TOML manifests and Python validators remains open, but no answer may
+grant them inherited authority or create a compatibility obligation.
+
+The following questions MUST remain unresolved until reviewed:
+
+1. Is =poo-flow-core= a logical public facade within the current package, or an
+   independently versioned physical Gerbil package?
+2. What exact POO-native contract may =wendao-episteme= depend on?
+3. Does ordinary governance require a custom =#lang=, or are imported hygienic
+   macros sufficient for the first experiment?
+4. Do =governance/meta= and =governance/distribution= require separate preludes,
+   or explicit authority imports under one prelude?
+5. Which governed content axes are permanent public vocabulary?
+6. Which compile-time operations are permitted for ordinary governance modules?
+7. How are authoritative external source identities declared without turning
+   their formats into the primary authoring model?
+8. What constitutes a deterministic governance expansion receipt?
+9. What is the smallest experiment that can falsify the architecture?
+10. Does the gitlink remain in the core repository long term, or move to a
+    future ecosystem workspace?
+
+No implementation may settle these questions accidentally.
+
+* Proposed review sequence
+
+The RFC SHOULD be reviewed in this order:
+
+1. problem statement and non-goals;
+2. repository, package, and dependency ownership;
+3. permanent governance-language identity;
+4. semantic authority boundaries;
+5. alternatives and rejected directions;
+6. open questions;
+7. only then, a bounded architecture experiment.
+
+The experiment and implementation plan are deliberately absent from this
+draft. They require a later reviewed section.
+
+* Companion RFCs
+
+** POO fixed-point observability and recoverable debugging
+:PROPERTIES:
+:DECISION_STATE: downstream-design
+:END:
+
+[[file:wendao-episteme-poo-fixed-point-observability-and-recoverable-debugging-rfc.org][POO Fixed-Point Observability and Recoverable Debugging RFC]]
+owns the detailed evaluator, diagnostic-evidence, recoverable-control,
+performance, and qualification research program.  It depends on the
+package, language, phase, effect, and receipt invariants in this RFC and
+must not redefine or weaken them.
+
+Generic evaluator prototypes and future =poo-flow-core= contracts are
+owned by the parent record
+=poo-flow/docs/10-19-design/10.06-poo-module-system/45-poo-fixed-point-observability-and-recoverable-debugging.org=.
+The child companion owns consumer requirements and qualification, not
+the parent implementation.
+
+* Relationship to existing records
+
+Existing records are evidence and design inputs, not a source of
+inherited authority.  Their continuing role is determined only by the
+four-layer authority allocation above.  In particular, existing TOML
+manifests and Python validators do not become normative inputs or
+compatibility baselines because they predate this RFC.
+
+This RFC is intended to complement, not silently replace:
+
+- the current =wendao-episteme= ontology, policy, prompt, and source contracts;
+- and the POO Flow current-project programming-style record governing
+  POO-native public surfaces, functional composition, closed module kernels,
+  and phase/hygiene ownership.
+
+The existing cognitive-policy blueprint discussion and the two architecture
+discussions that motivated this RFC are non-canonical inputs to the proposal.
+Their claims become durable decisions only when explicitly accepted and
+recorded in Org.
+
+This RFC does not authorize a bulk conversion or deletion of existing non-Org
+files. The repository-wide Org-only cleanup boundary requires a separate,
+explicitly reviewed decision.

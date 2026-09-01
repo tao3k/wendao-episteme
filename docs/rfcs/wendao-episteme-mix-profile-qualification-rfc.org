@@ -1,0 +1,368 @@
+#+title: Wendao Episteme Mix Profile Consumer Qualification RFC
+#+startup: overview
+#+property: header-args :eval never-export
+
+* Status and decision discipline
+
+:PROPERTIES:
+:RFC_STATE: architecture-approved
+:IMPLEMENTATION_STATE: not-authorized
+:PUBLIC_API_CHANGE: none
+:PARENT_OWNER: poo-flow-core
+:UPSTREAM_SEMANTIC_OWNER: clan/poo
+:END:
+
+This RFC records the =wendao-episteme= consumer and qualification obligations
+for the parent Mix Profile architecture.
+
+Architecture approval does not authorize child implementation, parent
+implementation, package publication, or release.
+
+* Related records
+
+- [[./wendao-episteme-governance-language-package-boundary-rfc.org][Wendao Episteme Governance Language Package Boundary RFC]]
+- [[../../../../docs/10-19-design/10.06-poo-module-system/45-mix-profile-recursive-composition-and-recoverable-control.org][POO Flow Mix Profile Recursive Composition and Recoverable Control RFC]]
+- [[../../../../user-interface/CONTRACT.org][POO Flow User Interface Contract]]
+
+* Contributor repository qualification boundary
+
+=wendao-episteme= is the open contributor repository in which enterprises,
+individual users, open-source maintainers, and vertical-domain specialists may
+co-maintain reusable modules, Profiles, Workflows, Knowledge, Policy,
+authorization, security, evidence, ownership, responsibility, accountability,
+and other vertical-domain governance projections.
+
+Those terms identify an open, multi-facet semantic space.  They are not a
+closed sum type, and a single contributed object may declare several facets.
+New domain facets do not require a new =poo-flow-core= asset-kind constructor.
+
+This contributor role does not change the parent/child boundary:
+
+- =poo-flow-core= owns the engine, POO-native composition contract, and runtime
+  evidence contract;
+- =wendao-episteme= owns contributor coordination, domain-specific governance
+  projection, and downstream embedding qualification;
+- each contributed vertical-domain asset retains its named semantic owner;
+- downstream users choose qualified assets and combine them through the
+  existing =use-composition= surface.
+
+A Mix Profile qualification result says that a contributed object can consume
+and compose with the =poo-flow-core= contract.  It does not transfer engine
+ownership to the contributor repository, grant automatic runtime authority, or
+turn the Mix object into a second Profile abstraction.
+
+The minimum contributor qualification envelope must eventually bind:
+
+- contributor and semantic owner identity;
+- module/Profile/Workflow/Knowledge identity and revision;
+- the open set of declared and qualified semantic facet identities;
+- imports and capability requirements;
+- provenance and applicable governance policy;
+- explicit authorization evidence;
+- ownership, maintainership, review, approval, and publication relations;
+- declared responsibilities, accountable principals, and their evidence;
+- security, privacy, compliance, and audit evidence required by the facets;
+- executable tests and domain evidence;
+- compatible =poo-flow-core= contract identity;
+- qualification outcome and receipt.
+
+This section approves the contributor-repository architecture only.  It does
+not authorize implementation, package publication, or a new public API.
+
+* Ownership boundary
+
+The dependency direction remains:
+
+#+begin_src mermaid
+flowchart LR
+    W["wendao-episteme"]
+    P["published poo-flow-core"]
+    G["clan/poo"]
+
+    W --> P
+    P --> G
+#+end_src
+
+- =wendao-episteme= consumes the published =poo-flow-core= contract.
+- The child does not directly own or wrap =clan/poo=.
+- The child does not authorize parent implementation or public API changes.
+- The parent does not own wendao governance-domain objects or projections.
+- Parent integration tests do not need child distribution or integration tests
+  in order to maintain =poo-flow-core=.
+- Child qualification MUST run against an explicitly identified published or
+  pinned parent artifact.
+
+* User Interface invariant
+
+Wendao governance composition uses the existing Profile/case interface.
+
+The following is a structural projection of the existing grammar, not a new
+public grammar:
+
+#+begin_src scheme
+(use-composition
+  (profiles
+    existing-profile
+    wendao-governance-profile)
+
+  (compose
+    ...))
+#+end_src
+
+The child MUST NOT introduce:
+
+- =(user-composition ...)=;
+- =(initial ...)=;
+- a public =(mix-module ...)= family;
+- user-authored fixed-point forms;
+- a second Profile or case abstraction.
+
+The Mix object is an implementation of the existing Profile contract.
+
+* Wendao Mix Profile responsibility
+
+The wendao Profile owns only domain-specific governance projection:
+
+- governance module selection;
+- governance settings;
+- domain validation;
+- compile-time governance plan projection;
+- governance presentation and diagnostic expectations;
+- domain capability requirements;
+- downstream embedding qualification.
+
+It may privately carry or derive:
+
+- a stable Profile identity;
+- recursive governance imports;
+- a capability-requirement contract;
+- =clan/poo= prototype contributions received through =poo-flow-core=.
+
+Private Mix metadata MUST NOT become a parallel user configuration surface.
+
+* Standalone and downstream equivalence
+
+The canonical standalone adapter remains:
+
+#+begin_src scheme
+#lang :wendao-episteme/governance
+
+(use-composition
+  (profiles
+    wendao-governance-profile)
+  (compose
+    ...))
+#+end_src
+
+A downstream module system may consume the same Profile value inside its own
+=use-composition= form.
+
+#+begin_src mermaid
+flowchart TB
+    W["Wendao governance Profile"]
+    S["Standalone governance adapter"]
+    D["Downstream host composition"]
+    P["Published poo-flow-core Profile projection"]
+
+    W --> S
+    W --> D
+    S --> P
+    D --> P
+#+end_src
+
+Standalone and downstream routes MUST agree on the normalized pure governance
+projection. Execution receipts remain route-specific.
+
+* Recursive composition qualification
+
+The child does not implement import-graph closure or fixed-point evaluation.
+
+It supplies governance cases that prove:
+
+- recursive wendao subprofiles remain ordinary Profile inputs;
+- diamond imports do not duplicate the same semantic governance contribution;
+- a valid recursive component projects through the parent contract;
+- semantic slot recursion is evaluated by the upstream =clan/poo= owner;
+- invalid identity, source, capability, or result states fail closed.
+
+* Capability qualification
+
+The child Profile carries capability requirements, not ambient bearer
+authority.
+
+- Pure governance composition does not receive capability tokens.
+- Capability authority is not unioned across import paths.
+- A governance action carries provenance to the external-effect gateway.
+- Execution checks the exact delegated path for the action.
+- A missing or inconsistent grant fails closed.
+- No restart may widen governance authority.
+
+* Diagnostic projection
+
+Ordinary governance configuration MUST NOT contain private Mix metadata or
+capability tokens.
+
+Existing presentation and trace contracts may expose safe observations:
+
+- opaque wendao Profile identity;
+- normalized governance module identity;
+- import edge and recursive-component identity;
+- cycle path;
+- capability requirement status;
+- compile, projection, and qualification receipt identity.
+
+The child does not define a new observability API.
+
+* Recoverable control qualification
+
+The parent recoverable-control plane is an approved target, not a current
+baseline. Child qualification therefore distinguishes:
+
+- current doctor/presentation/durable-recovery evidence;
+- future live continuable condition/restart behavior.
+
+The child may require future pure-phase restart behavior only at parent-declared
+safe points.
+
+It MUST NOT require:
+
+- continuation capture inside an arbitrary =clan/poo= slot frame;
+- continuation serialization;
+- recovery from an arbitrary stack overflow;
+- continuation across an external-effect gateway;
+- replay of an effect without a new capability check and execution receipt.
+
+* Receipt boundaries
+
+| Receipt | Child assertion |
+|---------+-----------------|
+| Compile receipt | Governance syntax and pure plan were constructed |
+| Parent graph/load receipt | Parent resolved and materialized the Profile closure |
+| Child qualification receipt | Governance projection satisfied child expectations |
+| Execution receipt | A capability-checked governance effect completed |
+| Durable recovery receipt | A serializable recovery scenario was recorded |
+
+No single receipt substitutes for another.
+
+* F13: wendao downstream-equivalence fixture
+
+F13 remains the child-owned qualification fixture.
+
+It MUST compare:
+
+1. the standalone =#lang :wendao-episteme/governance= route;
+2. downstream embedding of the same wendao Profile;
+3. the normalized pure governance projection;
+4. presentation and trace-safe diagnostic projection;
+5. capability requirements and action provenance;
+6. route-specific execution receipts when effects are explicitly exercised.
+
+** Parent prerequisites
+
+F13 starts only after the selected parent artifact provides:
+
+- a dependency-source identity for its installed =clan/poo/proto= owner;
+- a parent G1 interface-compatibility receipt;
+- parent G2 graph/component and loader receipts;
+- a parent G3 pure-closure qualification receipt;
+- parent G4 safe diagnostic qualification;
+- parent G5 capability-path qualification;
+- parent G6 recoverable-control qualification when F13 exercises recovery.
+
+The child records these receipt identities. It does not rerun or own the parent
+implementation gates.
+
+** Required F13 receipts
+
+| Route | Required receipts |
+|-------+-------------------|
+| Standalone | compile receipt, normalized governance projection, presentation/trace receipt |
+| Downstream embedding | compile receipt, normalized governance projection, presentation/trace receipt |
+| Explicit effect route | Cedar decision identity, token/consume result, route-specific execution receipt |
+| Recovery route | control-plane failure identity, restart-decision history, durable recovery scenario |
+
+Standalone and downstream compile receipts remain distinct even when their
+normalized pure governance projections are equal.
+
+Import and Profile composition alone MUST NOT produce an execution receipt.
+
+F13 MUST NOT:
+
+- invoke a child-owned fixed-point evaluator;
+- authorize a parent source implementation;
+- require parent ownership of child distribution tests;
+- treat compile success as execution success;
+- treat a durable recovery receipt as a resumable continuation.
+
+* Qualification checklist
+
+** Existing interface compatibility
+
+- [ ] The wendao Mix object is accepted as an existing Profile.
+- [ ] The outer user form remains =use-composition=.
+- [ ] The case retains the existing =profiles= and =compose= clauses.
+- [ ] Root Profile selection accepts the wendao Profile.
+- [ ] Root configuration presentation projects it without private metadata.
+- [ ] Declaration-case presentation matches.
+- [ ] Declaration-case trace rows remain safe.
+
+** Recursive Mix semantics
+
+- [ ] Recursive governance imports project to one Profile closure.
+- [ ] Diamond imports contribute once by semantic identity.
+- [ ] A valid circular import component closes through the parent contract.
+- [ ] Semantic recursion is delegated to =clan/poo=.
+- [ ] Invalid or tainted results fail closed.
+
+** Capability and effect boundary
+
+- [ ] Capability authority is not unioned across paths.
+- [ ] Capability tokens do not enter pure composition.
+- [ ] Action provenance identifies the delegated import path.
+- [ ] Missing authority fails before the external effect.
+- [ ] Every exercised effect produces its own execution receipt.
+
+** Standalone/downstream equivalence
+
+- [ ] Standalone and downstream compile receipts are captured separately.
+- [ ] Normalized pure governance projections agree.
+- [ ] Safe presentation and trace projections agree.
+- [ ] Route-specific execution differences remain explicit.
+- [ ] Parent G0--G6 prerequisite receipt identities are recorded.
+- [ ] Import and composition produce no execution receipt.
+- [ ] Recovery receipts contain no live continuation or capability token.
+
+These are obligations, not current green-test claims.
+
+* Rejected alternatives
+
+** Child-owned fixed-point implementation
+
+Rejected because =clan/poo= owns =mix/fix= and the parent owns integration.
+
+** New wendao composition macro
+
+Rejected because the existing =use-composition= surface already consumes
+Profiles.
+
+** Direct child dependency on internal parent source
+
+Rejected because the child consumes a published or pinned =poo-flow-core=
+artifact.
+
+** Capability union across imports
+
+Rejected because it would make diamond and cyclic imports privilege-escalation
+channels.
+
+* Implementation checklist
+
+No item below is authorized by this RFC's current implementation state.
+
+- [ ] Select the existing wendao Profile owner to carry the private Mix value.
+- [ ] Specify the domain projection without changing the public Profile API.
+- [ ] Specify F13 inputs and normalized comparison.
+- [ ] Specify safe diagnostic expectations.
+- [ ] Specify capability-requirement and action-provenance expectations.
+- [ ] Pin the parent artifact used by qualification.
+- [ ] Obtain explicit implementation authorization.
